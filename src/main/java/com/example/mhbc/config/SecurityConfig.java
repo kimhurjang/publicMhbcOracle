@@ -15,20 +15,35 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화
-                .httpBasic(AbstractHttpConfigurer::disable) // 기본 HTTP 인증 비활성화
-                .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 비활성화
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/signup", "/", "/login").permitAll() // 특정 경로는 인증 없이 허용
-                        .anyRequest().authenticated()) // 나머지 요청은 인증 필요
-                .logout((logout) -> logout
-                        .logoutSuccessUrl("/login") // 로그아웃 성공 시 리디렉션 URL
-                        .invalidateHttpSession(true)) // 세션 무효화
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용하지 않음
-                );
+        http.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable);
+
+        http.authorizeHttpRequests( authorize -> authorize
+                .requestMatchers("/", "/login","/join","/error","/index","/home","wedding").permitAll()
+                .requestMatchers("/booking").hasAnyRole("ADMIN","USER")
+                .requestMatchers("/admin").hasRole("ADMIN")
+                .anyRequest().authenticated()
+        );
+
+        http.formLogin(login -> login
+                .loginPage("/login")
+                .loginProcessingUrl("/loginProc")
+                .usernameParameter("userid")
+                .passwordParameter("pwd")
+                .defaultSuccessUrl("/")
+                .permitAll()
+        );
+
+        http.logout(logout -> logout
+                .logoutUrl("/logout") // 로그아웃 URL 지정
+                .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉트할 URL
+                .invalidateHttpSession(true) // 세션 무효화
+                .clearAuthentication(true) // 인증 정보 삭제
+                .deleteCookies("JSESSIONID") // 쿠키 삭제
+                .permitAll() // 모든 사용자에게 로그아웃 URL 접근 허용
+        );
         return http.build();
     }
+
 
     /**
      * 비밀번호 암호화를 위한 BCryptPasswordEncoder 빈 등록
