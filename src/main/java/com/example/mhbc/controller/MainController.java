@@ -6,11 +6,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class MainController {
 
-
     @RequestMapping({"/" , "/home"})
     public String index(){
         System.out.println(">>>>>>>>>>index page<<<<<<<<<<");
         return "index";
+    }
+    @RequestMapping("/login")
+    public String login(){
+        System.out.println(">>>>>>>>>>login page<<<<<<<<<<");
+        return "login";
     }
     @RequestMapping("/admin")
     public String admin(){
