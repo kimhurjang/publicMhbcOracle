@@ -1,39 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-
-<footer th:fragment="footerFragment">
-
-    <!--푸터-->
-
-        <div class="footerBox copy">
-            <h2>logo img</h2>
-            <p>©ManHwaBangCho</p>
-            <div id="snsIcon"><!--sns 링크 연결될 아이콘-->
-                <a href=""><img src=""></a>
-                <a href=""><img src=""></a>
-                <a href=""><img src=""></a>
-                <a href=""><img src=""></a>
-            </div>
+<footer th:fragment="footer">
+    <div class="footerBox copy">
+        <h2>logo img</h2>
+        <p>©ManHwaBangCho</p>
+        <div id="snsIcon"><!--sns 링크 연결될 아이콘-->
+            <a href=""><img src=""></a>
+            <a href=""><img src=""></a>
+            <a href=""><img src=""></a>
+            <a href=""><img src=""></a>
         </div>
-        <div class="footerBox myAccount">
-            <p>내 정보</p>
-            <p><a href="">마이 페이지</a></p>
-            <p><a href="">예약 정보 조회 / 수정</a></p>
-        </div>
-        <div class="footerBox address">
-            <p>주소</p>
-            <p>경상남도 고성군 거류면 은월리 17-5</p>
-        </div>
-        <div class="footerBox tel">
-            <p>연락처</p>
-            <p>TEL : 00-000-0000</p>
-            <p>Email : abcd1234@mail.com</p>
-        </div>
-
+    </div>
+    <div class="footerBox myAccount">
+        <p>내 정보</p>
+        <p><a href="">마이 페이지</a></p>
+        <p><a href="">예약 정보 조회 / 수정</a></p>
+    </div>
+    <div class="footerBox address">
+        <p>주소</p>
+        <p>경상남도 고성군 거류면 은월리 17-5</p>
+    </div>
+    <div class="footerBox tel">
+        <p>연락처</p>
+        <p>TEL : 00-000-0000</p>
+        <p>Email : abcd1234@mail.com</p>
+    </div>
 
     <script>
-
-
         //네비게이션 효과
         document.addEventListener("DOMContentLoaded", function () {
           const nav = document.querySelector("nav");
@@ -175,6 +168,5 @@
         // 아래 코드는 지도 위의 마커를 제거하는 코드입니다
         // marker.setMap(null);
     </script>
-
 </footer>
 </html>
