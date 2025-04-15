@@ -24,8 +24,8 @@ public class SecurityConfig {
                         "/member/**", "/login","/join","/error","/index","/home","wedding").permitAll()
                 .requestMatchers("/booking").hasAnyRole("ADMIN","USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
-                .anyRequest().authenticated()
                  */
+                .anyRequest().authenticated()
         );
 
         http.formLogin(login -> login
