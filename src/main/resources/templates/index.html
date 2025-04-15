@@ -1,19 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="fonts/xeicon.min.css">
-<link rel="stylesheet" as="style" crossorigin href="fonts/pretendard-subset.css" />        
-<link rel="stylesheet" href="css/common.css">
-<title>만화방초</title>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- headFragment 삽입 -->
+<head th:replace="~{fragment/head :: headFragment}"></head>
+
 <body>
-    안녕하세요
-    만화방초입니다.
-
-
-
-    
+<p>안녕하세요. 만화방초입니다.</p>
+<a href="https://xpressengine.github.io/XEIcon/library-2.3.3.html">xeicon 링크</a><br>
+<span class="xi-angle-right"></span>
 </body>
 </html>

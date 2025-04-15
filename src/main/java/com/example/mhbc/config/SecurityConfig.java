@@ -18,9 +18,10 @@ public class SecurityConfig {
         http.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests( authorize -> authorize
-                .requestMatchers("/", "/login","/join","/error","/index","/home","wedding").permitAll()
-                .requestMatchers("/booking").hasAnyRole("ADMIN","USER")
-                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/**").permitAll()
+                // .requestMatchers("/image/*","/css/*","/fonts/*","/", "/login","/join","/error","/index","/home","wedding").permitAll()
+                //.requestMatchers("/booking").hasAnyRole("ADMIN","USER")
+                //.requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
         );
 
