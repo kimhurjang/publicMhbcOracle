@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <div th:fragment="headerFragment">
+
+        <header>
+            <div id="logoImg">Logo</div>
+            <h2>헤더</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/home">홈</a></li>
+                <li><a href="/board">게시판</a></li>
+                <li><a href="/join">회원가입</a></li>
+                <li><a href="/login">로그인</a></li>
+                <li sec:authorize="hasAnyRole('USER','ADMIN')"><a href="/logout">로그아웃</a></li>
+                <li sec:authorize="hasAnyRole('USER','ADMIN')"><a th:href="@{/MyPage(idx=${a_membertest?.idx ?: 0})}">마이 페이지</a></li>
+            </ul>
+        </nav>
+
+    </div>
+</html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<footer th:fragment="footerFragment">
+
+    카피라이트©20250325<br>
+
+    <!--관리자 권한 가진 계정으로 로그인 하면 활성화-->
+    <a href="/admin" sec:authorize="hasRole('ADMIN')"><button type="button" id="adminBtn">관리자 페이지</button></a>
+
+</footer>
+</html>
