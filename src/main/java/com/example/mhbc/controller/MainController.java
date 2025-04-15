@@ -14,7 +14,7 @@ public class MainController {
     @RequestMapping("/login")
     public String login(){
         System.out.println(">>>>>>>>>>login page<<<<<<<<<<");
-        return "login";
+        return "member/login";
     }
     @RequestMapping("/admin")
     public String admin(){
