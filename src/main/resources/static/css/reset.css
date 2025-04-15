@@ -2,8 +2,6 @@
 @import url("../fonts/xeicon.min.css");
 @import url("../fonts/pretendard-subset.css");
 
-body {padding:20px;}
-
 * {margin:0;padding:0;box-sizing: border-box;} 
 a {text-decoration: none;display: inline-block;}
 li {list-style-type: none;}
