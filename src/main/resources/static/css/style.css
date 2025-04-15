@@ -66,16 +66,23 @@ nav{
    background-color: #8676A1;
 }
 #gnb li:last-child{
-   font-size: 13px;
-   width: 200px;
-   padding: 15px;
+   width: 150px;
+  padding: 5px;
+}
+#gnb li:last-child:hover span{
+  color: #F7F4ED;
+}
+a.nav_item.login span:last-child{
+   font-size: 14px;
+   line-height: 0;
 }
 .xi-profile-o{
-   width:30px;
+   font-size:30px;
 }
 .sub_nav_layer{
    width: 750px;
    position: absolute;
+   justify-content:space-between;
    top: 70px;
    left: 0;
    background-color: #D6CAE8;
@@ -117,8 +124,9 @@ nav:hover .sub_nav_layer {
    color:#F7F4ED;
 }
 .sub_group {
-   min-width:100px;
+   min-width:120px;
 }
+/*
 .sub_group:first-child{
    margin: 0 13px 0 10px;
 }
@@ -133,10 +141,9 @@ nav:hover .sub_nav_layer {
 }
 .sub_group:last-child{
    margin: 0 10px 0 20px;
-}
+}*/
 .sub_group:last-child{
-   width: 200px;
-   margin: 0 13px;
+   width: 150px;
 }
 .sub_group li{
    min-width: 100px;
