@@ -1,0 +1,28 @@
+@charset "utf-8";
+body {padding:20px;}
+
+* {margin:0;padding:0;box-sizing: border-box;} 
+a {text-decoration: none;display: inline-block;}
+li {list-style-type: none;}
+
+div, span, p, h1, h2, h3, h4, h5, h6, a, label, 
+input, textarea, button, select, li, td, th, figcaption, caption,
+blockquote, pre, code, b, strong, i, em, mark, small {font-family:"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", 
+    "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 'Malgun Gothic','맑은 고딕',"돋움",Dotum,sans-serif;
+    line-height:1.6; font-size:17px; font-weight: 300; color:#333;
+}
+h1, h2, h3, h4, h5, h6, blockquote, pre, code, b, strong, i, em, mark, small {font-size:revert; font-weight: revert;}
+mark {background-color: revert};
+
+/*
+blockquote: 인용문 텍스트.
+pre: 미리 지정된 텍스트를 스타일링.
+code: 코드 스타일링에 적합한 요소.
+강조 및 특수 텍스트 태그
+b: 굵은 텍스트.
+strong: 의미적으로 중요한 굵은 텍스트.
+i: 기울임꼴 텍스트.
+em: 강조된 기울임꼴 텍스트.
+mark: 강조 표시된 텍스트.
+small: 작은 크기의 텍스트.
+*/
