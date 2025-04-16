@@ -19,16 +19,12 @@ public class MainController {
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "admin";
     }
-    @RequestMapping("/wedding")
-    public String wedding(){
-        System.out.println(">>>>>>>>>>wedding page<<<<<<<<<<");
-        return "wedding";
+    @RequestMapping("/gallery")
+    public String gallery(){
+        System.out.println(">>>>>>>>>>gallery page<<<<<<<<<<");
+        return "board/gallery";
     }
-    @RequestMapping("/booking")
-    public String booking(){
-        System.out.println(">>>>>>>>>>booking page<<<<<<<<<<");
-        return "booking";
-    }
+
 
 
 }

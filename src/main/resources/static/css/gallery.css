@@ -1,0 +1,123 @@
+
+a {
+    color: inherit;  /* 링크의 기본 색을 부모 요소의 색과 동일하게 설정 */
+}
+
+a:visited,
+a:active {
+    color: inherit;  /* 클릭 후에도 기본 색상 그대로 유지 */
+}
+
+section {
+    width: 100%;
+}
+
+article {
+    margin: 500px 0;
+    width: 100%;
+}
+
+
+
+.views {
+    font-size: 13px;
+    color: #777;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+
+/* 갤러리 기본 스타일 */
+.gallery-container {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+}
+
+.gallery-title {
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+.gallery-subtitle {
+    font-size: 18px;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.gallery {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.card {
+    flex: 1 1 calc(33.333% - 20px);
+    max-width: 250px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: left;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.card-text {
+    padding: 15px;
+}
+
+.card-text h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.card-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+footer {
+    background-color: #9b89b3;
+    color: #F7F4ED;
+    padding: 80px;
+    display: flex;
+}
+
+footer div {
+    width: 300px;
+}
+
+.copy {
+    margin-right: 600px;
+    line-height: 50px;
+}
+
+#snsIcon {
+    justify-content: space-around;
+}
+
+.myAccount {
+    display: block;
+}
+
+.myAccount a {
+    color: #F7F4ED;
+}
+.flogo{
+    width: 135px;
+    height: 135px;
+}

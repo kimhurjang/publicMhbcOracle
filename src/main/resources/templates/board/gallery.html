@@ -1,10 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{fragment/layout}">
+
 <body>
-갤러리
+<section layout:fragment="content">
+<link rel="stylesheet" href="/css/gallery.css">
+    <main class="gallery-container">
+        <h1 class="gallery-title">갤러리</h1>
+
+        <div class="gallery">
+            <div class="card">
+                <a href="detail.html?id=1" class="card-link">
+                    <img src="./img/road.png" alt="자연풍경 사진">
+                    <div class="card-text">
+                        <h3>만화방초 길</h3>
+                        <p>멋진 자연을 감상하세요.</p>
+                        <div class="views">조회수: 123</div>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="detail.html?id=1" class="card-link">
+                    <img src="./img/box office.png" alt="도시 사진">
+                    <div class="card-text">
+                        <h3>매표소</h3>
+                        <p>도시의 숨결을 사진에 담다.</p>
+                        <div class="views">조회수: 123</div>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="detail.html?id=1" class="card-link">
+                    <img src="./img/flower.png" alt="해변 사진">
+                    <div class="card-text">
+                        <h3>산수국</h3>
+                        <p>해변의 고요와 소리가 느껴진다.</p>
+                        <div class="views">조회수: 123</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card">
+                <a href="detail.html?id=1" class="card-link">
+                    <img src="./img/road.png" alt="자연풍경 사진">
+                    <div class="card-text">
+                        <h3>만화방초 길</h3>
+                        <p>멋진 자연을 감상하세요.</p>
+                        <div class="views">조회수: 123</div>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="detail.html?id=1" class="card-link">
+                    <img src="./img/box office.png" alt="도시 사진">
+                    <div class="card-text">
+                        <h3>매표소</h3>
+                        <p>도시의 숨결을 사진에 담다.</p>
+                        <div class="views">조회수: 123</div>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="detail.html?id=1" class="card-link">
+                    <img src="./img/flower.png" alt="해변 사진">
+                    <div class="card-text">
+                        <h3>산수국</h3>
+                        <p>해변의 고요와 소리가 느껴진다.</p>
+                        <div class="views">조회수: 123</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card">
+                <a href="detail.html?id=1" class="card-link">
+                    <img src="./img/road.png" alt="자연풍경 사진">
+                    <div class="card-text">
+                        <h3>만화방초 길</h3>
+                        <p>멋진 자연을 감상하세요.</p>
+                        <div class="views">조회수: 123</div>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="detail.html?id=1" class="card-link">
+                    <img src="./img/box office.png" alt="도시 사진">
+                    <div class="card-text">
+                        <h3>매표소</h3>
+                        <p>도시의 숨결을 사진에 담다.</p>
+                        <div class="views">조회수: 123</div>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="detail.html?id=1" class="card-link">
+                    <img src="./img/flower.png" alt="해변 사진">
+                    <div class="card-text">
+                        <h3>산수국</h3>
+                        <p>해변의 고요와 소리가 느껴진다.</p>
+                        <div class="views">조회수: 123</div>
+                    </div>
+                </a>
+            </div>
+
+
+        </div>
+    </main>
+
+</section>
 </body>
-</html>
+</html><!--E contents-->
