@@ -13,11 +13,7 @@ public class MainController {
         model.addAttribute("title", "만화방초");//페이지별 타이틀 설정.(디폴트값==기본 제목)
         return "index";
     }
-    @RequestMapping("/login")
-    public String login(){
-        System.out.println(">>>>>>>>>>login page<<<<<<<<<<");
-        return "login";
-    }
+
     @RequestMapping("/admin")
     public String admin(){
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
