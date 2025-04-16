@@ -33,6 +33,7 @@
           const submenu = document.querySelector(".sub_nav_layer");
           let hideTimeout;
 
+<<<<<<< HEAD
           nav.addEventListener("mouseenter", () => {
             clearTimeout(hideTimeout);
             submenu.style.opacity = "1";
@@ -49,12 +50,40 @@
           });
 
           submenu.addEventListener("mouseenter", () => {
+=======
+
+        //네비게이션 효과
+        document.addEventListener("DOMContentLoaded", function () {
+          const nav = document.querySelector("nav");
+          const submenu = document.querySelector(".sub_nav_layer");
+          let hideTimeout;
+
+          nav.addEventListener("mouseenter", () => {
+>>>>>>> parent of cb3eeee (0415-5)
             clearTimeout(hideTimeout);
             submenu.style.opacity = "1";
             submenu.style.transform = "translateY(0)";
             submenu.style.pointerEvents = "auto";
           });
 
+<<<<<<< HEAD
+=======
+          nav.addEventListener("mouseleave", () => {
+            hideTimeout = setTimeout(() => {
+              submenu.style.opacity = "0";
+              submenu.style.transform = "translateY(-10px)";
+              submenu.style.pointerEvents = "none";
+            }, 200); // 200ms 안에 다시 들어오면 안 사라짐
+          });
+
+          submenu.addEventListener("mouseenter", () => {
+            clearTimeout(hideTimeout);
+            submenu.style.opacity = "1";
+            submenu.style.transform = "translateY(0)";
+            submenu.style.pointerEvents = "auto";
+          });
+
+>>>>>>> parent of cb3eeee (0415-5)
           submenu.addEventListener("mouseleave", () => {
             hideTimeout = setTimeout(() => {
               submenu.style.opacity = "0";
