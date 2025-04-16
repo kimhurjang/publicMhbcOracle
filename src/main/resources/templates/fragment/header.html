@@ -1,23 +1,47 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
-    <div th:fragment="headerFragment">
-
+    <div th:fragment="header">
         <header>
-            <div id="logoImg">Logo</div>
-            <h2>헤더</h2>
-        </header>
-        <nav>
-            <ul>
-                <li><a href="/home">홈</a></li>
-                <li><a href="/board">게시판</a></li>
-                <li><a href="/join">회원가입</a></li>
-                <li><a href="/login">로그인</a></li>
-                <li sec:authorize="hasAnyRole('USER','ADMIN')"><a href="/logout">로그아웃</a></li>
-                <li sec:authorize="hasAnyRole('USER','ADMIN')"><a th:href="@{/MyPage(idx=${a_membertest?.idx ?: 0})}">마이 페이지</a></li>
-            </ul>
-        </nav>
+            <div class="logo"><img src="/image/logo_1-2.png"></div>
+            <nav>
+                <!-- 메인 메뉴 -->
+                <ul id="gnb">
+                    <li><a href="#" class="nav_item">소개글</a></li>
+                    <li><a href="/wedding" class="nav_item">웨딩</a></li>
+                    <li><a href="#" class="nav_item">이용 안내</a></li>
+                    <li><a href="#" class="nav_item">커뮤니티</a></li>
+                    <li class="login"><a href="#" class="nav_item login">
+                        <span class="xi-profile-o"></span><br>
+                        <span>로그인/회원가입</span>
+                    </a>
+                    </li>
+                </ul>
 
+                <!-- 서브 메뉴 레이어 -->
+                <div class="sub_nav_layer">
+                    <ul class="sub_group">
+                        <li><a href="#">시설 소개</a></li>
+                        <li><a href="#">오시는 길</a></li>
+                    </ul>
+                    <ul class="sub_group">
+                        <li><a href="#">장소 소개</a></li>
+                        <li><a href="#">대관 안내</a></li>
+                    </ul>
+                    <ul class="sub_group">
+                        <li><a href="#">예약 / 문의</a></li>
+                        <li><a href="#">이용료</a></li>
+                        <li><a href="#">공지 사항</a></li>
+                    </ul>
+                    <ul class="sub_group">
+                        <li><a href="#">이벤트</a></li>
+                        <li><a href="#">갤러리</a></li>
+                    </ul>
+                    <ul class="sub_group">
+                        <li><a href="#">마이 페이지</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
     </div>
 </html>
