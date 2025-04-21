@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/reservation.css"></th:block>
+<section layout:fragment="content" id="container" class="reservation form">
+    <h1>상담예약</h1>
+    <div id="content" class="content">
+        <form th:action="@{/reservation/save}" th:object="${reservation}" method="post" onsubmit="return validateForm();">
+            <!-- 예약자 아이디 hidden 전달 -->
+            <input type="hidden" name="memberIdx" value="1"><!--테스트값, 테스트 완료하면 value 빼고 옆에거 넣기 th:field="*{memberIdx}"-->
+
+            <div class="form_section">
+                <p class="section_title">01. 기본 정보를 입력해주세요</p>
+                <p class="section_title_sub">*는 필수입력 사항입니다</p>
+                <div class="form_group">
+                    <label for="name_input"><span class="required">*</span>이름</label>
+                    <input type="text" id="name_input" th:field="*{name}" placeholder="이름을 정확히 기재해 주세요">
+                </div>
+                <div class="form_group">
+                    <label for="contact_tel"><span class="required">*</span>연락처</label>
+                    <input type="text" id="contact_tel" th:field="*{mobile}" placeholder="휴대폰 번호 입력" required pattern="^01[016789]-?\d{3,4}-?\d{4}$" title="형식: 010-1234-5678">
+                </div>
+                <div class="form_group">
+                    <label for="contact_date"><span class="required">*</span>상담 가능 시간</label>
+                    <input type="date" id="contact_date" placeholder="날짜 선택">
+                    <select id="contact_time_select">
+                        <option value="오전">오전</option>
+                        <option value="오후">오후</option>
+                    </select>
+                    <input type="hidden" name="contactTime" id="contactTime">
+                </div>
+                <div class="form_group">
+                    <label for="event_type_select">행사 종류</label>
+                    <select id="event_type_select" th:field="*{eventType}">
+                        <option value="예식">예식</option>
+                        <option value="기업행사">기업행사</option>
+                        <option value="일반행사">일반행사</option>
+                        <option value="다과파티">다과파티</option>
+                    </select>
+                </div>
+                <div class="form_group">
+                    <div class="event_date">
+                        <label for="event_date_input">행사 예정일</label>
+                        <input type="date" id="event_date_input" th:field="*{eventDate}">
+                        <select id="event_time_select">
+                            <option value="10">10시</option>
+                            <option value="12">12시</option>
+                            <option value="14">14시</option>
+                            <option value="16">16시</option>
+                        </select>
+                    </div>
+                    <input type="checkbox" name="date_choice" id="event_date_undecided">
+                    <label for="event_date_undecided">미정</label>
+                </div>
+                <div class="form_group">
+                    <div class="hall">
+                        <label>홀 선택</label>
+                        <input type="radio" th:field="*{hallIdx}" value="1" id="hall_ranunculus">
+                        <label for="hall_ranunculus">라넌큘러스</label>
+                        <input type="radio" th:field="*{hallIdx}" value="2" id="hall_lisianthus">
+                        <label for="hall_lisianthus">리사안셔스</label>
+                    </div>
+                </div>
+                <div class="form_group">
+                    <label for="guest_count_select">행사 인원수</label>
+                    <select id="guest_count_select" th:field="*{guestCnt}">
+                        <option value="50">50명</option>
+                        <option value="100">100명</option>
+                        <option value="150">150명</option>
+                        <option value="200">200명</option>
+                    </select>
+                </div>
+                <div class="form_group">
+                    <div class="meal_type">
+                        <label>식사 종류</label>
+                        <input type="radio" th:field="*{mealType}" value="뷔페A실속" id="meal_buffet_a">
+                        <label for="meal_buffet_a">뷔페A 실속</label>
+                        <input type="radio" th:field="*{mealType}" value="뷔페B실속" id="meal_buffet_b">
+                        <label for="meal_buffet_b">뷔페B 실속</label>
+                        <input type="radio" th:field="*{mealType}" value="도시락" id="meal_lunchbox">
+                        <label for="meal_lunchbox">도시락</label>
+                        <input type="radio" th:field="*{mealType}" value="없음" id="meal_none">
+                        <label for="meal_none">없음</label>
+                    </div>
+                </div>
+                <div class="form_group">
+                    <div class="flower">
+                        <label>꽃 종류</label>
+                        <input type="radio" th:field="*{flower}" value="조화" id="flower_artificial">
+                        <label for="flower_artificial">조화</label>
+                        <input type="radio" th:field="*{flower}" value="조화 + 생화" id="flower_mixed">
+                        <label for="flower_mixed">조화 + 생화</label>
+                        <input type="radio" th:field="*{flower}" value="생화" id="flower_real">
+                        <label for="flower_real">생화</label>
+                    </div>
+                </div>
+                <div class="price_box">
+                    <button type="button" id="calc_price_btn">금액 산출 버튼</button>
+                    <input type="text" readonly th:value="*{totalAmount}" id="price_result" th:field="*{totalAmount}">
+                </div>
+                <p class="section_title mt20">02. 문의사항을 입력해주세요.</p>
+                <textarea cols="50" rows="20" th:field="*{note}" id="inquiry_textarea"></textarea>
+                <div class="form_group align_start">
+                    <label>
+                        <input type="checkbox" id="agree_privacy" name="agree_privacy" required>
+                        [필수] 개인정보 수집 및 이용에 동의합니다.
+                    </label>
+                    <p class="privacy_info">
+                        - 수집 항목: 이름, 연락처, 이메일<br>
+                        - 이용 목적: 문의사항 안내 및 민원 처리<br>
+                        - 보유 기간: 동의일로부터 2년
+                    </p>
+                </div>
+                <div class="btn_group">
+                    <button type="submit" class="color1">제출</button>
+                    <button type="button" onclick="history.back()">취소</button>
+                </div>
+
+            </div>
+        </form> <!-- E form -->
+        <script>
+            function validateForm() {
+              const name = document.getElementById('name_input');
+              const mobile = document.getElementById('contact_tel');
+              const date = document.getElementById('contact_date');
+              const time = document.getElementById('contact_time_select');
+              const contactTime = document.getElementById('contactTime');
+              const privacy = document.getElementById('agree_privacy');
+
+              if (!name.value.trim()) {
+                alert("이름을 입력해주세요.");
+                name.focus();
+                return false;
+              }
+              if (!mobile.value.trim()) {
+                alert("연락처를 입력해주세요.");
+                mobile.focus();
+                return false;
+              }
+              if (!date.value) {
+                alert("상담 가능 날짜를 선택해주세요.");
+                date.focus();
+                return false;
+              }
+              if (!time.value) {
+                alert("상담 가능 시간을 선택해주세요.");
+                time.focus();
+                return false;
+              }
+              contactTime.value = date.value + ' / ' + time.value;
+              if (!privacy || !privacy.checked) {
+                alert("개인정보 수집 및 이용에 동의해주세요.");
+                privacy.focus();
+                return false;
+              }
+              return true;
+            }
+
+
+            // 행사 예정일 '미정' 체크 시 입력 비활성화 처리
+            const eventDateInput = document.getElementById('event_date_input');
+            const eventTimeSelect = document.getElementById('event_time_select');
+            const eventUndecided = document.getElementById('event_date_undecided');
+
+            eventUndecided.addEventListener('change', function () {
+              if (this.checked) {
+                eventDateInput.disabled = true;
+                eventTimeSelect.disabled = true;
+                eventDateInput.value = '';
+                eventTimeSelect.value = '';
+              } else {
+                eventDateInput.disabled = false;
+                eventTimeSelect.disabled = false;
+              }
+            });
+        </script>
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

@@ -3,13 +3,78 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/reservation.css"></th:block>
-<section layout:fragment="content" id="container" class="reservation list">
-    <h1>나의 예약 현황</h1>
+
+<!-- CSS 연결 -->
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/reservation.css">
+</th:block>
+
+<!-- 콘텐츠 영역 -->
+<section layout:fragment="content" id="container" class="reservation view">
+    <h1>예약 상세보기</h1>
+
     <div id="content" class="content">
+        <div class="is_wauto_box">
 
+            <table class="tbl_type_s01">
+                <colgroup>
+                    <col style="width: 20%;">
+                    <col>
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th>이름</th>
+                    <td th:text="${reservation.name}">홍길동</td>
+                </tr>
+                <tr>
+                    <th>연락처</th>
+                    <td th:text="${reservation.mobile}">010-1234-5678</td>
+                </tr>
+                <tr>
+                    <th>상담 가능 시간</th>
+                    <td th:text="${reservation.contactTime}">2025-05-01,오전</td>
+                </tr>
+                <tr>
+                    <th>행사 종류</th>
+                    <td th:text="${reservation.eventType}">예식</td>
+                </tr>
+                <tr>
+                    <th>행사 예정일</th>
+                    <td th:text="${#dates.format(reservation.eventDate, 'yyyy-MM-dd')}">2025-06-01</td>
+                </tr>
+                <tr>
+                    <th>홀</th>
+                    <td th:text="${reservation.hallName}">라넌큘러스</td>
+                </tr>
+                <tr>
+                    <th>인원 수</th>
+                    <td th:text="${reservation.guestCnt}">100명</td>
+                </tr>
+                <tr>
+                    <th>식사 종류</th>
+                    <td th:text="${reservation.mealType}">뷔페A</td>
+                </tr>
+                <tr>
+                    <th>꽃 장식</th>
+                    <td th:text="${reservation.flower}">조화 + 생화</td>
+                </tr>
+                <tr>
+                    <th>문의사항</th>
+                    <td th:text="${reservation.note}">비건 옵션 가능할까요?</td>
+                </tr>
+                </tbody>
+            </table>
 
+            <div class="btn_group mt20">
+                <a th:href="@{/reservation/list}" class="btn white small">목록</a>
+                <a th:href="@{'/reservation/edit/' + ${reservation.idx}}" class="btn color1 small">수정</a>
+                <a th:href="@{'/reservation/delete/' + ${reservation.idx}}" class="btn color2 small"
+                   onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+            </div>
+
+        </div>
     </div><!--E content-->
 </section><!--E container-->
+
 </body>
 </html>

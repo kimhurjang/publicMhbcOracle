@@ -4,9 +4,9 @@
 <head th:replace="~{fragment/head :: head}"></head>
 <body>
 <head th:replace="~{fragment/header :: header}"></head>
-<section id="container">
+<div id="wrapper">
     <th:block layout:fragment="content"></th:block>
-</section><!--E container-->
+</div><!--E wrapper-->
 <footer th:replace="~{fragment/footer :: footer}"></footer>
 </body>
 </html>

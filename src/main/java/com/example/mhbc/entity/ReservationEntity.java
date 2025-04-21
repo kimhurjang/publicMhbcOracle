@@ -3,6 +3,7 @@ package com.example.mhbc.entity;
 import com.example.mhbc.dto.ReservationDTO;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.Date;
 
 @Entity
@@ -37,14 +38,14 @@ public class ReservationEntity {
     private String flower; // 꽃장식
     private String contactTime; // 연락 가능한 시간
     private String note; // 기타 문의
-    private String userComment; // 코멘트
+    private String mobile; // 연락처
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")
     private Date createdAt; // 작성일
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIED_AT")
+    @Column(name = "UPDATE_AT")
     private Date updatedAt; // 수정일
 
     private String status; // 예약 상태
@@ -64,20 +65,23 @@ public class ReservationEntity {
 
     public ReservationDTO toDTO() {
         return ReservationDTO.builder()
-            .name(name)
-            .eventType(eventType)
-            .eventDate(eventDate)
-            .guestCnt(guestCnt)
-            .mealType(mealType)
-            .flower(flower)
-            .contactTime(contactTime)
-            .note(note)
-            .userComment(userComment)
-            .status(status)
-            .totalAmount(totalAmount)
-            .createdAt(createdAt)
-            .memberIdx(member != null ? member.getIdx() : null)
-            .hallIdx(hall != null ? hall.getIdx() : null)
-            .build();
+                .idx(idx)
+                .name(name)
+                .eventType(eventType)
+                .eventDate(eventDate)
+                .guestCnt(guestCnt)
+                .mealType(mealType)
+                .flower(flower)
+                .contactTime(contactTime)
+                .note(note)
+                .mobile(mobile)
+                .status(status)
+                .totalAmount(totalAmount)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
+                .memberIdx(member != null ? member.getIdx() : null)
+                .hallIdx(hall != null ? hall.getIdx() : null)
+                .hallName(hall != null ? hall.getName() : null)
+                .build();
     }
 }
