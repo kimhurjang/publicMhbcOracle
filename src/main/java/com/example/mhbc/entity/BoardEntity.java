@@ -25,6 +25,7 @@ public class BoardEntity {
     @JoinColumn(name = "MEMBER_IDX")
     private MemberEntity member; // 작성자
 
+    private Integer re; //답글여부(1=있음, 0=없음)
     private String title; // 타이틀
     private String content; // 내용
 

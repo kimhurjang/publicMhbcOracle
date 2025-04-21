@@ -1,4 +1,4 @@
-package com.example.project.controller;
+package com.example.mhbc.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -11,13 +11,15 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-/*
+
     // 404 (페이지를 찾을 수 없음) 예외 처리
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFound(Exception ex, Model model) {
         model.addAttribute("errorTitle", "페이지를 찾을 수 없습니다.");
         model.addAttribute("errorMessage", "요청한 페이지가 존재하지 않습니다.");
+        model.addAttribute("errorCode", HttpStatus.NOT_FOUND.value()); // 404 코드 추가
+        model.addAttribute("errorDetails", ex.toString()); // 예외의 상세 정보 추가
         return "error"; // 타임리프 error.html 로 이동
     }
 
@@ -27,14 +29,19 @@ public class GlobalExceptionHandler {
     public String handleAccessDeniedException(AccessDeniedException ex, Model model) {
         model.addAttribute("errorTitle", "접근 금지");
         model.addAttribute("errorMessage", "이 페이지에 접근할 권한이 없습니다.");
+        model.addAttribute("errorCode", HttpStatus.FORBIDDEN.value()); // 403 코드 추가
+        model.addAttribute("errorDetails", ex.toString()); // 예외의 상세 정보 추가
         return "error"; // 타임리프 error.html 로 이동
     }
-*/
+
     // 일반적인 예외 처리
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, Model model) {
         model.addAttribute("errorTitle", "오류 발생");
         model.addAttribute("errorMessage", ex.getMessage());
+        model.addAttribute("errorCode", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 기본 500 오류 코드 추가
+        model.addAttribute("errorDetails", ex.toString()); // 예외의 상세 정보 추가
+
         return "error"; // 타임리프 error.html 로 이동
     }
 }

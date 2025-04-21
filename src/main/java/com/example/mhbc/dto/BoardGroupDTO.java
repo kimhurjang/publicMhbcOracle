@@ -8,13 +8,15 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class BoardGroupDTO {
-    private String boardType;
+    private Long groupIdx;
+    private Integer boardType;
     private String name;
     private Integer orderNo;
     private String role;
 
     public BoardGroupEntity toEntity() {
         return BoardGroupEntity.builder()
+            .groupIdx(groupIdx)
             .boardType(boardType)
             .name(name)
             .orderNo(orderNo)

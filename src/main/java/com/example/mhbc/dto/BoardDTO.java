@@ -11,6 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class BoardDTO {
+    private Integer re;
     private String title;
     private String content;
     private Integer viewCnt;
@@ -20,6 +21,7 @@ public class BoardDTO {
 
     public BoardEntity toEntity(MemberEntity member, BoardGroupEntity group) {
         return BoardEntity.builder()
+            .re(re)
             .title(title)
             .content(content)
             .viewCnt(viewCnt)
