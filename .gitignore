@@ -1,3 +1,18 @@
+### 개인 테스트용 ###
+# === 소셜 로그인 테스트용 컨트롤러 ===
+src/main/java/com/example/mhbc/controller/MemberController.java
+src/main/java/com/example/mhbc/controller/SocialLoginController.java
+# === 소셜 로그인 테스트용 서비스 ===
+src/main/java/com/example/mhbc/service/SocialLoginService.java
+src/main/java/com/example/mhbc/service/MemberService.java
+# === Kakao 토큰 응답용 DTO ===
+src/main/java/com/example/mhbc/dto/KakaoTokenDTO.java
+# === WebClient 설정 파일 ===
+src/main/java/com/example/mhbc/config/WebClientConfig.java
+# === 멤버 레포지토리 ===
+src/main/java/com/example/mhbc/repository/MemberRepository.java
+
+
 HELP.md
 .gradle
 build/

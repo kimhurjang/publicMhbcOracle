@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>에러 페이지</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    .error-container { max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+    .error-title { font-size: 24px; font-weight: bold; color: red; }
+    .error-message { margin-top: 10px; font-size: 18px; }
+  </style>
+</head>
+<body>
+
+<div class="error-container">
+  <div class="error-title" th:text="${errorTitle}">에러 발생</div>
+  <div class="error-message" th:text="${errorMessage}">에러 메시지가 여기에 표시됩니다.</div>
+  <button onclick="goBack()">뒤로 가기</button>
+</div>
+
+<script>
+  function goBack() {
+      window.history.back();
+  }
+</script>
+
+</body>
+</html>
