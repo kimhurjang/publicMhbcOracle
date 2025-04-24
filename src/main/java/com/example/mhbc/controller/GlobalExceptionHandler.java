@@ -44,4 +44,6 @@ public class GlobalExceptionHandler {
 
         return "error"; // 타임리프 error.html 로 이동
     }
+
+
 }

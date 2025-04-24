@@ -16,61 +16,72 @@
     <div id="content" class="content">
         <div class="is_wauto_box">
 
-            <table class="tbl_type_s01">
+            <table class="tbl_type_01 tl_td">
                 <colgroup>
                     <col style="width: 20%;">
                     <col>
                 </colgroup>
-                <tbody>
-                <tr>
-                    <th>이름</th>
-                    <td th:text="${reservation.name}">홍길동</td>
-                </tr>
-                <tr>
-                    <th>연락처</th>
-                    <td th:text="${reservation.mobile}">010-1234-5678</td>
-                </tr>
-                <tr>
-                    <th>상담 가능 시간</th>
-                    <td th:text="${reservation.contactTime}">2025-05-01,오전</td>
-                </tr>
-                <tr>
-                    <th>행사 종류</th>
-                    <td th:text="${reservation.eventType}">예식</td>
-                </tr>
-                <tr>
-                    <th>행사 예정일</th>
-                    <td th:text="${#dates.format(reservation.eventDate, 'yyyy-MM-dd')}">2025-06-01</td>
-                </tr>
-                <tr>
-                    <th>홀</th>
-                    <td th:text="${reservation.hallName}">라넌큘러스</td>
-                </tr>
-                <tr>
-                    <th>인원 수</th>
-                    <td th:text="${reservation.guestCnt}">100명</td>
-                </tr>
-                <tr>
-                    <th>식사 종류</th>
-                    <td th:text="${reservation.mealType}">뷔페A</td>
-                </tr>
-                <tr>
-                    <th>꽃 장식</th>
-                    <td th:text="${reservation.flower}">조화 + 생화</td>
-                </tr>
-                <tr>
-                    <th>문의사항</th>
-                    <td th:text="${reservation.note}">비건 옵션 가능할까요?</td>
-                </tr>
-                </tbody>
+              <tbody>
+              <tr>
+                <th>예약번호</th>
+                <td th:text="${reservation.idx}">1</td>
+              </tr>
+              <tr>
+                <th>예약자 이름</th>
+                <td th:text="${reservation.name}">홍길동</td>
+              </tr>
+              <tr>
+                <th>연락처</th>
+                <td th:text="${reservation.mobile}">010-1234-5678</td>
+              </tr>
+              <tr>
+                <th>행사 종류</th>
+                <td th:text="${reservation.eventType}">예식</td>
+              </tr>
+              <tr>
+                <th>행사 예정일시</th>
+                <td th:text="${reservation.eventTimeSelect != null && !reservation.eventTimeSelect.isEmpty() ? reservation.eventDate + ' ' + reservation.eventTimeSelect + '시' : reservation.eventDate}">2025-05-31 14시</td>
+              </tr>
+              <tr>
+                <th>홀 이름</th>
+                <td th:text="${reservation.hallName}">리시안셔스홀</td>
+              </tr>
+              <tr>
+                <th>인원수</th>
+                <td th:text="${reservation.guestCnt != null && !reservation.guestCnt.toString().isEmpty() ? reservation.guestCnt + '명' : ''}"></td>
+              </tr>
+              <tr>
+                <th>식사 종류</th>
+                <td th:text="${reservation.mealType}">뷔페A실속</td>
+              </tr>
+              <tr>
+                <th>꽃 장식</th>
+                <td th:text="${reservation.flower}">조화</td>
+              </tr>
+              <tr>
+                <th>상담 가능 시간</th>
+                <td th:text="${reservation.contactTime}">2025-04-30 / 오후</td>
+              </tr>
+              <tr>
+                <th>총금액</th>
+                <td th:text="${ reservation.totalAmount != null ? #numbers.formatInteger(reservation.totalAmount, 3, 'COMMA') + '원' : '' }">1,000,000원</td>
+              </tr>
+              <tr>
+                <th>상태</th>
+                <td th:text="${reservation.status}">접수</td>
+              </tr>
+              <tr>
+                <th>문의사항</th>
+                <td th:text="${reservation.userNote}">요청사항이 있으면 여기에 표시</td>
+              </tr>
+              </tbody>
             </table>
 
-            <div class="btn_group mt20">
-                <a th:href="@{/reservation/list}" class="btn white small">목록</a>
-                <a th:href="@{'/reservation/edit/' + ${reservation.idx}}" class="btn color1 small">수정</a>
-                <a th:href="@{'/reservation/delete/' + ${reservation.idx}}" class="btn color2 small"
-                   onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
-            </div>
+          <div class="btn_group mt20">
+            <a th:href="@{/reservation/edit(idx=${reservation.idx})}" class="btn color1">수정</a>
+            <a th:href="@{/reservation/delete(idx=${reservation.idx})}" class="btn red" onclick="return confirm('삭제하시겠습니까?');">삭제</a>
+            <a th:href="@{/reservation/list}" class="btn white">목록</a>
+          </div>
 
         </div>
     </div><!--E content-->

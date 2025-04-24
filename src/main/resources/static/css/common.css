@@ -50,6 +50,10 @@ footer div { width:300px; }
 /* 관리자 테이블 */
 .tbl_admin th, .tbl_admin td {border-width:0; padding:10px 7px; }
 
+/*기본 가운데정렬을 왼쪽 정렬 */
+.tl_th th,
+.tl_td td {text-align:left;}
+
 /* 테이블 기본 스타일*/
 .tbl_type01 { border-width:2px 0 1px;}
 .tbl_type01 thead th {background:#fff; border-bottom-color:#333;}
@@ -60,7 +64,7 @@ footer div { width:300px; }
 .tbl_type_s01 {font-size:0.81em;}
 .tbl_type_s01 thead th {border-bottom-color:#ccc;}
 .tbl_type_s01 tbody th, .tbl_type_s01 tfoot th {background:#fff;}
-.tbl_type_s01 th, .tbl_type_s01 td {padding:8px 7px;}
+.tbl_type_s01 th, .tbl_type_s01 td {padding:8px 5px;}
 
 /* 반응형 테이블 스크롤 */
 .is_wlong_box, .is_wauto_box {overflow-x:auto;}
@@ -99,6 +103,20 @@ footer div { width:300px; }
 
 /* ----------------- custom class ------------------*/
 .align_start {align-items: flex-start !important;}
+
+.tl {text-align:left}
+.tc {text-align:center}
+.tr {text-align:right}
+
+.mt2 {margin-top:2px;}
 .mt15 {margin-top:15px;}
 .mt20 {margin-top:20px;}
 
+.ellipsis {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 70%;
+    text-align: left;
+}

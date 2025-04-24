@@ -1,9 +1,12 @@
 package com.example.mhbc.entity;
 
 import com.example.mhbc.dto.ReservationDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Entity
@@ -37,8 +40,15 @@ public class ReservationEntity {
     private String mealType; // 식사 종류
     private String flower; // 꽃장식
     private String contactTime; // 연락 가능한 시간
-    private String note; // 기타 문의
     private String mobile; // 연락처
+
+    private String status; // 예약 상태
+    private Integer totalAmount; // 총금액
+
+    @Column(name = "user_note")
+    private String userNote; // 사용자 메모
+    @Column(name = "admin_note")
+    private String adminNote; // 관리자 메모
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")
@@ -48,32 +58,38 @@ public class ReservationEntity {
     @Column(name = "UPDATE_AT")
     private Date updatedAt; // 수정일
 
-    private String status; // 예약 상태
-    private Integer totalAmount; // 총금액
-
     @PrePersist
     protected void onCreate() {
         Date now = new Date();
         createdAt = now;
         updatedAt = now;
     }
-
     @PreUpdate
     protected void onUpdate() {
         updatedAt = new Date();
     }
 
     public ReservationDTO toDTO() {
-        return ReservationDTO.builder()
+
+      // Date → LocalDateTime → String
+      String formattedEventDate = "";
+      String formattedTimeSelect = "";
+      if (eventDate != null) {
+        LocalDateTime ldt = eventDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        formattedEventDate = ldt.toLocalDate().toString(); // "yyyy-MM-dd"
+        formattedTimeSelect = String.valueOf(ldt.getHour()); // 시간만 추출
+      }
+
+      return ReservationDTO.builder()
                 .idx(idx)
                 .name(name)
                 .eventType(eventType)
-                .eventDate(eventDate)
+                .eventDate(formattedEventDate)       // ← String으로 변환해서 저장
+                .eventTimeSelect(formattedTimeSelect) // ← 시간도 따로
                 .guestCnt(guestCnt)
                 .mealType(mealType)
                 .flower(flower)
                 .contactTime(contactTime)
-                .note(note)
                 .mobile(mobile)
                 .status(status)
                 .totalAmount(totalAmount)
@@ -82,6 +98,9 @@ public class ReservationEntity {
                 .memberIdx(member != null ? member.getIdx() : null)
                 .hallIdx(hall != null ? hall.getIdx() : null)
                 .hallName(hall != null ? hall.getName() : null)
+                .userNote(userNote)
+                .adminNote(adminNote)
+
                 .build();
     }
 }

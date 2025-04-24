@@ -11,6 +11,7 @@
 input[type="text"],input[type="date"],select {height:43px;}
 input[type="text"],input[type="date"],select,textarea{width:100%;padding:10px 12px;font-size:0.95em;border:1px solid #ccc;border-radius:6px;transition:border-color 0.3s;}
 input:focus,select:focus,textarea:focus{border-color:#000;outline:none;}
+.price_box input[type="text"] {width:auto;}
 
 /* 날짜 / 시간 */
 .event_date{display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
@@ -18,7 +19,7 @@ input:focus,select:focus,textarea:focus{border-color:#000;outline:none;}
 #event_date_undecided{margin-left:8px;}
 
 /* 라디오 그룹 */
-.hall,.flower,.meal_type{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;flex-shrink:1;}
+#guestCntContainer, .hall,.flower,.meal_type{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;flex-shrink:1;}
 input[type="radio"],input[type="checkbox"]{margin-right:3px;vertical-align:middle;}
 .hall label,.flower label,.meal_type label{display:inline-flex;align-items:center;gap:3px;white-space:nowrap;font-size:0.85em;line-height:1.5;}
 

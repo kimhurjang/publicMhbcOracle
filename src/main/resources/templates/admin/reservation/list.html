@@ -5,18 +5,13 @@
 <body>
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/reservation.css"></th:block>
 <section layout:fragment="content" id="container" class="reservation list">
-    <h1>나의 예약 현황</h1>
+    <h1>예약 현황</h1>
     <div id="content" class="content">
         <div class="is_wauto_box">
             <table class="tbl_type_s01">
                 <colgroup>
                     <col style="width: 5%;">
-                    <col style="">
-                    <col style="">
-                    <col style="">
-                    <col style="width: 10%;">
-                    <col style="">
-                    <col style="width: 10%;">
+                    <col>
                 </colgroup>
                 <thead>
                     <tr>
@@ -26,19 +21,36 @@
                         <th>상담 가능 시간</th>
                         <th>행사 종류</th>
                         <th>행사 예정일</th>
+                        <th>홀</th>
+                        <th>인원 수</th>
+                        <th>식사</th>
+                        <th>꽃</th>
+                        <th>산출금액</th>
+                        <th>상태</th>
                         <th>상세</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="r, stat : ${reservations}">
                         <td th:text="${stat.count}">1</td>
-                        <td th:text="${r.name}">홍길동</td>
+                        <td>
+                          <a th:href="@{/reservation/view(idx=${r.idx})}" th:text="${r.name}" title="상세보기">홍길동</a>
+                        </td>
                         <td th:text="${r.mobile}">010-1234-5678</td>
-                        <td th:text="${r.contactTime}">오전</td>
+                        <td>
+                          <a th:href="@{/reservation/view(idx=${r.idx})}" th:text="${r.contactTime}" title="상세보기">2025-04-30 / 오후</a>
+                        </td>
                         <td th:text="${r.eventType}">예식</td>
                         <td th:text="${r.eventTimeSelect != null && !r.eventTimeSelect.isEmpty() ? r.eventDate + ' ' + r.eventTimeSelect + '시' : r.eventDate}">2025-05-01 14:00</td>
+                        <td th:text="${r.hallName}">라넌큘러스</td>
+                        <td th:text="${r.guestCnt}">100</td>
+                        <td th:text="${r.mealType}">뷔페A</td>
+                        <td th:text="${r.flower}">생화</td>
+                        <td th:text="${#numbers.formatInteger(r.totalAmount, 3, 'COMMA')}">산출금액</td>
+                        <td th:text="${r.status}">예약</td>
                         <td>
-                          <a th:href="@{/reservation/view(idx=${r.idx})}" class="btn white small">보기</a>
+                          <a th:href="@{/reservation/edit(idx=${r.idx})}" class="btn color1 small">수정</a>
+                          <a th:href="@{/reservation/delete(idx=${r.idx})}" onclick="return confirm('정말 삭제하시겠습니까?')" class="btn color2 small">삭제</a>
                         </td>
                     </tr>
                 </tbody>
