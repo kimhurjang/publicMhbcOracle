@@ -1,7 +1,5 @@
+#container { background:#fff;}
 
-section{
-   width: 100%;
-}
 .main article, .board article{
    margin: 500px 0;
    width: 100%;

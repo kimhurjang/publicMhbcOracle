@@ -1,12 +1,12 @@
-package com.example.mhbc.service;
+package com.example.mhbc.service.admin;
 
 import com.example.mhbc.dto.ReservationDTO;
 import com.example.mhbc.entity.HallEntity;
 import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.entity.ReservationEntity;
-import com.example.mhbc.repository.HallRepository;
 import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.repository.ReservationRepository;
+import com.example.mhbc.service.HallService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 /**
  * 예약 서비스 구현체
- * - 예약 등록, 조회, 수정, 삭제 로직 처리
+ * - 예약 조회, 페이징, 검색, 수정, 삭제, 상태변경 로직 처리
  */
 @Service
 @RequiredArgsConstructor
-public class ReservationServiceImpl implements ReservationService {
+public class AdminReservationServiceImpl implements AdminReservationService {
 
   private final ReservationRepository reservationRepository;
   private final MemberRepository memberRepository;
@@ -46,31 +46,6 @@ public class ReservationServiceImpl implements ReservationService {
    * - ReservationDTO → ReservationEntity 변환
    * - 연관된 MemberEntity, HallEntity 조회 후 Entity에 주입
    */
-  @Override
-  public void save(ReservationDTO dto) {
-    MemberEntity member = memberRepository.findById(dto.getMemberIdx())
-      .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 memberIdx입니다: " + dto.getMemberIdx()));
-    HallEntity hall = hallService.findById(dto.getHallIdx()); // 홀 조회 실패 시 예외 발생
-
-    // 연락처에 하이픈이 없을 경우 자동 추가
-    String mobile = dto.getMobile();
-    if (mobile != null && !mobile.contains("-")) {
-      dto.setMobile(formatMobileNumber(mobile));
-    }
-    // status 기본값 설정
-    if (dto.getStatus() == null || dto.getStatus().trim().isEmpty()) {
-      dto.setStatus("상담대기");
-    }
-
-    // ReservationEntity 값 확인
-    // System.out.println(">>>>>>>>>ReservationEntity: " + entity);
-    // System.out.println(">>>>>>>>>memberEntity: " + member); // 디버깅용 출력
-    // System.out.println(">>>>>>>>>hallEntity: " + hall); // 디버깅용 출력
-
-    ReservationEntity entity = dto.toEntity(member, hall); // DTO → Entity
-    reservationRepository.save(entity); // JPA 저장 (INSERT)
-  }
-
   /**
    * 예약 전체 목록 조회
    * - Entity 목록을 DTO 목록으로 변환

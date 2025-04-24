@@ -15,8 +15,7 @@ public class BoardGroupEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupIdx; // 그룹 번호
-
-    private String boardType; // 게시판 타입
+    private Integer boardType; // 게시판 타입
     private String name; // 게시판 이름
     private Integer orderNo; // 순서
     private String role; // 권한
