@@ -2,6 +2,7 @@ package com.example.mhbc.controller;
 
 import com.example.mhbc.dto.ReservationDTO;
 import com.example.mhbc.repository.HallRepository;
+import com.example.mhbc.repository.ReservationRepository;
 import com.example.mhbc.service.HallService;
 import com.example.mhbc.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ public class ReservationController {
 
   private final ReservationService reservationService;
   private final HallService hallService;
+
+  private final ReservationRepository reservationRepository;
 
   // 예약 등록 폼 화면
   @GetMapping("/form")
@@ -45,6 +48,10 @@ public class ReservationController {
   @GetMapping("/list")
   public String showList(Model model) {
     model.addAttribute("reservations", reservationService.findAll());
+
+    System.out.println(">>>> 전체 예약 수: " + reservationRepository.findAll().size());
+    System.out.println(">>>> 변환된 DTO 수: " + reservationService.findAll().size());
+
     return "reservation/list";
   }
 
@@ -73,7 +80,7 @@ public class ReservationController {
   }
 
   // 예약 삭제 처리
-  @GetMapping("/delete")
+  @PostMapping("/delete")
   public String deleteReservation(@RequestParam Long idx) {
     reservationService.delete(idx);
     return "redirect:/reservation/list";

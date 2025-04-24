@@ -66,20 +66,17 @@
           <div class="hall">
             <label>홀 선택</label>
             <div th:each="hall : ${halls}">
-              <input type="radio"
-                     name="hallIdx"
-                     th:field="*{hallIdx}"
-                     th:value="${hall.idx}"
-                     th:id="'hall_' + ${hall.idx}"
-                     th:data-capacity="${hall.capacity}">
+              <input type="radio" th:field="*{hallIdx}" th:value="${hall.idx}" th:id="'hall_' + ${hall.idx}" th:data-capacity="${hall.capacity}">
               <label th:for="'hall_' + ${hall.idx}" th:text="${hall.name}">홀명</label>
             </div>
           </div>
         </div>
 
         <div class="form_group">
-          <label>행사 인원수</label>
-          <div id="guestCntContainer"></div>
+          <div class="guestCntContainer">
+            <label>행사 인원수</label>
+            <div id="guestCntContainer"></div>
+          </div>
         </div>
 
         <div class="form_group">

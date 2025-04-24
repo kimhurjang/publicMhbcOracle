@@ -19,16 +19,19 @@ input:focus,select:focus,textarea:focus{border-color:#000;outline:none;}
 #event_date_undecided{margin-left:8px;}
 
 /* 라디오 그룹 */
-#guestCntContainer, .hall,.flower,.meal_type{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;flex-shrink:1;}
 input[type="radio"],input[type="checkbox"]{margin-right:3px;vertical-align:middle;}
-.hall label,.flower label,.meal_type label{display:inline-flex;align-items:center;gap:3px;white-space:nowrap;font-size:0.85em;line-height:1.5;}
+#guestCntContainer, .hall,
+.guestCntContainer, .flower,.meal_type {display:flex;flex-wrap:nowrap;align-items:center;gap:6px;flex-shrink:1;}
+.guestCntContainer label, .hall label,.flower label,.meal_type label{display:inline-flex;align-items:center;gap:3px;white-space:nowrap;font-size:0.85em;line-height:1.5;}
 
 /* 연락처 */
 .mobile{display:flex;align-items:center;gap:10px;}
 .mobile input[type="text"]{width:22%;}
 
 /* select/input 크기 조정 */
-.form_group select,.form_group input[type="text"],.form_group input[type="date"]{flex:1;min-width:120px;}
+.form_group select,
+.form_group input[type="text"],
+.form_group input[type="date"]{flex:1;min-width:120px;}
 
 /* 금액 산출 */
 .price_box{display:flex;align-items:center;gap:12px;margin-top:25px;}

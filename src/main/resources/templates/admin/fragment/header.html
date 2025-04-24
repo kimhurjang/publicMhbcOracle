@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <header th:fragment="header">
+        <div class="logo"><img src="/image/logo_1-2.png"></div>
+        <nav>
+            <!-- 메인 메뉴 -->
+            <ul id="gnb">
+                <li><a href="/home" class="nav_item">소개글aaa</a></li>
+                <li><a href="#" class="nav_item">웨딩</a></li>
+                <li><a href="#" class="nav_item">이용 안내</a></li>
+                <li><a href="#" class="nav_item">커뮤니티</a></li>
+                <li class="login"><a href="#" class="nav_item login">
+                    <span class="xi-profile-o"></span><br>
+                    <span>로그인/회원가입</span>
+                </a>
+                </li>
+            </ul>
+
+            <!-- 서브 메뉴 레이어 -->
+            <div class="sub_nav_layer">
+                <ul class="sub_group">
+                    <li><a href="#">시설 소개</a></li>
+                    <li><a href="#">오시는 길</a></li>
+                </ul>
+                <ul class="sub_group">
+                    <li><a href="#">장소 소개</a></li>
+                    <li><a href="#">대관 안내</a></li>
+                </ul>
+                <ul class="sub_group">
+                    <li><a href="#">상담 예약</a></li>
+                    <li><a href="#">이용료</a></li>
+                    <li><a href="#">공지 사항</a></li>
+                </ul>
+                <ul class="sub_group">
+                    <li><a href="/board/ev  ent">이벤트</a></li>
+                    <li><a href="/board/gallery">갤러리</a></li>
+                    <li><a href="/board/oftenquestionpage">문의 사항</a></li>
+                </ul>
+                <ul class="sub_group">
+                    <li><a href="#">마이 페이지</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+</html>

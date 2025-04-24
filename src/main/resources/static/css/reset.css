@@ -14,13 +14,21 @@ blockquote, pre, code, b, strong, i, em, mark, small {font-family:"Pretendard Va
     line-height:1.6; font-size:17px; font-weight: 300; color:#333;
 }
 h1, h2, h3, h4, h5, h6, blockquote, pre, code, b, strong, i, em, mark, small, th, td, td > a {font-size:revert; font-weight: revert;}
-mark {background-color: revert};
-input[type="text"], input[type="date"], select {height:43px;}
+mark {background-color: #e1e1e1; color:#000; font-size:13px; font-weight:400; letter-spacing:-0.4px; padding:2px 5px;}
+mark.color1 {background-color: #d7c6ff; color:#37009f; }
+small {font-size:13px; font-weight:400; letter-spacing:-0.4px; display:inline-block;}
+
+/* ----------------- form ------------------*/
+input[type="radio"],input[type="checkbox"]{margin-right:3px;vertical-align:middle;}
+input[type="text"], input[type="date"], input[type="date"], input[type="file"], select {height:43px;}
+input[type="text"],input[type="date"],input[type="number"],select,textarea{width:100%;padding:10px 12px;font-size:0.95em;border:1px solid #ccc;border-radius:6px;transition:border-color 0.3s;}
+input:focus,select:focus,textarea:focus{border-color:#000;outline:none;}
+textarea{width:100%;padding:12px;font-size:0.95em;resize:vertical;border-radius:6px;min-height:150px;}
 
 /* ----------------- table ------------------*/
 /* 공통 테이블 스타일*/
 table {}
-table { width:100%; margin-bottom:15px; table-layout:fixed; border-collapse: collapse;text-align:center; border:1px solid #333; border-width:2px 0 0; border-spacing:0px; font-size:15px; }
+table { width:100%; table-layout:fixed; border-collapse: collapse;text-align:center; border:1px solid #333; border-width:2px 0 0; border-spacing:0px; font-size:15px; }
 th {background:#f2f4f6; font-weight:500; color:#222;}
 td.nbg, th.nbg {background:#fff;}
 th, td {word-wrap:break-word; line-height:1.3; word-break:break-all; padding:12px 8px; border:1px solid #ccc;}

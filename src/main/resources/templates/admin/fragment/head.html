@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- title을 동적으로 삽입 -->
+  <title th:text="${title}">기본 제목</title>
+
+  <link rel="stylesheet" href="/css/reset.css">
+  <th:block layout:fragment="css"></th:block>
+
+</head>
+</html>

@@ -24,5 +24,10 @@ public class MainController {
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "admin";
     }
+    @RequestMapping("/admin/content")
+    public String adminContentLayout() {
+      System.out.println(">>>>>>>>>>admin content page<<<<<<<<<<");
+      return "/admin/content";
+    }
 
 }
