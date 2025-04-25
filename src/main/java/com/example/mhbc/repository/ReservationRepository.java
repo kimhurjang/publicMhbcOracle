@@ -11,6 +11,8 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long> {
   List<ReservationEntity> findAllByOrderByIdxDesc(); // 내림차순
 
-  @Query(value="select idx, name from reservation", nativeQuery = true)
-  List<Object []> selectByAll();
+  //jpgl
+  //@Query(value="select idx, name from reservation", nativeQuery = true)
+  //List<Object []> selectByAll();
+
 }

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragment/layout}">
+      layout:decorate="~{admin/fragment/layout}">
 <body>
-<section layout:fragment="content" id="container" class="admin hall_form">
+<section layout:fragment="content" id="container" class="hall form">
   <h2 th:text="${hall.idx != null ? '홀 수정' : '홀 등록'}">홀 등록</h2>
   <div class="content">
     <form th:action="@{/admin/hall/save}" th:object="${hall}" method="post">

@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Entity
@@ -77,8 +78,20 @@ public class ReservationEntity {
     String formattedTimeSelect = "";
     if (eventDate != null) {
       LocalDateTime ldt = eventDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-      formattedEventDate = ldt.toLocalDate().toString(); // "yyyy-MM-dd"
-      formattedTimeSelect = String.valueOf(ldt.getHour()); // 시간만 추출
+
+      formattedEventDate = ldt.format(DateTimeFormatter.ofPattern("yy-MM-dd")); // ← 25-04-24
+      formattedTimeSelect = String.format("%02d시", ldt.getHour());             // ← 10 → "10시"
+    }
+
+    // "2025-04-24 / 오후" → "25-04-24 / 오후"
+    String formattedContactTime = contactTime;
+    if (contactTime != null && contactTime.length() >= 10) {
+      // "2025-04-24 / 오후"
+      // index 2~10 → "25-04-24"
+      // index 10~ → " / 오후"
+      String datePart = contactTime.substring(2, 10);   // "25-04-24"
+      String ampmPart = contactTime.substring(10);      // " / 오후"
+      formattedContactTime = datePart + ampmPart;
     }
 
     return ReservationDTO.builder()
@@ -90,7 +103,7 @@ public class ReservationEntity {
       .guestCnt(guestCnt)
       .mealType(mealType)
       .flower(flower)
-      .contactTime(contactTime)
+      .contactTime(formattedContactTime)
       .mobile(mobile)
       .status(status)
       .totalAmount(totalAmount)

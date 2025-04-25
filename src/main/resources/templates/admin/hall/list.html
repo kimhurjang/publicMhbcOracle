@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragment/layout}">
+      layout:decorate="~{admin/fragment/layout}">
 <body>
-<section layout:fragment="content" id="container" class="admin hall_list">
+<section layout:fragment="content" id="container" class="hall list">
   <h2>홀 목록</h2>
   <div class="content">
     <a th:href="@{/admin/hall/form}" class="btn color1 small">+ 홀 등록</a>
@@ -11,6 +11,9 @@
       <colgroup>
         <col style="width:45px">
         <col>
+        <col>
+        <col>
+        <col style="width:125px">
       </colgroup>
       <thead>
       <tr>
@@ -23,7 +26,7 @@
       </thead>
       <tbody>
       <tr th:each="hall, i : ${hallList}">
-        <td th:text="${i.index + 1}">1</td>
+        <td th:text="${hallList.size() - i.index}">9</td>
         <td th:text="${hall.name}">리시안셔스홀</td>
         <td th:text="${hall.capacity}">100</td>
         <td th:text="${#numbers.formatInteger(hall.price, 3, 'COMMA')} + '원'">1,000,000원</td>
