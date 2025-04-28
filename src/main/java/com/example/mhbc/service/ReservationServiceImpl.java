@@ -71,10 +71,7 @@ public class ReservationServiceImpl implements ReservationService {
     reservationRepository.save(entity); // JPA 저장 (INSERT)
   }
 
-  /**
-   * 예약 전체 목록 조회
-   * - Entity 목록을 DTO 목록으로 변환
-   */
+  // 예약 전체 목록 조회 - Entity 목록을 DTO 목록으로 변환
   @Override
   public List<ReservationDTO> findAll() {
     List<ReservationEntity> entities = reservationRepository.findAllByOrderByIdxDesc();
@@ -88,9 +85,7 @@ public class ReservationServiceImpl implements ReservationService {
             .collect(Collectors.toList()); // 변환된 DTO를 리스트로 수집해서 반환
   }
 
-  /**
-   * 예약 단건 상세 조회
-   */
+  //예약 단건 상세 조회
   @Override
   public ReservationDTO findById(Long idx) {
     if (idx == null) return null; // null 체크 추가
@@ -99,12 +94,9 @@ public class ReservationServiceImpl implements ReservationService {
             .orElse(null); // 없으면 null 반환
   }
 
-  /**
-   * 예약 수정 처리
-   * - save()는 idx가 있으면 UPDATE로 작동
-   */
+  // 예약 수정 처리  save()는 idx가 있으면 UPDATE로 작동
   @Override
-  public void update(ReservationDTO dto) {
+  public void update(ReservationDTO dto, String loginId) {
     MemberEntity member = memberRepository.findById(dto.getMemberIdx())
             .orElseThrow();
     HallEntity hall = hallService.findById(dto.getHallIdx());
@@ -119,13 +111,14 @@ public class ReservationServiceImpl implements ReservationService {
       dto.setStatus("상담대기");
     }
 
+    // 마지막 수정자 세팅
+    dto.setLastModifiedBy(loginId);
+
     ReservationEntity entity = dto.toEntity(member, hall); // DTO → Entity
     reservationRepository.save(entity); // JPA save()는 update로 동작
   }
 
-  /**
-   * 예약 삭제 처리
-   */
+  // 예약 삭제 처리
   @Override
   public void delete(Long idx) {
     reservationRepository.deleteById(idx); // 해당 ID 삭제

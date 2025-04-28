@@ -34,14 +34,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="r, stat : ${reservations}">
-          <td th:text="${stat.count}">1</td>
+        <tr th:each="r, stat : ${paging.content}">
+          <td th:text="${paging.totalElements - (pagination.offset + stat.index)}">1</td> <!-- 수정된 No 계산 -->
           <td th:text="${r.name}">홍길동</td>
           <td th:text="${r.mobile}">010-1234-5678</td>
           <td th:text="${r.contactTime}">오전</td>
           <td th:text="${r.eventType}">예식</td>
-          <td
-            th:text="${r.eventTimeSelect != null && !r.eventTimeSelect.isEmpty() ? r.eventDate + ' ' + r.eventTimeSelect + '시' : r.eventDate}">
+          <td th:text="${r.eventTimeSelect != null and r.eventTimeSelect != '' ? r.eventDate + ' ' + r.eventTimeSelect + '시' : r.eventDate}">
             2025-05-01 14:00
           </td>
           <td th:text="${r.status}">상담대기</td>
@@ -52,6 +51,9 @@
         </tbody>
       </table>
     </div>
+
+    <div th:replace="~{fragment/paging :: paging}"></div>
+
   </div><!--E content-->
 </section><!--E container-->
 </body>

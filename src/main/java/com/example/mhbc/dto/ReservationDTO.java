@@ -41,6 +41,7 @@ public class ReservationDTO {
 
   private String userNote; // 사용자 비고
   private String adminNote; // 관리자 비고
+  private String lastModifiedBy; // 마지막 수정자 ID
 
   // DTO → Entity (수정용까지 반영)
   public ReservationEntity toEntity(MemberEntity member, HallEntity hall) {
@@ -76,7 +77,8 @@ public class ReservationDTO {
       //.member(member)
       //.hall(hall)
       .userNote(userNote)
-      .adminNote(adminNote);
+      .adminNote(adminNote)
+      .lastModifiedBy(lastModifiedBy);
 
     // 수정 시에만 idx 포함
     if (idx != null) {

@@ -50,6 +50,8 @@ public class ReservationEntity {
   private String userNote; // 사용자 메모
   @Column(name = "admin_note")
   private String adminNote; // 관리자 메모
+  @Column(name = "last_modified_by")
+  private String lastModifiedBy; // 마지막 수정자 ID
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "CREATE_AT")
@@ -114,6 +116,7 @@ public class ReservationEntity {
       .hallName(hall != null ? hall.getName() : null)
       .userNote(userNote)
       .adminNote(adminNote)
+      .lastModifiedBy(lastModifiedBy)
 
       .build();
   }

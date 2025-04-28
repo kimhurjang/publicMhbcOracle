@@ -1,11 +1,17 @@
 package com.example.mhbc.controller;
 
 import com.example.mhbc.dto.ReservationDTO;
+import com.example.mhbc.entity.ReservationEntity;
 import com.example.mhbc.repository.HallRepository;
 import com.example.mhbc.repository.ReservationRepository;
 import com.example.mhbc.service.HallService;
 import com.example.mhbc.service.ReservationService;
+import com.example.mhbc.util.Utility;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,11 +52,27 @@ public class ReservationController {
 
   // 예약 목록 화면
   @GetMapping("/list")
-  public String showList(Model model) {
-    model.addAttribute("reservations", reservationService.findAll());
+  public String showList(@RequestParam(value="page", defaultValue="1") int page,
+                         Model model) {
 
-    System.out.println(">>>> 전체 예약 수: " + reservationRepository.findAll().size());
-    System.out.println(">>>> 변환된 DTO 수: " + reservationService.findAll().size());
+    int itemsPerPage = 5; // 한 페이지당 5개씩 출력
+    int groupSize = 3;    // 페이징 그룹 크기
+    String link = "/reservation/list"; // 현재 페이지 링크
+
+    Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
+    Page<ReservationDTO> paging = reservationRepository.findAll(pageable)
+      .map(ReservationEntity::toDTO);
+
+    int totalCount = (int) paging.getTotalElements();
+
+    Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, "link");
+
+    model.addAttribute("paging", paging);
+    model.addAttribute("pagination", pagination);
+    model.addAttribute("link", link);
+
+    //System.out.println(">>>> 전체 예약 수: " + reservationRepository.findAll().size());
+    //System.out.println(">>>> 변환된 DTO 수: " + reservationService.findAll().size());
 
     return "reservation/list";
   }
@@ -73,9 +95,10 @@ public class ReservationController {
 
   // 예약 수정 처리
   @PostMapping("/update")
-  public String updateReservation(@ModelAttribute ReservationDTO reservationDTO) {
+  public String updateReservation(@ModelAttribute ReservationDTO reservationDTO,
+                                  @ModelAttribute("loginId") String loginId) {
 
-    reservationService.update(reservationDTO);
+    reservationService.update(reservationDTO, loginId);
     return "redirect:/reservation/view?idx=" + reservationDTO.getIdx();
   }
 

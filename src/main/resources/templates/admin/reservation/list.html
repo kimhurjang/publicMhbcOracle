@@ -6,6 +6,7 @@
 <th:block layout:fragment="css">
   <link rel="stylesheet" href="/css/reservation.css">
 </th:block>
+
 <section layout:fragment="content" id="container" class="reservation list">
   <h1>예약 현황</h1>
   <div id="content" class="content">
@@ -15,12 +16,14 @@
         <button type="submit" class="btn color2">검색</button>
       </div>
     </form>
+
     <style>
       .tbl_type_s01 {table-layout:revert;}
       .tbl_type_s01 th:last-child, td:last-child {width:130px;}
     </style>
+
     <form th:action="@{/admin/reservation/status}" method="post" id="statusForm">
-      <small>전체 수 : <th:block th:text="${reservations.size()}"></th:block></small>
+      <small>전체 수 : <th:block th:text="${paging.totalElements}"></th:block></small>
       <div class="is_wlong_box">
         <table class="tbl_type_s01">
           <colgroup>
@@ -45,13 +48,13 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:each="r, stat : ${reservations}">
-            <td th:text="${reservations.size() - stat.index}">9</td>
+          <tr th:each="r, stat : ${paging.content}">
+            <td th:text="${paging.totalElements - (pagination.offset + stat.index)}">9</td>
             <td th:text="${r.memberIdx}">101</td>
             <td th:text="${r.name}">홍길동</td>
             <td th:text="${r.contactTime}">25.05.04 / 오후</td>
             <td th:text="${r.eventType}">예식</td>
-            <td th:text="${r.eventDate + ' ' + r.eventTimeSelect}">25.06.12 10시</td>
+            <td th:text="${r.eventTimeSelect != null and !r.eventTimeSelect.isEmpty() ? r.eventDate + ' ' + r.eventTimeSelect + '시' : r.eventDate}">25.06.12 10시</td>
             <td th:text="${r.hallName}">리시안셔스</td>
             <td th:text="${r.guestCnt}">100</td>
             <td th:text="${r.flower}">생화</td>
@@ -59,27 +62,33 @@
             <td th:text="${#dates.format(r.createdAt, 'yy.MM.dd HH:mm')}">24.03.09 13:02</td>
             <td>
               <input type="hidden" name="statuses" th:id="'status_' + ${r.idx}" th:value="${r.status}">
-              <button type="button" class="btn status_btn small" th:data-idx="${r.idx}" th:data-status="${r.status}" th:text="${r.status}" th:classappend="${r.status == '확정' ? 'color1' : (r.status == '취소' ? 'disabled2' : '')}">
+              <button type="button" class="btn status_btn small"
+                      th:data-idx="${r.idx}"
+                      th:data-status="${r.status}"
+                      th:text="${r.status}"
+                      th:classappend="${r.status == '확정' ? 'color1' : (r.status == '취소' ? 'disabled2' : '')}">
               </button>
-              <a th:href="@{/reservation/view(idx=${r.idx})}" class="btn small">보기</a>
+              <a th:href="@{/admin/reservation/view(idx=${r.idx})}" class="btn small">보기</a>
             </td>
           </tr>
           </tbody>
         </table>
       </div>
     </form>
+
+    <div th:replace="~{admin/fragment/paging :: paging}"></div>
+
     <div class="btn_box mt20">
       <button type="button" id="saveStatusesBtn" class="btn color2">상태변경 저장</button>
     </div>
+
     <script>
       const statusOrder = ["상담대기", "보류", "확정", "취소"];
       const statusMap = new Map();
 
-      // 버튼 클릭 시 상태 순환 및 Map에 저장
       document.querySelectorAll(".status_btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const current = btn.dataset.status;
-          // 상태 목록에서 현재 상태의 다음 상태를 계산
           const next = statusOrder[(statusOrder.indexOf(current) + 1) % statusOrder.length];
           btn.textContent = next;
           btn.dataset.status = next;
@@ -87,20 +96,16 @@
         });
       });
 
-      // 저장 버튼 클릭 시 변경된 상태 서버로 전송
       document.getElementById("saveStatusesBtn").addEventListener("click", () => {
         if (statusMap.size === 0) return alert("변경된 상태가 없습니다.");
 
-        // 변경된 상태를 서버로 전달하기 위해 배열로 변환.
         const updates = [...statusMap].map(([idx, status]) => ({ idx, status }));
 
-        // 서버에 변경된 상태를 전달.
         fetch("/admin/reservation/status/ajax", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updates)
         })
-
         .then(res => res.ok ? res.text() : Promise.reject("서버 오류"))
         .then(msg => { alert(msg); location.reload(); })
         .catch(err => alert("상태 변경 실패: " + err));
@@ -109,5 +114,6 @@
 
   </div><!--E content-->
 </section><!--E container-->
+
 </body>
 </html>

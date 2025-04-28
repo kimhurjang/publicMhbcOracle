@@ -175,3 +175,6 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 /* 말줄임 */
 .ellipsis { width: 70%;white-space: nowrap; text-overflow: ellipsis; text-align: left;display: inline-block; overflow: hidden; }
 
+/*페이징*/
+.paging {display:flex; justify-content:center; gap:5px; margin-top:20px;}
+.paging li.active a {background-color:#D6CAE8; color:#5c437e; border-color:#9b89b3;}

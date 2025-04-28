@@ -1,13 +1,11 @@
 package com.example.mhbc.service.admin;
 
 import com.example.mhbc.dto.ReservationDTO;
-import com.example.mhbc.entity.HallEntity;
-import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.entity.ReservationEntity;
-import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.repository.ReservationRepository;
-import com.example.mhbc.service.HallService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,18 +22,14 @@ public class AdminReservationServiceImpl implements AdminReservationService {
 
   private final ReservationRepository reservationRepository;
 
-  //예약 전체 목록 조회
+  // 예약 리스트 페이징 조회
   @Override
-  public List<ReservationDTO> findAll() {
-    List<ReservationEntity> entities = reservationRepository.findAllByOrderByIdxDesc();
-    //System.out.println(">> JPA로 가져온 Entity 수: " + entities.size());
-
-    return reservationRepository.findAllByOrderByIdxDesc()
-      .stream()
-      .map(ReservationEntity::toDTO)
-      .collect(Collectors.toList());
+  public Page<ReservationDTO> findAll(Pageable pageable) {
+    return reservationRepository.findAll(pageable)
+      .map(ReservationEntity::toDTO);
   }
 
+  // 예약 상태 일괄 수정 (기존 방식)
   @Override
   public void updateStatuses(List<String> updatedStatuses) {
     for (String statusEntry : updatedStatuses) {
@@ -53,6 +47,7 @@ public class AdminReservationServiceImpl implements AdminReservationService {
     }
   }
 
+  // 예약 상태 일괄 수정 (Ajax 방식)
   @Override
   public void updateStatusesByAjax(List<Map<String, String>> updates) {
     for (Map<String, String> update : updates) {
@@ -66,5 +61,25 @@ public class AdminReservationServiceImpl implements AdminReservationService {
     }
   }
 
+  // 개별 예약 조회
+  @Override
+  public ReservationDTO findById(Long idx) {
+    if (idx == null) return null;
+    return reservationRepository.findById(idx)
+      .map(ReservationEntity::toDTO)
+      .orElse(null);
+  }
+
+  // 관리자 메모 수정
+  @Override
+  public void updateAdminNote(Long idx, String adminNote, String loginId) {
+    ReservationEntity reservation = reservationRepository.findById(idx)
+      .orElseThrow(() -> new IllegalArgumentException("잘못된 예약 번호입니다."));
+
+    // 마지막 수정자 세팅
+    reservation.setLastModifiedBy(loginId);
+    reservation.setAdminNote(adminNote);
+    reservationRepository.save(reservation);
+  }
 
 }
