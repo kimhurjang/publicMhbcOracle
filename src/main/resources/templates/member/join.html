@@ -1,10 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Join</title>
+    <title>회원가입 폼</title>
+    <link rel="stylesheet" href="/css/joinStyle.css">
 </head>
 <body>
- 회원가입 페이지
+
+<section class="form_section">
+    <h2 class="section_title">회원가입</h2>
+    <p class="section_title_sub"><span class="required">*</span> 필수 입력 항목</p>
+
+    <form id="joinForm" action="/api/member/join" method="post">
+
+    <input type="hidden" name="create_at" value="create_at">
+        <!--수정날짜&마지막 로그인 시간은 서버에서 처리-->
+
+        <input type="hidden" name="idx" value="idx">
+
+        <input type="hidden" name="grade" value="1">
+        <!--grade 0 == 비회원 / 1 == 일반 회원 / 5 == 매니저 /  10 == 관리자(임의)-->
+
+        <input type="hidden" name="status" value="정상">
+        <!--정상 / 정지 / 탈퇴-->
+
+        <!-- 이름 -->
+        <div class="form_group">
+            <label for="name">이름 <span class="required">*</span></label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <!-- 이메일 -->
+        <div class="form_group">
+            <label for="email">이메일 <span class="required">*</span></label>
+            <input type="text" id="email" name="email" required>
+        </div>
+
+        <!-- 아이디 -->
+        <div class="form_group">
+            <label for="userid">아이디 <span class="required">*</span></label>
+            <input type="text" id="userid" name="userid" required>
+            <button type="button" id="checkIdBtn">중복 확인</button>
+            <span id="idCheckResult"></span>
+        </div>
+
+        <!-- 비밀번호 -->
+        <div class="form_group">
+            <label for="password">비밀번호 <span class="required">*</span></label>
+            <input type="password" id="password" name="pwd" required>
+        </div>
+
+        <!-- 생년월일 -->
+        <div class="form_group">
+            <label for="birthdate">생년월일</label>
+            <input type="date" id="birthdate" name="birthdate">
+        </div>
+
+        <!-- 연락처 -->
+        <div class="form_group mobile">
+            <label for="mobile">연락처</label>
+            <input type="text" name="mobile1" maxlength="3" placeholder="010">
+            <input type="text" name="mobile2" maxlength="4">
+            <input type="text" name="mobile3" maxlength="4">
+        </div>
+
+        <!-- 성별 -->
+        <div class="form_group">
+            <label>통신사</label>
+            <div class="hall">
+                <label><input type="radio" name="telecom" value="skt" required> SKT</label>
+                <label><input type="radio" name="telecom" value="kt" required> KT</label>
+                <label><input type="radio" name="telecom" value="lg" required> LG</label>
+            </div>
+        </div>
+
+        <!-- 제출 버튼 -->
+        <div class="btn_group mt20">
+            <button type="submit" class="color1">제출</button>
+        </div>
+    </form>
+</section>
+
+<script>
+    // 아이디 중복 확인
+    document.getElementById("checkIdBtn").addEventListener("click", function() {
+        var userid = document.getElementById("userid").value;
+
+        if (userid === "") {
+            alert("아이디를 입력해주세요.");
+            return;
+        }
+
+        fetch("/api/member/idcheck?userid=" +userid)
+            .then(response => response.text())
+            .then(result => {
+                if (result === "Y") {
+                    document.getElementById("idCheckResult").textContent = "아이디가 중복됩니다.";
+                    document.getElementById("idCheckResult").style.color = "red";
+                } else {
+                    document.getElementById("idCheckResult").textContent = "사용 가능한 아이디입니다.";
+                    document.getElementById("idCheckResult").style.color = "green";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    });
+
+    // 폼 제출 전에 유효성 검사
+    document.getElementById("joinForm").addEventListener("submit", function(event) {
+        var userid = document.getElementById("userid").value;
+        var idCheckResult = document.getElementById("idCheckResult").textContent;
+
+        if (idCheckResult === "아이디가 중복됩니다.") {
+            event.preventDefault();  // 폼 제출을 막음
+            alert("아이디가 중복됩니다. 다른 아이디를 사용해주세요.");
+        }
+    });
+</script>
+
 </body>
 </html>

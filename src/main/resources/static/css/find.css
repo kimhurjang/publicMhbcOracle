@@ -1,0 +1,101 @@
+/* 초기화 코드 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container{
+  margin-top: 100px;
+}
+body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+  display: flex;
+  justify-content: flex-start; /* 상단에 정렬 */
+  align-items: center; /* 수평 중앙 정렬 */
+  min-height: 100vh; /* 화면 전체 높이를 차지하지 않도록 설정 */
+  flex-direction: column; /* 자식 요소들이 세로로 배치되도록 설정 */
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.tabnav {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.tabnav li {
+  margin-right: 10px;
+}
+
+.tabnav li a {
+  display: block;
+  padding: 10px 20px;
+  background: #eee;
+  text-decoration: none;
+  color: black;
+  border-radius: 8px 8px 0 0;
+}
+
+#tab1.active {
+  width: 550px;
+}
+
+#tab2.active {
+  width: 550px;
+}
+
+.tabnav li a.active {
+  background: #8676A1;
+  color: white;
+}
+
+
+.tabcontent > div {
+  display: none;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 0 0 8px 8px;
+}
+
+.tabcontent > div.active {
+  display: block;
+}
+
+input, select {
+  margin-top: 5px;
+  margin-bottom: 15px;
+  padding: 8px;
+  width: 200px;
+}
+
+#name_input1 {
+  margin-left: 16px;
+}
+#name_input2 {
+  margin-left: 16px;
+}
+button {
+  background-color: #8e7cc3;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #7768ae;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 700px; /* 최대 너비 설정 */
+  text-align: center;
+}

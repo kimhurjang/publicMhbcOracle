@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원 정보</title>
+  <link rel="stylesheet" href="/css/adminuserinfo.css">
+</head>
+<body>
+<div class="container">
+
+  <!-- 사이드바 -->
+  <aside class="sidebar">
+    <h2>ADMIN</h2>
+    <ul>
+      <li class="active">회원 관리</li>
+      <li>게시물 관리</li>
+      <li>예약 관리</li>
+    </ul>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="main">
+    <!-- 상단 -->
+    <div class="topbar">
+      <button class="logout_btn">logout</button>
+    </div>
+
+    <!-- 제목 -->
+    <h2 class="page_title">회원 정보</h2>
+
+    <!-- 정보 카드 -->
+    <section class="info_card">
+      <div class="info_row">
+        <div class="info_item">
+          <label for="idx">회원번호</label>
+          <input type="text" id="idx" name="idx" value="00" readonly>
+        </div>
+        <div class="info_item">
+          <label for="name">회원 이름</label>
+          <input type="text" id="name" name="name" value="홍길동">
+        </div>
+        <div class="info_item">
+          <label for="sns_email">SNS계정</label>
+          <input type="text" id="sns_email" name="sns_email" value="aaa@naver.com" >
+        </div>
+        <div class="info_item">
+          <label for="snsSelect">SNS계정 플랫폼</label>
+          <select id="snsSelect" name="snsSelect">
+            <option value="naver" selected>NAVER</option>
+            <option value="kakao">KAKAO</option>
+            <option value="google" >GOOGLE</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="info_row">
+        <div class="info_item">
+          <label for="email">이메일</label>
+          <input type="text" id="email" name="email" value="aaa@naver.com" >
+        </div>
+        <div class="info_item">
+          <label>휴대폰 번호</label>
+          <select>
+            <option value="skt" selected>SKT</option>
+            <option value="kt">KT</option>
+            <option value="lg" >LG</option>
+          </select>
+          <input type="text" name="mobile" value="000-0000-0000" >
+        </div>
+      </div>
+
+      <div class="info_row">
+        <div class="info_item">
+          <label>가입일</label>
+          <p>2021.07.01 08:10</p>
+        </div>
+        <div class="info_item">
+          <label>마지막 로그인</label>
+          <p>2021.07.29 17:34</p>
+        </div>
+        <div class="info_item">
+          <label>회원 상태</label>
+          <select>
+            <option value="정상" selected>정상</option>
+            <option value="탈퇴">탈퇴</option>
+            <option value="정지">정지</option>
+          </select>
+        </div>
+        <div class="info_item">
+          <label>권한</label>
+          <select>
+            <option value="1" selected>일반</option>
+            <option value="5">매니저</option>
+            <option value="10" >관리자</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 하단 버튼 -->
+    <div class="bottom_btns">
+      <button class="save_btn">저장</button>
+    </div>
+  </main>
+</div>
+</body>
+</html>

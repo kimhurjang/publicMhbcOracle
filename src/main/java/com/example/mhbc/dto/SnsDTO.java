@@ -1,9 +1,9 @@
 package com.example.mhbc.dto;
 
-import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.entity.SnsEntity;
 import lombok.*;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -14,19 +14,15 @@ public class SnsDTO {
     private String snsId;
     private String snsEmail;
     private String snsName;
-    private String snsProfileImg;
-    private Date connectedAt;
-    private Long memberIdx;
+    private LocalDateTime connectedAt;
 
-    public SnsEntity toEntity(MemberEntity member) {
+    public SnsEntity toEntity() {
         return SnsEntity.builder()
-            .snsType(snsType)
-            .snsId(snsId)
-            .snsEmail(snsEmail)
-            .snsName(snsName)
-            .snsProfileImg(snsProfileImg)
-            .connectedAt(connectedAt)
-            .member(member)
-            .build();
+                .snsType(snsType)
+                .snsId(snsId)
+                .snsEmail(snsEmail)
+                .snsName(snsName)
+                .connectedAt(connectedAt)
+                .build();
     }
 }

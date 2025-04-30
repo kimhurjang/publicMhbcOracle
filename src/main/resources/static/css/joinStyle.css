@@ -1,0 +1,135 @@
+/* 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    padding: 30px;
+    background-color: #f8f8f8;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* 폼 전체 영역 */
+.form_section {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 섹션 제목 */
+.section_title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.section_title_sub {
+    font-size: 0.75em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: red;
+}
+
+/* 필수 입력 항목 표시 */
+.required {
+    color: red;
+}
+
+/* 폼 그룹 공통 */
+.form_group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.form_group label {
+    min-width: 100px;
+    width: auto;
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #444;
+    flex-shrink: 0;
+}
+
+/* 입력 필드 공통 스타일 */
+input[type="text"],
+input[type="password"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #8e7cc3;
+    outline: none;
+}
+
+/* 연락처 입력 필드 */
+.mobile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mobile input[type="text"] {
+    width: 22%;
+}
+
+/* 라디오 그룹 (통신사 선택) */
+.hall {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 1;
+}
+
+.hall label {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+    font-size: 0.85em;
+    line-height: 1.5;
+}
+
+/* 라디오 버튼 정렬 */
+input[type="radio"] {
+    margin-right: 3px;
+    vertical-align: middle;
+}
+
+/* 버튼 스타일 */
+button {
+    background-color: #D6CAE8;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 0.95em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #8676A1;
+    color: #fff;
+}
+
+/* 버튼 그룹 정렬 */
+.btn_group {
+    text-align: center;
+    margin-top: 20px;
+}

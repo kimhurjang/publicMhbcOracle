@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 회원 관리</title>
+    <link rel="stylesheet" href="/css/adminuser.css">
+</head>
+<body>
+<div class="container">
+
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <h2>ADMIN</h2>
+        <ul>
+            <li><a href="#">회원 관리</a></li>
+            <li><a href="#">게시물 관리</a></li>
+            <li><a href="#">예약 관리</a></li>
+        </ul>
+    </aside>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main">
+        <!-- 로그아웃 버튼 -->
+        <div class="topbar">
+            <button>logout</button>
+        </div>
+
+        <!-- 타이틀 -->
+        <h2>회원 관리</h2>
+
+        <!-- 검색 영역 -->
+        <div class="search_box">
+            <select>
+                <option>전체</option>
+                <option>정상</option>
+                <option>정지</option>
+                <option>탈퇴</option>
+            </select>
+            <input type="text" placeholder="회원 검색">
+            <button>검색</button>
+        </div>
+
+        <!-- 회원 목록 테이블 -->
+        <table class="member_table">
+            <thead>
+            <tr>
+                <th><input type="checkbox"></th>
+                <th>회원번호</th>
+                <th>회원 이름</th>
+                <th>SNS계정</th>
+                <th>휴대폰 번호</th>
+                <th>이메일</th>
+                <th>회원 상태</th>
+                <th>가입일</th>
+                <th>최종접속</th>
+                <th>권한</th>
+                <th>관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>00000000</td>
+                <td>홍길동</td>
+                <td>네이버</td>
+                <td>정보없음</td>
+                <td>abc@mail.com</td>
+                <td class="status-normal">정상</td>
+                <td>2021.07.01</td>
+                <td>2021.07.02</td>
+                <td>관리자</td>
+                <td><a href="/member/adminuserinfo"><button>정보</button></a></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>00000001</td>
+                <td>이무명</td>
+                <td>없음</td>
+                <td>010-0000-0000</td>
+                <td>abc@mail.com</td>
+                <td class="status-stop">정지</td>
+                <td>2021.07.01</td>
+                <td>2021.07.02</td>
+                <td>유저</td>
+                <td><a href="adminuserinfo"><button>정보</button></a></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>00000002</td>
+                <td>홍길동</td>
+                <td>카카오</td>
+                <td>정보없음</td>
+                <td>abc@mail.com</td>
+                <td class="status-out">탈퇴</td>
+                <td>2021.07.01</td>
+                <td>2021.07.02</td>
+                <td>유저</td>
+                <td><a href="adminuserinfo"><button>정보</button></a></td>
+            </tr>
+            <!-- 추가 회원 rows... -->
+            </tbody>
+        </table>
+
+        <!-- 버튼 그룹 -->
+        <div class="button_group">
+            <button>전체선택</button>
+            <button>삭제</button>
+            <button>수정</button>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#" class="active">4</a>
+            <a href="#">5</a>
+            <a href="#">6</a>
+            <a href="#">7</a>
+            <a href="#">8</a>
+            <a href="#">9</a>
+            <a href="#">10

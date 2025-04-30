@@ -1,0 +1,149 @@
+* {
+    box-sizing: border-box;
+  }
+
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    background: #f8f8f8;
+  }
+
+  .container {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    width: 220px;
+    background-color: #1f2339;
+    color: white;
+    padding: 20px;
+  }
+
+  .sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .sidebar li {
+    margin: 15px 0;
+    cursor: pointer;
+  }
+
+  .sidebar li.active {
+    color: #5ce1e6;
+    font-weight: bold;
+  }
+
+  .main {
+    flex: 1;
+    padding: 40px;
+    background-color: #fff;
+    position: relative;
+  }
+
+  .topbar {
+    text-align: right;
+    margin-bottom: 20px;
+  }
+
+  .logout_btn {
+    padding: 8px 15px;
+    background-color: #111;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .page_title {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+
+  .info_card {
+    background-color: #fafafa;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+
+  .info_row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .info_item {
+    flex: 1;
+    min-width: 220px;
+    margin-right: 40px;
+    margin-bottom: 10px;
+  }
+
+  .info_item label {
+    display: block;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+  }
+
+  .info_item p {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .bottom_btns {
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .save_btn {
+    padding: 10px 30px;
+    font-size: 16px;
+    background-color: #5ce1e6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+  }
+  .save_btn:hover{
+    background-color: #5c8385;
+  }
+
+  input[type="text"],
+ input[type="password"],
+ input[type="date"],
+ textarea {
+    width: 250px;
+    padding: 10px 12px;
+    font-size: 0.95em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+ }
+
+ select{
+    width: 90px;
+    padding: 10px 12px;
+    font-size: 0.95em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+ }
+
+ #snsSelect{
+    width: 100px;
+    padding: 10px 12px;
+    font-size: 0.95em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s;
+ }

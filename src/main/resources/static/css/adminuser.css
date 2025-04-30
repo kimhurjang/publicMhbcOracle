@@ -1,0 +1,197 @@
+/* 기본 설정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  a{
+    text-decoration: none;
+    color: white;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f5f6fa;
+    color: #333;
+  }
+
+  /* 전체 레이아웃 */
+  .container {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* 사이드바 */
+  .sidebar {
+    width: 220px;
+    background-color: #2c2f48;
+    color: white;
+    padding: 20px 15px;
+  }
+
+  .sidebar h2 {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+  }
+
+  .sidebar ul {
+    list-style: none;
+  }
+
+  .sidebar li {
+    margin-bottom: 10px;
+    font-size: 0.95em;
+    cursor: pointer;
+  }
+
+  .sidebar li:hover {
+    text-decoration: underline;
+  }
+
+  /* 메인 컨텐츠 */
+  .main {
+    flex: 1;
+    padding: 30px 40px;
+    background-color: #f5f6fa;
+  }
+
+  /* 상단 로그아웃 버튼 */
+  .topbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+
+  .topbar button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .topbar button:hover {
+    background-color: #555;
+  }
+
+  /* 타이틀 */
+  .main h2 {
+    font-size: 1.4em;
+    margin-bottom: 20px;
+  }
+
+  /* 검색 영역 */
+  .search_box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .search_box select,
+  .search_box input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95em;
+  }
+
+  .search_box button {
+    background-color: #3dc2b7;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .search_box button:hover {
+    background-color: #29a89e;
+  }
+
+  /* 테이블 스타일 */
+  .member_table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .member_table th,
+  .member_table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    font-size: 0.95em;
+  }
+
+  .member_table th {
+    background-color: #f2f4f6;
+    font-weight: 600;
+  }
+
+  /* 버튼 그룹 */
+  .button_group {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .button_group button {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    cursor: pointer;
+  }
+
+  .button_group button:hover {
+    background-color: #f2f2f2;
+  }
+
+  /* 상태별 텍스트 색 */
+  .status-normal {
+    color: #2d8cf0;
+    font-weight: bold;
+  }
+
+  .status-stop {
+    color: #f56c6c;
+    font-weight: bold;
+  }
+
+  .status-out {
+    color: #909399;
+    font-weight: bold;
+  }
+
+  /* 하단 페이지네이션 */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 8px;
+  }
+
+  .pagination a {
+    padding: 6px 10px;
+    border-radius: 4px;
+    background-color: white;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9em;
+  }
+
+  .pagination a.active {
+    background-color: #3dc2b7;
+    color: white;
+    border-color: #3dc2b7;
+  }
+
+  .pagination a:hover {
+    background-color: #e2f6f4;
+  }

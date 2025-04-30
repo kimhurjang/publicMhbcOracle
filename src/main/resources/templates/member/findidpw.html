@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>아이디 비밀번호 찾기</title>
+  <link rel="stylesheet" href="/css/find.css">
+</head>
+<body>
+<div class="container">
+  <h2>아이디 비밀번호 찾기</h2>
+
+  <div class="tab">
+    <ul class="tabnav">
+      <li><a href="#tab1" class="active">아이디 찾기</a></li>
+      <li><a href="#tab2">비밀번호 찾기</a></li>
+    </ul>
+
+    <div class="tabcontent">
+      <!-- 아이디 찾기 폼 -->
+      <div id="tab1" class="active">
+        <form action="/find-id" method="post">
+          <label for="name_input1">이름</label>
+          <input type="text" id="name_input1" name="name" placeholder="이름" required><br>
+
+          <label for="email_input1">이메일</label>
+          <input type="text" id="email_input1" name="email" placeholder="이메일" required>
+          <span>@</span>
+          <select name="email_domain" id="event_type_select1">
+            <option value="naver.com">naver.com</option>
+            <option value="gmail.com">gmail.com</option>
+          </select><br>
+
+          <button type="submit">아이디 찾기</button>
+        </form>
+      </div>
+
+      <!-- 비밀번호 찾기 폼 -->
+      <div id="tab2">
+        <form action="/find-password" method="post">
+          <label for="id_input">아이디</label>
+          <input type="text" id="id_input" name="id" placeholder="아이디" required><br>
+
+          <label for="name_input2">이름</label>
+          <input type="text" id="name_input2" name="name" placeholder="이름" required><br>
+
+          <button type="submit">비밀번호 찾기</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const tabLinks = document.querySelectorAll('.tabnav a');
+  const tabContents = document.querySelectorAll('.tabcontent > div');
+
+  // 탭 클릭 시 동작
+  tabLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      // 모든 탭 비활성화
+      tabLinks.forEach(t => t.classList.remove('active'));
+      tabContents.forEach(c => c.classList.remove('active'));
+
+      // 선택된 탭 활성화
+      this.classList.add('active');
+      const targetId = this.getAttribute('href').replace('#', '');
+      document.getElementById(targetId).classList.add('active');
+
+      // URL 해시값도 바꿔줌
+      history.replaceState(null, null, `#${targetId}`);
+    });
+  });
+
+  // 페이지 로드시 해시값 확인하여 탭 자동 전환
+  window.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash.replace('#', '');
+    const targetTab = document.getElementById(hash);
+
+    if (targetTab) {
+      // 모든 탭 비활성화
+      tabLinks.forEach(t => t.classList.remove('active'));
+      tabContents.forEach(c => c.classList.remove('active'));
+
+      // 해당 탭만 활성화
+      targetTab.classList.add('active');
+      const targetLink = document.querySelector(`.tabnav a[href="#${hash}"]`);
+      if (targetLink) {
+        targetLink.classList.add('active');
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
