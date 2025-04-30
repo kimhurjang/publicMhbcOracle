@@ -1,8 +1,13 @@
+
 package com.example.mhbc.entity;
 
 import com.example.mhbc.dto.BoardDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 @Entity
@@ -23,16 +28,28 @@ public class BoardEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_IDX")
+    @JsonIgnore
     private MemberEntity member; // 작성자
 
+    @NotBlank(message = "제목은 필수 입력 항목입니다.")
     private String title; // 타이틀
+
+    @NotBlank(message = "본문은 필수 입력 항목입니다.")
     private String content; // 내용
+
+
+    private Integer re; // 질문 답변 구분용
 
     @Builder.Default
     private Integer viewCnt = 0; // 조회수
 
+    @OneToOne(mappedBy = "board")
+    private AttachmentEntity attachment;
+
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt; // 작성일
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -53,12 +70,14 @@ public class BoardEntity {
 
     public BoardDTO toDTO() {
         return BoardDTO.builder()
-            .title(title)
-            .content(content)
-            .viewCnt(viewCnt)
-            .createdAt(createdAt)
-            .groupIdx(group != null ? group.getGroupIdx() : null)
-            .memberIdx(member != null ? member.getIdx() : null)
-            .build();
+                .title(title)
+                .content(content)
+                .viewCnt(viewCnt)
+                .createdAt(createdAt)
+                .groupIdx(group != null ? group.getGroupIdx() : null)
+                .memberIdx(member != null ? member.getIdx() : null)
+                .build();
     }
+
+
 }

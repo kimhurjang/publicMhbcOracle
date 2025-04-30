@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/cmct}"><h1>커뮤니티 글쓰기</h1></a>
+  <div id="content" class="content">
+    <form name="cmct_write_proc" method="post" action="/board/cmct_write_proc" enctype="multipart/form-data" th:object="${commonForm}">
+      <input type="hidden" name="board_type" th:value="${boardType}">
+      <input type="hidden" name="group_idx" th:value="${groupIdx}">
+      <input type="hidden" name="member" th:value="1">
+      <input type="hidden" name="idx" th:value="${board.idx}">
+
+      <!--유효성 검사 통과용-->
+      <input type="hidden" name="email" value="user@example.com" />
+      <input type="hidden" name="name" value="홍길동" />
+      <input type="hidden" name="userid" value="user123" />
+      <input type="hidden" name="pwd" value="password123" />
+
+      <table>
+        <tr>
+          <td>작성자</td>
+          <td><input type="text" name="name" value="익명" readonly></td>
+          <!--로그인 기능 구현 후 수정-->
+        </tr>
+        <tr>
+          <td>제목</td>
+          <td>
+            <input type="text" th:field="*{title}" name="title" required placeholder="제목을 입력해주세요.">
+            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="display: none;"></div>
+          </td>
+        </tr>
+        <tr>
+          <td>작성 날짜</td>
+          <td><input type="date" name="createdAt" id="createdAt" th:value="${today}" readonly></td>
+        </tr>
+        <tr>
+          <td>본문</td>
+          <td>
+            <textarea name="content" th:field="*{content}" cols="70" rows="10" required placeholder="본문을 입력해주세요."></textarea>
+            <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="display: none;"></div>
+          </td>
+        </tr>
+        <tr>
+          <td>첨부 파일</td>
+          <td><input type="file" name="attachment"></td>
+        </tr>
+        <tr>
+          <td colspan="2"><button type="submit">작성 하기</button> <button type="reset">다시 쓰기</button></td>
+        </tr>
+      </table>
+      <div th:if="${errors}">
+        <ul>
+          <li th:each="error : ${errors}">
+            <span th:text="${error.defaultMessage}"></span>
+          </li>
+        </ul>
+      </div>
+    </form>
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

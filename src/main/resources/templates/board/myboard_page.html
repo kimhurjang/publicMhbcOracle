@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <h1>내가 작성한 글 목록</h1>
+  <div id="content" class="content">
+    <table>
+
+      <tr>
+        <td colspan="2">1 대 1 문의</td>
+      </tr>
+      <tr th:each=" board : ${boardList}">
+        <td th:if="${groupIdx == 6 && member.idx == 1}" >
+          <a th:href="@{/board/personalquestion_view(group_idx=${groupIdx},board_type=${boardType},idx=${board.idx})}">
+            <span th:text="${board.title}"></span></a>
+        </td>
+        <td>
+          <span th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></span>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2">커뮤니티</td>
+      </tr>
+      <tr th:each=" board : ${boardList}">
+        <td th:if="${groupIdx == 2 && member.idx == 1}">
+          <a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member.idx}))}"><span th:text="${board.title}"></span></a>
+        </td>
+        <td>
+          <span th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></span>
+        </td>
+      </tr>
+    </table>
+
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

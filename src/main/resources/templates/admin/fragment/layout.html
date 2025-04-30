@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head th:replace="~{fragment/head :: head}"></head>
-<body id="user">
-<head th:replace="~{fragment/header :: header}"></head>
+<head th:replace="~{admin/fragment/head :: head}"></head>
+<body id="admin">
+<head th:replace="~{admin/fragment/header :: header}"></head>
 <div id="wrapper">
     <th:block layout:fragment="content"></th:block>
 </div><!--E wrapper-->
-<footer th:replace="~{fragment/footer :: footer}"></footer>
+<!-- footer th:replace="~{admin/fragment/footer :: footer}"></footer -->
 </body>
 </html>

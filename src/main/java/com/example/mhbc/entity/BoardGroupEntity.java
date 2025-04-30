@@ -13,7 +13,7 @@ import lombok.*;
 public class BoardGroupEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //직접 값 넣어주세요 노션 참고
     private Long groupIdx; // 그룹 번호
 
     private String boardType; // 게시판 타입
@@ -23,10 +23,10 @@ public class BoardGroupEntity {
 
     public BoardGroupDTO toDTO() {
         return BoardGroupDTO.builder()
-            .boardType(boardType)
-            .name(name)
-            .orderNo(orderNo)
-            .role(role)
-            .build();
+                .boardType(boardType)
+                .name(name)
+                .orderNo(orderNo)
+                .role(role)
+                .build();
     }
 }

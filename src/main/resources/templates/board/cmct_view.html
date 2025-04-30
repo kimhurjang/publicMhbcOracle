@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+    <a th:href="@{/board/cmct}"><h1>커뮤니티</h1></a>
+    <div id="content" class="content">
+        <form name="comment" method="post" action="/board/cmct_comment_proc">
+            <input type="hidden" name="boardIdx" th:value="${board.idx}">
+            <input type="hidden" name="memberIdx" value="1"><!--로그인 구현 후 th:value-->
+            <input type="hidden" name="groupIdx" th:value="${groupIdx}">
+            <input type="hidden" name="boardType" th:value="${boardType}">
+            <table>
+                <tr>
+                    <td>제목</td>
+                    <td>
+                        <span th:text="${board.title}"></span>
+                        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button type="button" class="small">삭제</button></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>작성 날짜</td>
+                    <td th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" th:text="${board.content}"></td>
+                </tr>
+                <tr th:if="${board.attachment != null}">
+                    <td>첨부 파일</td>
+                    <td>
+                        <span th:text="${board.attachment.fileName}"></span>
+                        <a th:href="@{/board/file/download/{idx}(idx=${board.attachment.idx})}">
+                            <button type="button">다운로드</button>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" th:if="${member == board.member.idx || grade == 10}">
+                        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, comments_idx=${0})}"><button type="button">삭제</button></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">댓글</td>
+                </tr>
+
+                <tr>
+                    <td><textarea cols="50" rows="3" name="content"></textarea></td>
+                    <td><button type="submit">등록</button></td>
+                </tr>
+
+                <tr th:each="comments : ${commentsList}">
+                    <td th:text="${comments.content}"></td>
+                    <td>
+                        <span th:text="${comments.member != null && comments.member.name != null ?
+                        #strings.substring(comments.member.name, 0, 1) + '*' + #strings.substring(comments.member.name, 2) :
+                        '알 수 없음'}">
+                        </span>
+                        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType},idx=${board.idx}, comments_idx=${comments.idx},memberIdx=${1})}"><button type="button" class="small">X</button></a>
+                        <br>
+                        <span th:text="${#dates.format(comments.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><a th:href="@{/board/cmct}"><button type="button">뒤로가기</button></a></td>
+                </tr>
+            </table>
+        </form>
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/event}"><h1>이벤트</h1></a>
+  <div id="content" class="content">
+
+    <div class="event header"><h2 th:text="${board.title}"></h2></div>
+    <div th:if="${board.attachment != null}">
+      <img th:src="@{${board.attachment.filePath}}" alt="첨부 이미지" class="card-img"/>
+    </div>
+    <div th:text="${board.content}"></div>
+    <div th:text="${board.viewCnt}"></div>
+    <div>작성일 : <div th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></div></div>
+    <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}"><button>[관리자]삭제</button></a>
+    <!--sec:authorize="hasRole('ADMIN')"-->
+    <a th:href="@{/board/event}"><button>뒤로가기</button></a>
+
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

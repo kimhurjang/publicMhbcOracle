@@ -15,10 +15,10 @@ public class BoardGroupDTO {
 
     public BoardGroupEntity toEntity() {
         return BoardGroupEntity.builder()
-            .boardType(boardType)
-            .name(name)
-            .orderNo(orderNo)
-            .role(role)
-            .build();
+                .boardType(boardType)
+                .name(name)
+                .orderNo(orderNo)
+                .role(role)
+                .build();
     }
 }

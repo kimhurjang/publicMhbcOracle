@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<header th:fragment="header">
+  <h1>ADMIN</h1>
+  <nav>
+    <ul id="gnb">
+      <li><strong><a href="#">회원관리</a></strong></li>
+      <li><strong><a href="#">게시물관리</a></strong>
+        <ul class="sub">
+          <li><a href="#">게시판 현황</a></li>
+          <li><a href="#">게시물 관리</a></li>
+        </ul>
+      </li>
+      <li>
+        <strong><a href="#">예약관리</a></strong>
+        <ul class="sub">
+          <li><a href="#">예약현황</a></li>
+          <li><a href="#">일정관리</a></li>
+          <li><a href="#">홀관리</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+  <script>
+    document.querySelectorAll('#gnb > li > strong > a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const li = link.closest('li');
+        const sub = li.querySelector('.sub');
+        const isActive = li.classList.contains('active');
+
+        // 모든 메뉴 닫기
+        document.querySelectorAll('#gnb > li').forEach(item => {
+          item.classList.remove('active');
+          const subMenu = item.querySelector('.sub');
+          if (subMenu) {
+            subMenu.style.maxHeight = '0';
+            subMenu.style.padding = '0 20px';
+          }
+        });
+
+        if (!isActive && sub) {
+          li.classList.add('active');
+          sub.style.padding = '20px';
+          sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+        }
+      });
+    });
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#gnb > li.active .sub').forEach(sub => {
+        sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+        sub.style.padding = '20px';
+      });
+    });
+
+  </script>
+
+</header>
+</html>

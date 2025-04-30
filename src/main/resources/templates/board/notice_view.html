@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+    <a th:href="@{/board/notice}"><h1>공지 사항</h1></a>
+    <div id="content" class="content">
+        <table th:if="${(groupIdx == 1) and (idx == board.idx)}">
+            <tr>
+                <td th:text="${board.title}" colspan="2"></td>
+            </tr>
+            <tr>
+                <td th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}" colspan="2"></td>
+            </tr>
+            <tr>
+                <td th:text="${board.content}" colspan="2"></td>
+            </tr>
+            <tr th:if="${board.attachment != null}">
+                <td>첨부 파일</td>
+                <td>
+                    <span th:text="${board.attachment.fileName}"></span>
+                    <a th:href="@{/board/file/download/{idx}(idx=${board.attachment.idx})}">
+                        <button type="button">다운로드</button>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <a th:href="@{/board/notice}"><button>뒤로가기</button></a>
+                    <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button>[관리자]삭제</button></a>
+                </td>
+            </tr>
+        </table>
+
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
