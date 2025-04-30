@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- title을 동적으로 삽입 -->
-  <title th:text="${title}">기본 제목</title>
+  <title th:text="${webtitle} ?: '만화방초'"></title>
 
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/css/common.css">
