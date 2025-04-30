@@ -1,15 +1,99 @@
 package com.example.mhbc.util;
 
+import com.example.mhbc.entity.AttachmentEntity;
+import com.example.mhbc.entity.BoardEntity;
+import com.example.mhbc.repository.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class Utility {
+
+    private final BoardRepository boardRepository;
+    private final BoardGroupRepository boardGroupRepository;
+    private final MemberRepository memberRepository;
+    private final AttachmentRepository attachmentRepository;
+    private final CommentsRepository commentsRepository;
+    private String uploadDir = "D:/SpringProject/data/";
+    /**
+    * 파일
+    * */
+    /*파일 업로드*/
+    public void saveAttachment(MultipartFile attachment, BoardEntity board) throws IOException {
+        if (!attachment.isEmpty()) {
+            String uuidFileName = UUID.randomUUID().toString() + "_" + attachment.getOriginalFilename();
+            //uploadDir = "D:/SpringProject/data/";
+
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            File destination = new File(uploadDir, uuidFileName);
+            attachment.transferTo(destination);
+
+            // 상대 경로만 DB에 저장
+            String relativePath = uuidFileName;
+
+            // AttachmentEntity 생성 및 설정
+            AttachmentEntity attachmentEntity = new AttachmentEntity();
+            attachmentEntity.setFilePath(relativePath); // 상대 경로
+            attachmentEntity.setFileName(attachment.getOriginalFilename());
+            attachmentEntity.setFileType(attachment.getContentType());
+            attachmentEntity.setFileSize((int) attachment.getSize());
+
+            // 파일과 게시글 연결
+            attachmentEntity.setBoard(board);
+            attachmentRepository.save(attachmentEntity);
+
+            // 게시글에 첨부파일 정보 반영
+            board.setAttachment(attachmentEntity);
+            boardRepository.save(board); // 게시글과 첨부파일 연결 반영
+        }
+    }
+    /*파일 삭제*/
+    @Transactional
+    public void deleteAttachments(long boardIdx) {
+        try {
+
+            List<AttachmentEntity> attachments = attachmentRepository.findByBoard_Idx(boardIdx);
+
+            for (AttachmentEntity attachment : attachments) {
+                String filepath = attachment.getFilePath();
+                System.out.println("파일 경로: " + filepath);
+                String dir = "D:/SpringProject/data/";
+
+                // 실제 파일 삭제
+                File file = new File(dir + filepath);
+
+                if (file.exists()) {
+                    if (file.delete()) {
+                        System.out.println("파일 삭제 성공: " + filepath);
+                    } else {
+                        System.out.println("파일 삭제 실패: " + filepath);
+                    }
+                } else {
+                    System.out.println("파일이 존재하지 않음: " + filepath);
+                }
+            }
+
+            // 1. 첨부파일 삭제
+            attachmentRepository.deleteByIdx(boardIdx);
+        } catch (Exception e) {
+            System.out.println("예외 발생: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     /*
     페이징
@@ -34,8 +118,6 @@ public class Utility {
         private boolean hasNext; // 다음 버튼 노출 여부
         private boolean hasFirst; // 처음 버튼 노출 여부
         private boolean hasLast;  // 마지막 버튼 노출 여부
-
-        private String link;
 
         public Pagination(int page, int size, int totalCount, int groupSize, String link) {
             this.page = page < 1 ? 1 : page;

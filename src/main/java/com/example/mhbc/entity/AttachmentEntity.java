@@ -37,12 +37,13 @@ public class AttachmentEntity {
 
     public AttachmentDTO toDTO() {
         return AttachmentDTO.builder()
-            .fileName(fileName)
-            .fileType(fileType)
-            .filePath(filePath)
-            .fileSize(fileSize)
-            .createdAt(createdAt)
-            .boardIdx(board != null ? board.getIdx() : null)
-            .build();
+                .fileName(fileName)
+                .fileType(fileType)
+                .filePath(filePath)
+                .fileSize(fileSize)
+                .createdAt(createdAt)
+                .boardIdx(board != null ? board.getIdx() : null)
+                .build();
     }
+
 }

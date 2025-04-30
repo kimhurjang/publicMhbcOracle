@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+        layout:decorate="~{fragment/layout}">
+
+<body>
+<section layout:fragment="content">
+    <link rel="stylesheet" href="/css/gallery.css">
+    <main class="gallery-container">
+        <a th:href="@{/board/gallery}"><h1 class="gallery-title">갤러리</h1></a>
+        <!--<a href="/admin" sec:authorize="hasRole('ADMIN')"></a>-->
+        <a th:href="@{/board/gallery_write(board_type=${boardType}, group_idx=${groupIdx})}"><button>[관리자]글쓰기</button></a>
+        <div class="gallery">
+
+            <a th:href="@{/board/gallery_view(idx=${board.idx}, board_type=${boardType}, group_idx=${groupIdx})}" th:if="${groupIdx == 4}" th:each="board : ${boardList}" class="card" >
+
+                <div th:if="${board.attachment != null}">
+                    <img th:src="@{|/data/${board.attachment.filePath}|}" alt="첨부 이미지" class="card-img"/>
+                </div>
+
+                <div class="card-text">
+                    <h3 th:text="${board.title}"></h3>
+                    <p th:text="${board.content}"></p>
+                    <div th:text="'조회수 : ' + ${board.viewCnt}"></div>
+                </div>
+
+            </a>
+
+        </div>
+    </main>
+
+</section>
+</body>
+</html><!--E contents-->

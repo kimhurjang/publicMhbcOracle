@@ -1,32 +1,3 @@
-
-a {
-    color: inherit;  /* 링크의 기본 색을 부모 요소의 색과 동일하게 설정 */
-}
-
-a:visited,
-a:active {
-    color: inherit;  /* 클릭 후에도 기본 색상 그대로 유지 */
-}
-
-section {
-    width: 100%;
-}
-
-article {
-    margin: 500px 0;
-    width: 100%;
-}
-
-
-
-.views {
-    font-size: 13px;
-    color: #777;
-    margin-top: 5px;
-    font-style: italic;
-}
-
-
 /* 갤러리 기본 스타일 */
 .gallery-container {
     text-align: center;
@@ -69,10 +40,14 @@ article {
     transform: translateY(-5px);
 }
 
-.card img {
+.card-img {
     width: 100%;
     height: 150px;
     object-fit: cover;
+}
+
+.card-img.view{
+    height: auto;
 }
 
 .card-text {
@@ -88,36 +63,4 @@ article {
     margin: 0;
     font-size: 14px;
     color: #555;
-}
-
-footer {
-    background-color: #9b89b3;
-    color: #F7F4ED;
-    padding: 80px;
-    display: flex;
-}
-
-footer div {
-    width: 300px;
-}
-
-.copy {
-    margin-right: 600px;
-    line-height: 50px;
-}
-
-#snsIcon {
-    justify-content: space-around;
-}
-
-.myAccount {
-    display: block;
-}
-
-.myAccount a {
-    color: #F7F4ED;
-}
-.flogo{
-    width: 135px;
-    height: 135px;
 }

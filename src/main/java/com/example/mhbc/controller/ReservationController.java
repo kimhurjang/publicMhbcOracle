@@ -84,6 +84,7 @@ public class ReservationController {
   @GetMapping("/view")
   public String viewReservation(@RequestParam Long idx, Model model) {
     model.addAttribute("webtitle", "만화방초 | 예약 상세보기");
+    
     model.addAttribute("reservation", reservationService.findById(idx));
     return "reservation/view";
   }
@@ -91,9 +92,9 @@ public class ReservationController {
   // 예약 수정 폼 화면
   @GetMapping("/edit")
   public String editReservation(@RequestParam Long idx, Model model) {
-    ReservationDTO dto = reservationService.findById(idx);
-
     model.addAttribute("webtitle", "만화방초 | 예약 수정하기");
+    
+    ReservationDTO dto = reservationService.findById(idx);
     model.addAttribute("reservation", dto); // 기존 예약 정보
     model.addAttribute("halls", hallService.getAllHalls()); // 홀 목록
     return "reservation/form"; // form.html 재사용

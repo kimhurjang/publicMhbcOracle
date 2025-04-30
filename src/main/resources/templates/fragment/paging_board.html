@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="paging">
+
+
+    <!--
+         사용 하실 때 아래 코드 쓰시면 됩니다.
+         <div th:replace="~{fragment/paging :: paging}"></div>
+     -->
+  <div th:if="${!paging.isEmpty()}">
+    <ul class="paging">
+      <li th:if="${pagination.hasFirst}">
+        <a th:href="@{|${link}?page=1&board_type=${boardType}&group_idx=${groupIdx}|}" class="btn small">처음</a>
+      </li>
+
+      <li th:if="${pagination.hasPrev}">
+        <a th:href="@{|${link}?page=${pagination.currentGroupStart}&board_type=${boardType}&group_idx=${groupIdx}|}" class="btn small">이전</a>
+      </li>
+
+      <li th:each="pageNum : ${pagination.pageList}"
+          th:classappend="${pageNum == paging.number} ? 'active'">
+        <a th:text="${pageNum + 1}" th:href="@{|${link}?page=${pageNum + 1}&board_type=${boardType}&group_idx=${groupIdx}|}" class="btn small"></a>
+      </li>
+
+      <li th:if="${pagination.hasNext}">
+        <a th:href="@{|${link}?page=${pagination.currentGroupEnd + 2}&board_type=${boardType}&group_idx=${groupIdx}|}" class="btn small">다음</a>
+      </li>
+
+      <li th:if="${pagination.hasLast}">
+        <a th:href="@{|${link}?page=${paging.totalPages}&board_type=${boardType}&group_idx=${groupIdx}|}" class="btn small">마지막</a>
+      </li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

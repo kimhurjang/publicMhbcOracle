@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/cmct}"><h1>커뮤니티</h1></a>
+  <div id="content" class="content">
+    <a th:href="@{/board/cmct_write(group_idx=${groupIdx},board_type=${boardType})}"><button>글쓰기</button></a>
+    <table>
+      <tr th:each=" board : ${paging}">
+        <td><a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member.idx},board_type=${boardType})}" th:text="${board.title}"></a></td>
+        <td th:text="${#strings.substring(board.member.name, 0, 1) + '*' + #strings.substring(board.member.name, 2)}"></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div th:replace="~{fragment/paging_board :: paging}"></div>
+        </td>
+      </tr>
+    </table>
+
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

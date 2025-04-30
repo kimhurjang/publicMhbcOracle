@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+    <a th:href="@{/board/oftenquestion}"><h1>자주 묻는 질문</h1></a>
+    <div id="content" class="content">
+
+        <table class="">
+            <tr th:each="board : ${paging}" th:if="${groupIdx == 5 and board.re == 0}">
+                <td><a th:href="@{/board/oftenquestion_view(group_idx=${groupIdx}, board_type=${boardType}, title=${board.title}, idx=${board.idx})}" th:text="${board.title}"></a></td>
+            </tr>
+            <tr>
+                <td>
+                    <div th:replace="~{fragment/paging_board :: paging}"></div>
+                </td>
+            </tr>
+        </table>
+    </div><!--E content-->
+    <a th:href="@{/board/personalquestion}"><button>1 대 1 문의하러 가기</button></a>
+    <a th:href="@{/board/myboard_page(group_idx=${groupIdx},board_type=${boardType},member=1)}"><button>내가 쓴 글 보러가기</button></a>
+</section><!--E container-->
+</body>
+</html>
