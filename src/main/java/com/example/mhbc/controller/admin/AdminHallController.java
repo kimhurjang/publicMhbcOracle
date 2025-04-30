@@ -21,6 +21,8 @@ public class AdminHallController {
 
   @GetMapping("/list")
   public String list(Model model) {
+    model.addAttribute("webtitle", "예약관리 | 홀 현황");
+
     List<HallDTO> hallList = adminHallService.findAll();
     System.out.println(">>>>>>>>>" + hallList.toString());
     model.addAttribute("hallList", hallList);
@@ -29,6 +31,8 @@ public class AdminHallController {
 
   @GetMapping("/form")
   public String form(@RequestParam(required = false) Long idx, Model model) {
+    model.addAttribute("webtitle", "예약관리 | 홀 등록");
+
     HallDTO hall = (idx != null) ? adminHallService.findById(idx) : new HallDTO();
     model.addAttribute("hall", hall);
     return "admin/hall/form";

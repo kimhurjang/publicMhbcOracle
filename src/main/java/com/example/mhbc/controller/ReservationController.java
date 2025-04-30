@@ -35,6 +35,7 @@ public class ReservationController {
   public String showForm(Model model) {
     ReservationDTO reservation = new ReservationDTO(); // or 조회한 DTO
 
+    model.addAttribute("webtitle", "만화방초 | 상담예약");
     model.addAttribute("reservation", new ReservationDTO());
     model.addAttribute("halls", reservationService.getHallList());
 
@@ -54,6 +55,8 @@ public class ReservationController {
   @GetMapping("/list")
   public String showList(@RequestParam(value="page", defaultValue="1") int page,
                          Model model) {
+
+    model.addAttribute("webtitle", "만화방초 | 예약 현황");
 
     int itemsPerPage = 5; // 한 페이지당 5개씩 출력
     int groupSize = 3;    // 페이징 그룹 크기
@@ -80,6 +83,8 @@ public class ReservationController {
   // 예약 상세보기 화면
   @GetMapping("/view")
   public String viewReservation(@RequestParam Long idx, Model model) {
+    model.addAttribute("webtitle", "만화방초 | 예약 상세보기");
+    
     model.addAttribute("reservation", reservationService.findById(idx));
     return "reservation/view";
   }
@@ -87,6 +92,8 @@ public class ReservationController {
   // 예약 수정 폼 화면
   @GetMapping("/edit")
   public String editReservation(@RequestParam Long idx, Model model) {
+    model.addAttribute("webtitle", "만화방초 | 예약 수정하기");
+    
     ReservationDTO dto = reservationService.findById(idx);
     model.addAttribute("reservation", dto); // 기존 예약 정보
     model.addAttribute("halls", hallService.getAllHalls()); // 홀 목록
