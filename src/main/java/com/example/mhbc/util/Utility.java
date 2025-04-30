@@ -101,6 +101,7 @@ public class Utility {
     @Getter
     public static class Pagination {
 
+        private final String link;
         private int page;        // 현재 페이지
         private int size;        // 페이지당 데이터 수
         private int totalCount;  // 전체 데이터 수
