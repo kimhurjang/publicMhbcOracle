@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+<body>
+<section layout:fragment="content" id="container" class="hall list">
+  <h2>홀 목록</h2>
+  <div class="content">
+    <a th:href="@{/admin/hall/form}" class="btn color1 small">+ 홀 등록</a>
+    <table class="mt2">
+      <colgroup>
+        <col style="width:45px">
+        <col>
+        <col>
+        <col>
+        <col style="width:125px">
+      </colgroup>
+      <thead>
+      <tr>
+        <th>번호</th>
+        <th>홀 이름</th>
+        <th>수용인원</th>
+        <th>기본가격</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="hall, i : ${hallList}">
+        <td th:text="${hallList.size() - i.index}">9</td>
+        <td th:text="${hall.name}">리시안셔스홀</td>
+        <td th:text="${hall.capacity}">100</td>
+        <td th:text="${#numbers.formatInteger(hall.price, 3, 'COMMA')} + '원'">1,000,000원</td>
+        <td>
+          <a th:href="@{/admin/hall/form(idx=${hall.idx})}" class="btn gray small">수정</a>
+          <a th:href="@{/admin/hall/delete(idx=${hall.idx})}" onclick="return confirm('삭제하시겠습니까?')"
+             class="btn red small">삭제</a>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(hallList)}">
+        <td colspan="5">등록된 홀이 없습니다.</td>
+      </tr>
+      </tbody>
+    </table>
+    <mark>총 금액 =(홀 + 식사 + 꽃) * 인원수 / 뷔페A 13,000 뷔페B 8,000 도시락 7,000 / 생화 7,000 조화+생화 5,000 조화 4,000</mark>
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

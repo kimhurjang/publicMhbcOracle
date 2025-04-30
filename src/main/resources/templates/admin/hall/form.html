@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+<body>
+<section layout:fragment="content" id="container" class="hall form">
+  <h2 th:text="${hall.idx != null ? '홀 수정' : '홀 등록'}">홀 등록</h2>
+  <div class="content">
+    <form th:action="@{/admin/hall/save}" th:object="${hall}" method="post">
+      <input type="hidden" th:field="*{idx}">
+      <div class="form_group">
+        <label>홀 이름</label>
+        <input type="text" th:field="*{name}" required>
+      </div>
+      <div class="form_group">
+        <label>수용 인원</label>
+        <input type="number" min="100" max="250" th:field="*{capacity}" required>
+      </div>
+      <div class="form_group">
+        <label>기본 가격</label>
+        <input type="number" th:field="*{price}" required>
+      </div>
+      <div class="btn_group">
+        <button type="submit" class="btn color1 ">저장</button>
+        <a th:href="@{/admin/hall/list}" class="btn gray ">취소</a>
+      </div>
+    </form>
+
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
