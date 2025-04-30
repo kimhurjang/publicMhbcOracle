@@ -27,6 +27,9 @@ public class SnsEntity {
     @Column(name = "sns_name")
     private String snsName;
 
+    @Column(name = "mobile")
+    private String mobile;
+
     @Column(name = "connected_at")
     private LocalDateTime connectedAt;  // LocalDateTime을 사용하면 JPA가 자동으로 처리
 }

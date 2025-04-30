@@ -7,6 +7,7 @@ public class SocialUserInfoDTO {
     private String snsName;  // sns_name (nickname 대체)
     private String snsEmail; // sns_email
     private String snsType;  // sns_type 추가
+    private  String mobile;
     private LocalDateTime connectedAt; // 연결 시간 추가 (String으로 유지)
 
     // 새 생성자 (모든 필드를 초기화)
@@ -39,6 +40,10 @@ public class SocialUserInfoDTO {
         return snsType;
     }
 
+    public String getMobile() {
+        return mobile;
+    }
+
     public LocalDateTime getConnectedAt() {
         return connectedAt;
     }
@@ -58,6 +63,10 @@ public class SocialUserInfoDTO {
 
     public void setSnsType(String snsType) {
         this.snsType = snsType;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public void setConnectedAt(LocalDateTime connectedAt) {

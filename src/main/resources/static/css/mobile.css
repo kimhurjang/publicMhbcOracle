@@ -1,0 +1,90 @@
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 30px;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* 폼 전체 영역 */
+        .form_section {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 섹션 제목 */
+        .section_title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* 폼 그룹 공통 */
+        .form_group {
+            margin-bottom: 20px;
+        }
+
+        .form_group label {
+            display: block;
+            font-size: 0.9em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        input[type="text"] {
+            width: 30%;
+            padding: 10px 12px;
+            font-size: 0.95em;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #8e7cc3;
+            outline: none;
+        }
+
+        /* 버튼 스타일 */
+       button {
+           background-color: #D6CAE8;
+           color: #fff;
+           padding: 10px 20px;
+           font-size: 0.95em;
+           border: none;
+           border-radius: 6px;
+           cursor: pointer;
+           transition: background-color 0.3s;
+           width: 120px; /* ← 여기 줄임 */
+       }
+
+        button:hover {
+            background-color: #8676A1;
+            color: #fff;
+        }
+
+        /* 취소 링크 스타일 */
+        .cancel-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .cancel-link:hover {
+            text-decoration: underline;
+        }

@@ -63,7 +63,7 @@ body {
 input[type="text"],
 input[type="password"],
 input[type="date"] {
-    width: 100%;
+    width: 30%;
     padding: 10px 12px;
     font-size: 0.95em;
     border: 1px solid #ccc;

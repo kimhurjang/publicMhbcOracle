@@ -7,7 +7,7 @@ import com.example.mhbc.repository.SnsRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.example.mhbc.dto.SocialUserInfo;
+import com.example.mhbc.dto.SocialUserInfoDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>전화번호 입력</title>
+    <link rel="stylesheet" href="/css/mobile.css">
+</head>
+<body>
+<h2>전화번호를 입력해주세요</h2>
+
+<form action="/api/member/mobile" method="post">
+    <label for="mobile">전화번호:</label>
+    <input type="text" id="mobile" name="mobile" placeholder="전화번호를 입력하세요" oninput="formatPhoneNumber(this)">
+    <button type="submit">확인</button>
+</form>
+
+
+<script>
+    function formatPhoneNumber(input) {
+        // 숫자만 남기기
+        let numbers = input.value.replace(/\D/g, '');
+
+        // 전화번호 포맷 적용
+        if (numbers.length < 4) {
+            input.value = numbers;
+        } else if (numbers.length < 8) {
+            input.value = numbers.slice(0, 3) + '-' + numbers.slice(3);
+        } else {
+            input.value = numbers.slice(0, 3) + '-' + numbers.slice(3, 7) + '-' + numbers.slice(7, 11);
+        }
+    }
+</script>
+</body>
+</html>
