@@ -14,9 +14,7 @@ public class SnsDTO {
     private String snsId;
     private String snsEmail;
     private String snsName;
-    private String mobile;
     private LocalDateTime connectedAt;
-
 
     public SnsEntity toEntity() {
         return SnsEntity.builder()
@@ -24,7 +22,6 @@ public class SnsDTO {
                 .snsId(snsId)
                 .snsEmail(snsEmail)
                 .snsName(snsName)
-                .mobile(mobile)
                 .connectedAt(connectedAt)
                 .build();
     }

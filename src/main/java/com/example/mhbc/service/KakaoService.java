@@ -45,8 +45,8 @@ public class KakaoService {
                 .uri("/oauth/token")
                 .body(BodyInserters.fromFormData("grant_type", "authorization_code")
 
-                        .with("client_id", "c9bb56960e98eceddc4418dc3243c916")
-                        .with("redirect_uri", "http://localhost:8090/member/sociallogin")
+                        .with("client_id", "3a729b684852129622871e6b959a97e6")
+                        .with("redirect_uri", "http://localhost:8090/api/member/kakao")
                         .with("code", code)
                 )
 

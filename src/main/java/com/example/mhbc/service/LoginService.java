@@ -13,8 +13,7 @@ public class LoginService {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     public MemberEntity login(String userid, String pwd) {
         Optional<MemberEntity> memberOpt = memberRepository.findByUserid(userid);
@@ -23,7 +22,7 @@ public class LoginService {
             MemberEntity member = memberOpt.get();
 
             // 데이터베이스에 저장된 비밀번호와 입력된 비밀번호 비교
-            if (bCryptPasswordEncoder.matches(pwd, member.getPwd())) {
+            if (member.getPwd().equals(pwd)) {
                 return member; // 로그인 성공
             }
         }

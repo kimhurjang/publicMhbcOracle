@@ -1,5 +1,6 @@
 package com.example.mhbc.config;
 
+import com.example.mhbc.service.UserPasswordEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -17,9 +19,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable);
 
-        http.authorizeHttpRequests( authorize -> authorize
+        http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/**").permitAll()
-                .requestMatchers("/booking").hasAnyRole("ADMIN","USER")
+                .requestMatchers("/booking").hasAnyRole("ADMIN", "USER")
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
         );
@@ -44,7 +46,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-
     /**
      * 비밀번호 암호화를 위한 BCryptPasswordEncoder 빈 등록
      */
@@ -53,5 +54,13 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
+    /**
+     * 암호화 없이 평문 비교를 위해 PasswordEncoder를 사용하지 않음
+     * 실제로는 아래 메소드를 사용하지 않음
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        // 암호화하지 않고 평문 비밀번호 비교하도록 빈을 반환하지 않음
+        return null;
+    }
 }

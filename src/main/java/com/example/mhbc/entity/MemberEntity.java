@@ -3,7 +3,7 @@ package com.example.mhbc.entity;
 import com.example.mhbc.dto.MemberDTO;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "MEMBER")
@@ -35,23 +35,26 @@ public class MemberEntity {
     @Column(name = "STATUS")
     private String status = "ACTIVE"; // 회원상태
 
+
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")
-    private LocalDateTime createdAt; // 가입일
+    private Date createdAt; // 가입일
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATE_AT")
-    private LocalDateTime updatedAt; // 수정일
-
+    private Date updatedAt; // 수정일
 
     @PrePersist
     protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
+        Date now = new Date();
         createdAt = now;
         updatedAt = now;
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = new Date();
     }
 
     public MemberDTO toDTO() {
@@ -64,4 +67,7 @@ public class MemberEntity {
                 .status(status)
                 .build();
     }
+
+
 }
+

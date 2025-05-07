@@ -20,15 +20,15 @@ public class MemberDTO {
 
     public MemberEntity toEntity() {
         return MemberEntity.builder()
-            .userid(userid)
-            .pwd(pwd)
-            .name(name)
-            .telecom(telecom)
-            .mobile(mobile)
-            .email(email)
-            .grade(grade)
-            .status(status)
-            .nickname(nickname)
-            .build();
+                .userid(userid)
+                .pwd(pwd)
+                .name(name)
+                .telecom(telecom)
+                .mobile(mobile)
+                .email(email)
+                .grade(grade)
+                .status(status)
+                .nickname(nickname)
+                .build();
     }
 }
