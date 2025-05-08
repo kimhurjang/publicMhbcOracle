@@ -8,10 +8,39 @@
   <a th:href="@{/board/cmct}"><h1>커뮤니티</h1></a>
   <div id="content" class="content">
     <a th:href="@{/board/cmct_write(group_idx=${groupIdx},board_type=${boardType})}"><button>글쓰기</button></a>
-    <table>
+    <form action="/board/search" method="get">
+      <input type="hidden" name="group_idx" th:value="${groupIdx}">
+      <input type="hidden" name="board_type" th:value="${boardType}">
+      <div><input type="text" name="keyword" value="" required placeholder="제목으로 검색하기"><button type="submit" class="btn small">검색</button></div>
+    </form>
+
+    <!-- 검색 결과 영역 -->
+    <div th:if="${isSearch != null and isSearch}">
+      <p><strong>검색 결과:</strong></p>
+
+      <div th:if="${#lists.isEmpty(paging)}">
+        <p>검색 결과가 없습니다.</p>
+      </div>
+
+      <table th:if="${not #lists.isEmpty(paging)}">
+        <tr th:each=" board : ${paging}">
+          <td>
+            <a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member?.idx ?: 'Default Value'},board_type=${boardType})}"
+               th:text="${board.title}"></a>
+          </td>
+          <td th:text="${#strings.substring(board.member.name, 0, 1) + '*' + #strings.substring(board.member.name, 2)}"></td>
+        </tr>
+        <tr>
+          <td colspan="2"><a th:href="@{/board/cmct}"><button type="button">뒤로 가기</button></a></td>
+        </tr>
+      </table>
+    </div>
+
+    <table th:if="${isSearch == null or not isSearch}">
       <tr th:each=" board : ${paging}">
         <td><a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member.idx},board_type=${boardType})}" th:text="${board.title}"></a></td>
         <td th:text="${#strings.substring(board.member.name, 0, 1) + '*' + #strings.substring(board.member.name, 2)}"></td>
+
       </tr>
       <tr>
         <td colspan="2">

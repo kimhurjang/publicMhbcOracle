@@ -9,6 +9,7 @@ import com.example.mhbc.entity.*;
 import com.example.mhbc.repository.*;
 import com.example.mhbc.service.BoardService;
 import com.example.mhbc.service.CommentsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -659,6 +659,21 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
         return "redirect:/board/"+redirectUrl;
     }
 
+    @GetMapping("search")
+    public String search(@RequestParam("group_idx") long groupIdx,
+                         @RequestParam("board_type") long boardType,
+                         @RequestParam("keyword") String keyword,
+                         Model model){
 
+        List<BoardDTO> result;
+        result = utility.searchByTitle(keyword, groupIdx, boardType);
+
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("isSearch", true);
+        model.addAttribute("paging", result);
+        model.addAttribute("keyword", keyword); // 검색어 유지
+        return "/board/cmct_page";
+    }
 
 }

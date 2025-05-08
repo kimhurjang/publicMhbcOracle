@@ -1,33 +1,43 @@
 package com.example.mhbc.controller;
 
+import com.example.mhbc.entity.BoardEntity;
+import com.example.mhbc.repository.BoardRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
+@RequiredArgsConstructor
 public class MainController {
 
-    @RequestMapping({"/", "/home"})
-    public String index(Model model) {
+    private final BoardRepository boardRepository;
+
+    @RequestMapping({"/" , "/home"})
+    public String index(Model model){
         System.out.println(">>>>>>>>>>index page<<<<<<<<<<");
-        model.addAttribute("title", "만화방초");
+
+        List<BoardEntity> event = boardRepository.findByGroupGroupIdx(3L);
+        List<BoardEntity> board = boardRepository.findByGroupGroupIdx(1L);
+
+        model.addAttribute("event", event.subList(0, Math.min(2, event.size())));
+        model.addAttribute("board", board.subList(0, Math.min(2, event.size())));
+
         return "index";
     }
-    @RequestMapping("/content")
-    public String contentLayout() {
-        System.out.println(">>>>>>>>>>content page<<<<<<<<<<");
-        return "content";
-    }
     @RequestMapping("/admin")
-    public String admin() {
+    public String admin(){
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "admin";
     }
-    @RequestMapping("/admin/content")
-    public String adminContentLayout() {
-      System.out.println(">>>>>>>>>>admin content page<<<<<<<<<<");
-      return "/admin/content";
+
+    @RequestMapping("/map")
+    public String map(){
+
+        return "map";
     }
+
 
 }

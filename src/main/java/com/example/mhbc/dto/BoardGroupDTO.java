@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class BoardGroupDTO {
-    private String boardType;
+    private Long boardType;
     private String name;
     private Integer orderNo;
     private String role;

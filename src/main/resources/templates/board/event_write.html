@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/event.css">
+</th:block>
 <body>
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
@@ -32,6 +35,14 @@
             <textarea cols="30" rows="2" name="content" required placeholder="본문을 입력해주세요."></textarea>
             <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="display: none;"></div>
           </td>
+        </tr>
+        <tr>
+          <td>시작일</td>
+          <td><input type="date" name="startAt" id="startAt"></td>
+        </tr>
+        <tr>
+          <td>종료일</td>
+          <td><input type="date" name="closedAt" id="closedAt"></td>
         </tr>
         <tr>
           <td>이미지 첨부파일</td>

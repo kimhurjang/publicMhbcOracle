@@ -3,198 +3,201 @@
         xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{fragment/layout}">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/main.css">
+</th:block>
+
 <body>
 <section layout:fragment="content" class="main">
-    <link rel="stylesheet" href="/css/main.css">
 
-    <div class="slider"><!--메인 이미지 캐러셀-->
-        <div class="slide slide1"></div>
-        <!-- <div class="slide slide2"></div>
-        <div class="slide slide3"></div>
-        <div class="slide slide4"></div>
-        <div class="slide slide5"></div> -->
+
+    <div id="ms1" class="container bg-holder" data-width="1200" data-height="700">
+        <!--메인 이미지 캐러셀-->
+        <div class="slider">
+            <div class="slide slide1">
+                <img src="./image/1.jfif">
+            </div>
+            <div class="slide slide2">
+                <img src="./image/1-1.jpg">
+            </div>
+            <div class="slide slide3">
+                <img src="./image/2.jfif">
+            </div>
+            <div class="slide slide4">
+                <img src="./image/3.jfif">
+            </div>
+            <div class="slide slide5">
+                <img src="./image/4.jfif">
+            </div>
+            <div class="slide slide6">
+                <img src="./image/5.jfif">
+            </div>
+            <div class="slide slide7">
+                <img src="./image/6.jfif">
+            </div>
+            <div class="slide slide8">
+                <img src="./image/7.jfif">
+            </div>
+        </div>
     </div>
-    <!--서브 캐러셀-->
-    <article class="slider subSlider">
 
-        <div class="subSlide img">
-            <div><img src="">메인 이미지 1</div>
+    <div id="ms2" class="container bg-holder" data-width="1200" data-height="700">
+        <!--서브 캐러셀-->
+        <article class="subSlider">
+
+
+            <div class="subSlideWrapper">
+                <!-- 왼쪽 큰 이미지 -->
+                <div class="mainImage">
+                    <img src="./image/4.jfif" alt="메인 이미지">
+                </div>
+
+                <!-- 오른쪽: 서브 이미지 + 설명 -->
+                <div class="sideContent">
+                    <div class="subImage">
+                        <img src="./image/6.jfif" alt="서브 이미지">
+                    </div>
+                    <h3>이미지 별 설명</h3>
+                    <p>A subheading for this section, as long or as short as you like</p>
+                    <div class="buttons">
+                        <button class="btn sub-left"><i class="xi-angle-left"></i></button>
+                        <button class="btn sub-right"><i class="xi-angle-right"></i></button>
+                        <a href="#"><button class="more">더 보기</button></a>
+                    </div>
+                    </div>
+                </div>
+
+            <div class="subSlideWrapper">
+                <!-- 왼쪽 큰 이미지 -->
+                <div class="mainImage">
+                    <img src="/image/9.jfif" alt="메인 이미지">
+                </div>
+
+                <!-- 오른쪽: 서브 이미지 + 설명 -->
+                <div class="sideContent">
+                    <div class="subImage">
+                        <img src="./image/10.jfif" alt="서브 이미지">
+                    </div>
+                    <h3>이미지 별 설명</h3>
+                    <p>A subheading for this section, as long or as short as you like</p>
+                    <div class="buttons">
+                        <button class="btn sub-left"><i class="xi-angle-left"></i></button>
+                        <button class="btn sub-right"><i class="xi-angle-right"></i></button>
+                        <a href="#"><button class="more">더 보기</button></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subSlideWrapper">
+                <!-- 왼쪽 큰 이미지 -->
+                <div class="mainImage">
+                    <img src="./image/16.jpg" alt="메인 이미지">
+                </div>
+
+                <!-- 오른쪽: 서브 이미지 + 설명 -->
+                <div class="sideContent">
+                    <div class="subImage">
+                        <img src="./image/18.jpg" alt="서브 이미지">
+                    </div>
+                    <h3>이미지 별 설명</h3>
+                    <p>A subheading for this section, as long or as short as you like</p>
+                    <div class="buttons">
+                        <button class="btn sub-left"><i class="xi-angle-left"></i></button>
+                        <button class="btn sub-right"><i class="xi-angle-right"></i></button>
+                        <a href="#"><button class="more">더 보기</button></a>
+                    </div>
+                </div>
+            </div>
+
+
+        </article>
+    </div>
+
+    <div id="ms3" class="container bg-holder" data-width="1200" data-height="700">
+        <!--중간 배너-->
+        <article id="banner">
             <div>
-                <img src="">
-                <div class="subSlide text">
+                <p>EVENT</p>
+                <p>만화방초에서 진행되는 다양한 이벤트</p>
+                <a href="/board/event"><button>보러가기</button></a>
+            </div>
+        </article>
 
-                    <h3>이미지 설명 타이틀</h3>
-                    <p>한 줄 설명글</p>
-                    <div>
-                        <button class="arrow left">왼쪽</button>
-                        <button class="arrow right">오른쪽</button>
-                        <a href="" id="more"><button>더 보기</button></a>
+        <!--이벤트-->
+        <article id="event">
+
+            <div th:if="${#lists.size(event) == 0}" id="nullEvent">
+                <h2>현재 진행 중인 이벤트가 없습니다.</h2>
+            </div>
+
+            <div th:each="event : ${event}"  data-aos="fade-down" data-aos-delay="200">
+                <img th:src="@{|/data/${event.attachment.filePath}|}">
+                <div>
+                    <span>
+                        <sub th:text="${#dates.format(event.startAt, 'yyyy-MM-dd')}+' ~ '+${#dates.format(event.closedAt, 'yyyy-MM-dd')}"></sub>
+                    </span>
+                    <h3 th:text="${event.title}"></h3>
+                    <p th:text="${event.content.length() > 30} ? ${#strings.substring(event.content, 0, 30) + '...'} : ${event.content}"></p>
+                    <a th:href="@{/board/event_view(group_idx=${event.group.groupIdx}, board_type=${event.group.boardType}, idx=${event.idx})}"><button class="xi-arrow-right"></button></a>
+                </div>
+            </div>
+
+        </article>
+    </div>
+
+    <div id="ms4" class="container bg-holder" data-width="1200" data-height="700">
+        <!--갤러리-->
+        <div class="gallerySlider" data-aos="fade-down" data-aos-delay="200">
+
+                <div class="ga-prev"></div>
+
+            <ul class="gaSlider">
+                <li><img src="/image/12.jfif" alt="갤러리 이미지 1"></li>
+                <li><img src="/image/13.jpg" alt="갤러리 이미지 2"></li>
+                <li><img src="/image/16.jfif" alt="갤러리 이미지 3"></li>
+                <li><img src="/image/18.jpg" alt="갤러리 이미지 4"></li>
+                <li><img src="/image/img.jpg" alt="갤러리 이미지 5"></li>
+                <li><img src="/image/kuk202306110112.680x.0.jpg" alt="갤러리 이미지 6"></li>
+                <li><img src="/image/L7940277.jfif" alt="갤러리 이미지 7"></li>
+            </ul>
+
+            <div class="ga-next"></div>
+
+        </div>
+    </div>
+
+    <div id="ms5" class="container bg-holder" data-width="1200" data-height="700">
+        <!--게시판 / 오시는 길-->
+        <article id="board">
+            <div data-aos="fade-right" data-aos-delay="200">
+                <div class="board boards">
+                    <h2>게시판</h2>
+                    <a href="/board/notice"><button class="btn more">더 보기</button></a>
+                </div>
+
+                <div class="board contents">
+                    <div class="board content" th:each="board : ${board}">
+                        <p th:text="${board.title}"></p><br>
+                        <sub th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></sub><br>
+                        <p th:text="${board.content.length() > 30} ? ${#strings.substring(board.content, 0, 30) + '...'} : ${board.content}"></p>
+                        <a th:href="@{/board/notice_view(group_idx=${board.group.groupIdx}, board_type=${board.group.boardType}, idx=${board.idx})}"><button class="xi-arrow-right"></button></a>
                     </div>
 
                 </div>
             </div>
-        </div>
-        <!-- <div>
-
-           <div class="subSlide img">
-              <div><img src="">메인 이미지 2</div>
-              <div><img src="">서브 이미지 2</div>
-           </div>
-           <div>
-              <h3>이미지 설명 타이틀</h3>
-              <p>한 줄 설명글</p>
-              <div>
-                 <button>←</button>
-                 <button>→</button>
-                 <a href=""><button>더 보기</button></a>
-              </div>
-           </div>
-
-        </div>
-        <div>
-
-           <div class="subSlide img">
-              <div><img src="">메인 이미지 3</div>
-              <div><img src="">서브 이미지 3</div>
-           </div>
-           <div>
-              <h3>이미지 설명 타이틀</h3>
-              <p>한 줄 설명글</p>
-              <div>
-                 <button>←</button>
-                 <button>→</button>
-                 <a href=""><button>더 보기</button></a>
-              </div>
-           </div>
-
-        </div>
-        <div>
-
-           <div class="subSlide img">
-              <div><img src="">메인 이미지 4</div>
-              <div><img src="">서브 이미지 4</div>
-           </div>
-
-           <div>
-              <h3>이미지 설명 타이틀</h3>
-              <p>한 줄 설명글</p>
-              <div>
-                 <button>←</button>
-                 <button>→</button>
-                 <a href=""><button>더 보기</button></a>
-              </div>
-           </div>
-
-        </div> -->
-
-    </article>
-
-    <!--웨딩 캐러셀-->
-    <article id="main_wedding">
-
-        <div>
-            <img src="">
-            <div>
-                <div>
-                    <h3>웨딩 홀 1</h3>
-                    <p>한 줄 설명</p>
+            <div class="mapBox" data-aos="fade-left" data-aos-delay="200">
+                <div id="map"></div><!--맵스-->
+                <div id="boardMap">
+                    <h3>오시는 길</h3>
+                    <p>경상남도 고성군 거류면 은월리 17-5</p>
+                    <a href=""><button>자세히</button></a>
                 </div>
-                <a href=""><button>바로 가기</button></a>
             </div>
-        </div>
+        </article>
+    </div>
+    <a href="#" class="scroll-top"><button class="btn xi-arrow-up"></button></a>
 
-        <!-- <div>
-           <img src="">
-           <div>
-              <div>
-                 <h3>웨딩 홀 2</h3>
-                 <p>한 줄 설명</p>
-              </div>
-              <a href=""><button>바로 가기</button></a>
-           </div>
-        </div> -->
-
-    </article>
-
-
-    <!--중간 배너-->
-    <article id="banner">
-        <div>
-            <h3>배너 타이틀</h3>
-            <p>한 줄 글</p>
-            <a href="#"><button>보러가기</button></a>
-        </div>
-    </article>
-
-
-    <!--이벤트-->
-    <article id="event">
-        <div>
-            <img src="">
-            <div>
-                <h3>이벤트 1</h3>
-                <p>한 줄 설명</p>
-                <a href=""><button>→</button></a>
-            </div>
-        </div>
-        <div>
-            <img src="">
-            <div>
-                <h3>이벤트 2</h3>
-                <p>한 줄 설명</p>
-                <a href=""><button>→</button></a>
-            </div>
-        </div>
-    </article>
-
-    <!--인스타 API (임시)-->
-    <article id="instaAPI">
-        <div> 인스타 1</div>
-        <div> 인스타 2</div>
-        <div> 인스타 3</div>
-    </article>
-
-    <article id="main_gallery">
-        <img src="">
-        <img src="">
-        <img src="">
-    </article>
-
-
-    <!--게시판 / 오시는 길-->
-    <article id="board">
-        <div>
-            <div class="board boards">
-                <h3>게시판</h3>
-                <a href=""><button>더 보기</button></a>
-            </div>
-
-            <div class="board contents">
-                <div class="board content">
-                    <p>게시물 타이틀 1</p><br>
-                    <sub>게시 날짜</sub><br>
-                    <p>본문 일부</p>
-                    <a href=""><button>→</button></a>
-                </div>
-
-                <div class="board content">
-                    <p>게시물 타이틀 2</p><br>
-                    <sub>게시 날짜</sub><br>
-                    <p>본문 일부</p>
-                    <a href=""><button>→</button></a>
-                </div>
-
-            </div>
-        </div>
-        <div class="mapBox">
-            <div id="map"></div><!--맵스-->
-            <div id="boardMap">
-                <h3>오시는 길</h3>
-                <p>경상남도 고성군 거류면 은월리 17-5</p>
-                <a href=""><button>자세히</button></a>
-            </div>
-        </div>
-    </article>
 </section>
 </body>
 </html><!--E contents-->

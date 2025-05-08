@@ -26,18 +26,58 @@
         <p>Email : abcd1234@mail.com</p>
     </div>
 
+    <!--패럴렉스 스크롤링 라이브러리 임폴트-->
+    <script src="/js/jquery.parallax-scroll.min.js"></script>
+
+    <!--제이쿼리 스크롤 효과 라이브러리 삽입-->
+    <script src="/js/jquery.scrollTo.min.js"></script>
+
+    <!--휠 효과 임폴트-->
+    <script src="/js/wheel.js"></script>
+
+    <script src="/js/main.js"></script>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
     <script>
-        // 네비게이션 효과
         document.addEventListener("DOMContentLoaded", function () {
             const nav = document.querySelector("nav");
+            const logo = document.querySelector(".logo");
             const submenu = document.querySelector(".sub_nav_layer");
+            const mainSlide = document.querySelector("#ms1");
             let hideTimeout;
 
+            // 페이지 로드 시 스크롤 위치에 따라 투명 상태 초기화
+            function checkScroll() {
+                if (!mainSlide) {
+                    // 서브페이지에서는 transparentNav 적용하지 않음
+                    nav.classList.remove("transparentNav");
+                    logo.classList.remove("transparentNav");
+                    return;
+                }
+
+                const mainSlideHeight = mainSlide.offsetHeight;
+                if (window.scrollY <= mainSlideHeight - nav.offsetHeight) {
+                    nav.classList.add("transparentNav");
+                    logo.classList.add("transparentNav");
+                } else {
+                    nav.classList.remove("transparentNav");
+                    logo.classList.remove("transparentNav");
+                }
+            }
+
+            // 페이지 로드 후 즉시 적용
+            checkScroll();
+
+            // 서브메뉴 hover 제어
             nav.addEventListener("mouseenter", () => {
                 clearTimeout(hideTimeout);
                 submenu.style.opacity = "1";
                 submenu.style.transform = "translateY(0)";
                 submenu.style.pointerEvents = "auto";
+
+                // hover 시 투명 클래스 제거
+                nav.classList.remove("transparentNav");
             });
 
             nav.addEventListener("mouseleave", () => {
@@ -45,6 +85,9 @@
                     submenu.style.opacity = "0";
                     submenu.style.transform = "translateY(-10px)";
                     submenu.style.pointerEvents = "none";
+
+                    // 스크롤 위치가 캐러셀 안이면 다시 투명하게
+                    checkScroll();
                 }, 200);
             });
 
@@ -60,9 +103,25 @@
                     submenu.style.opacity = "0";
                     submenu.style.transform = "translateY(-10px)";
                     submenu.style.pointerEvents = "none";
+
+                    // 스크롤 위치가 캐러셀 안이면 다시 투명하게
+                    checkScroll();
                 }, 200);
             });
+
+            // 스크롤 이벤트 추가
+            window.addEventListener("scroll", function () {
+                checkScroll(); // 스크롤 시마다 스크롤 위치에 따라 투명 상태 체크
+            });
         });
+
+      AOS.init({
+       duration: 600,  // 애니메이션 지속 시간 (밀리초)
+       easing: 'ease-in-out',  // 애니메이션의 이징 함수
+       delay: 0,  // 애니메이션 지연 시간 (밀리초)
+       offset: 10,  // 스크롤 감지의 시작 위치 (픽셀)
+        once: false
+     });
 
     </script>
 </footer>

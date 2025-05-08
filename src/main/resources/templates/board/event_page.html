@@ -2,20 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/event.css">
+</th:block>
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/event.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <a th:href="@{/board/event}"><h1>이벤트</h1></a>
   <a th:href="@{/board/event_write(group_idx=${groupIdx},board_type=${boardType})}"><button>[관리자]글쓰기</button></a>
   <div id="content" class="content">
 
     <a th:if="${groupIdx == 3}" th:each="board : ${boardList}" th:href="@{/board/event_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}" class="event board">
-      <div th:text="${board.title}"></div>
+      <div class="event card">
+        <div th:if="${board.attachment != null}" class="card-img">
+          <img th:src="@{|/data/${board.attachment.filePath}|}" alt="첨부 이미지"/>
+        </div>
 
-      <div th:if="${board.attachment != null}">
-        <img th:src="@{${board.attachment.filePath}}" alt="첨부 이미지" class="card-img"/>
+        <div th:text="${board.title}" class="event title"></div>
+
+        <div><sub th:text="${#dates.format(board.startAt, 'yyyy-MM-dd')}+' ~ '+${#dates.format(board.closedAt, 'yyyy-MM-dd')}"></sub></div>
+        <div class="xi-step-forward"></div>
       </div>
-
     </a>
 
   </div><!--E content-->

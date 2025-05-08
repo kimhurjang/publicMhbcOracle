@@ -4,10 +4,10 @@ package com.example.mhbc.entity;
 import com.example.mhbc.dto.BoardDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Entity
@@ -48,6 +48,16 @@ public class BoardEntity {
 
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "START_AT")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startAt; // 이벤트 시작일
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CLOSED_AT")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date closedAt; // 이벤트 종료일
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt; // 작성일
@@ -70,14 +80,19 @@ public class BoardEntity {
 
     public BoardDTO toDTO() {
         return BoardDTO.builder()
+                .idx(idx)
                 .title(title)
                 .content(content)
+                .re(re)
                 .viewCnt(viewCnt)
                 .createdAt(createdAt)
+                .closedAt(closedAt)
+                .startAt(startAt)
                 .groupIdx(group != null ? group.getGroupIdx() : null)
-                .memberIdx(member != null ? member.getIdx() : null)
+                .member(member)
                 .build();
     }
+
 
 
 }

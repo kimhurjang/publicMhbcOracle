@@ -1,5 +1,6 @@
 package com.example.mhbc.util;
 
+import com.example.mhbc.dto.BoardDTO;
 import com.example.mhbc.entity.AttachmentEntity;
 import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.repository.*;
@@ -14,11 +15,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class Utility {
-
     private final BoardRepository boardRepository;
     private final BoardGroupRepository boardGroupRepository;
     private final MemberRepository memberRepository;
@@ -150,5 +151,19 @@ public class Utility {
             this.hasLast = page < totalPage;
         }
     }
+
+    /*
+    * 검색
+    * */
+    public List<BoardDTO> searchByTitle(String keyword, long groupIdx, Long boardType) {
+        keyword = keyword.trim();
+        System.out.println("Searching for: " + keyword + " with groupIdx: " + groupIdx + " and boardType: " + boardType);
+        List<BoardEntity> results = boardRepository.findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(keyword, groupIdx, boardType);
+        System.out.println("Search Results: " + results.size());
+        return results.stream()
+                .map(BoardDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 
 }
