@@ -58,7 +58,7 @@ public class MemberController {
       if (member.getMobile() == null || member.getMobile().trim().isEmpty()) {
         return "redirect:/api/member/mobile";
       }
-      return "redirect:/";
+      return "redirect:/content";
     } else {
       redirectAttributes.addFlashAttribute("error", "아이디나 비밀번호가 틀립니다.");
       return "redirect:/api/member/login";

@@ -27,11 +27,13 @@ public class MainController {
 
         return "index";
     }
-    @RequestMapping("/admin")
+    @RequestMapping("/content")
     public String admin(){
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
-        return "admin";
+        return "content";
     }
+
+
 
     @RequestMapping("/map")
     public String map(){
