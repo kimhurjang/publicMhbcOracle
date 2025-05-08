@@ -7,13 +7,19 @@
     <title>Sign In</title>
     <link rel="stylesheet" href="/css/login.css">
 </head>
+<div class="logo">
+    <a href="/">
+        <img src="/image/logo_1-2.png" alt="로고">
+    </a>
+</div>
+
 <body>
 <div class="container">
     <div class="login_box">
         <h1>회원 로그인</h1>
 
         <!-- 로그인 폼 시작 -->
-        <form action="/api/member/loginProc" method="POST">
+        <form th:action="@{/api/member/loginProc}" method="POST">
             <div class="input_group">
                 <label for="userid">아이디</label>
                 <input type="text" id="userid" name="userid" placeholder="아이디" required>

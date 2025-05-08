@@ -1,6 +1,5 @@
 package com.example.mhbc.config;
 
-import com.example.mhbc.service.UserPasswordEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -19,10 +19,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable);
 
-        http.authorizeHttpRequests(authorize -> authorize
+        http.authorizeHttpRequests( authorize -> authorize
                 .requestMatchers("/**").permitAll()
-                .requestMatchers("/booking").hasAnyRole("ADMIN", "USER")
-                .requestMatchers("/admin").hasRole("ADMIN")
+                // .requestMatchers("/image/*","/css/*","/fonts/*","/", "/login","/join","/error","/index","/home","wedding").permitAll()
+                //.requestMatchers("/booking").hasAnyRole("ADMIN","USER")
+                //.requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/api/member/login","/api/member/mobile").permitAll()
                 .anyRequest().authenticated()
         );
 
@@ -43,24 +45,27 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID") // 쿠키 삭제
                 .permitAll() // 모든 사용자에게 로그아웃 URL 접근 허용
         );
+
+        http.sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .invalidSessionUrl("/api/member/login") // 세션 만료시 로그인 페이지로 리디렉션
+                .maximumSessions(1) // 한 계정으로 최대 1회만 로그인
+                .expiredUrl("/api/member/login") // 세션 만료 시 로그인 페이지로 리디렉션
+        );
+
         return http.build();
     }
+
 
     /**
      * 비밀번호 암호화를 위한 BCryptPasswordEncoder 빈 등록
      */
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
     }
 
-    /**
-     * 암호화 없이 평문 비교를 위해 PasswordEncoder를 사용하지 않음
-     * 실제로는 아래 메소드를 사용하지 않음
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // 암호화하지 않고 평문 비밀번호 비교하도록 빈을 반환하지 않음
-        return null;
-    }
+
+
+
 }
