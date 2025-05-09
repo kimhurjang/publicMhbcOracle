@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -219,6 +221,49 @@ public class MemberController {
   public String findidpw() {
     return "member/findidpw";
   }
+
+  // 아이디 찾기 인증번호 발송
+  @PostMapping("/find-id/send-verification-code")
+  @ResponseBody
+  public Map<String, Object> sendVerificationCode(@RequestBody Map<String, String> request) {
+    String name = request.get("name");
+    String mobile = request.get("mobile");
+
+    MemberEntity member = memberRepository.findByNameAndMobile(name, mobile);
+    Map<String, Object> response = new HashMap<>();
+
+    if (member != null) {
+      // 인증번호 발송 로직 (여기서 인증번호 생성)
+      String verificationCode = String.valueOf((int) (Math.random() * 1000000));
+      // 인증번호를 저장하거나 발송하는 로직
+      response.put("status", "success");
+      response.put("verificationCode", verificationCode);
+    } else {
+      response.put("status", "error");
+      response.put("message", "해당 정보를 찾을 수 없습니다.");
+    }
+
+    return response;
+  }
+
+  // 비밀번호 찾기 처리
+  @PostMapping("/find-password")
+  public String findPassword(@RequestParam("id") String id,
+                             @RequestParam("name") String name,
+                             RedirectAttributes redirectAttributes) {
+    MemberEntity member = memberRepository.findByUseridAndName(id, name);
+
+    if (member != null) {
+      // 비밀번호 찾기 로직 처리, 예: 비밀번호를 이메일로 발송
+      redirectAttributes.addFlashAttribute("message", "비밀번호를 이메일로 전송했습니다.");
+      return "redirect:/api/member/login";
+    } else {
+      redirectAttributes.addFlashAttribute("error", "아이디나 이름이 일치하지 않습니다.");
+      return "redirect:/api/member/findidpw";
+    }
+  }
+
+
 
   @RequestMapping("/adminuser")
   public String adminuser() {

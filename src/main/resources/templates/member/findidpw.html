@@ -2,10 +2,12 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>아이디 비밀번호 찾기</title>
-  <link rel="stylesheet" href="/css/find.css">
+  <link rel="stylesheet" href="/css/find.css"> <!-- 여기에 스타일시트 링크 추가 -->
 </head>
 <body>
+
 <div class="container">
   <h2>아이디 비밀번호 찾기</h2>
 
@@ -18,20 +20,21 @@
     <div class="tabcontent">
       <!-- 아이디 찾기 폼 -->
       <div id="tab1" class="active">
-        <form action="/find-id" method="post">
+        <form id="find-id-form" method="POST" action="/api/member/findidpw">
           <label for="name_input1">이름</label>
-          <input type="text" id="name_input1" name="name" placeholder="이름" required><br>
+          <input type="text" id="name_input1" name="name" required placeholder="이름을 입력하세요"><br>
 
-          <label for="email_input1">이메일</label>
-          <input type="text" id="email_input1" name="email" placeholder="이메일" required>
-          <span>@</span>
-          <select name="email_domain" id="event_type_select1">
-            <option value="naver.com">naver.com</option>
-            <option value="gmail.com">gmail.com</option>
-          </select><br>
+          <label for="mobile_input1">전화번호</label>
+          <input type="tel" id="mobile_input1" name="mobile" required placeholder="전화번호를 입력하세요"><br>
 
-          <button type="submit">아이디 찾기</button>
+          <button type="submit" class="btn" id="find-id-btn">아이디 찾기</button>
         </form>
+
+        <div id="verification-section" style="display:none;">
+          <label for="verification-code">인증번호</label>
+          <input type="text" id="verification-code" placeholder="인증번호를 입력하세요">
+          <button type="button" id="verify-button" class="btn">인증번호 확인</button>
+        </div>
       </div>
 
       <!-- 비밀번호 찾기 폼 -->
@@ -56,41 +59,80 @@
 
   // 탭 클릭 시 동작
   tabLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
+      link.addEventListener('click', function(e) {
+          e.preventDefault();
 
-      // 모든 탭 비활성화
-      tabLinks.forEach(t => t.classList.remove('active'));
-      tabContents.forEach(c => c.classList.remove('active'));
+          // 모든 탭 비활성화
+          tabLinks.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
 
-      // 선택된 탭 활성화
-      this.classList.add('active');
-      const targetId = this.getAttribute('href').replace('#', '');
-      document.getElementById(targetId).classList.add('active');
+          // 선택된 탭 활성화
+          this.classList.add('active');
+          const targetId = this.getAttribute('href').replace('#', '');
+          document.getElementById(targetId).classList.add('active');
 
-      // URL 해시값도 바꿔줌
-      history.replaceState(null, null, `#${targetId}`);
-    });
+          // URL 해시값도 바꿔줌
+          history.replaceState(null, null, `#${targetId}`);
+      });
   });
 
   // 페이지 로드시 해시값 확인하여 탭 자동 전환
   window.addEventListener('DOMContentLoaded', () => {
-    const hash = window.location.hash.replace('#', '');
-    const targetTab = document.getElementById(hash);
+      const hash = window.location.hash.replace('#', '');
+      const targetTab = document.getElementById(hash);
 
-    if (targetTab) {
-      // 모든 탭 비활성화
-      tabLinks.forEach(t => t.classList.remove('active'));
-      tabContents.forEach(c => c.classList.remove('active'));
+      if (targetTab) {
+          // 모든 탭 비활성화
+          tabLinks.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
 
-      // 해당 탭만 활성화
-      targetTab.classList.add('active');
-      const targetLink = document.querySelector(`.tabnav a[href="#${hash}"]`);
-      if (targetLink) {
-        targetLink.classList.add('active');
+          // 해당 탭만 활성화
+          targetTab.classList.add('active');
+          const targetLink = document.querySelector(`.tabnav a[href="#${hash}"]`);
+          if (targetLink) {
+              targetLink.classList.add('active');
+          }
       }
-    }
   });
+
+  // 폼 제출 시 인증번호 발송
+  const findIdForm = document.querySelector('#find-id-form');
+  const mobileInput = document.querySelector('#mobile_input1');
+  const nameInput = document.querySelector('#name_input1');
+  const verificationSection = document.querySelector('#verification-section');
+  const verifyButton = document.querySelector('#verify-button');
+  const verificationCodeInput = document.querySelector('#verification-code');
+
+  findIdForm.addEventListener('submit', function (event) {
+    event.preventDefault();  // 폼 제출을 막고 JavaScript로 처리
+
+    const phone = mobileInput.value;
+    const name = nameInput.value;
+
+    // 서버로 전화번호와 이름을 보내서 인증번호 발송
+    fetch('/find-id/send-verification-code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: name, mobile: phone })  // JSON으로 보내기
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Response Data:', data);  // 응답 데이터 확인
+        if (data.status === 'success') {
+            verificationSection.style.display = 'block';
+            alert('인증번호가 전송되었습니다!');
+        } else {
+            alert('해당 정보를 찾을 수 없습니다.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('오류가 발생했습니다: ' + error.message);
+    });
+});
+
 </script>
 
 </body>
