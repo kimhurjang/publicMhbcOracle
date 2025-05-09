@@ -57,7 +57,15 @@ public class MainController {
     }
     @RequestMapping("/map")
     public String map(){
-        return "map";
+        return "/page/map";
+    }
+    @RequestMapping("/place")
+    public String place(){
+        return "/page/place";
+    }
+    @RequestMapping("/rental")
+    public String rental(){
+        return "/page/rental";
     }
 
 
