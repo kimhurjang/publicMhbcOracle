@@ -16,7 +16,7 @@ public class MainController {
 
     private final BoardRepository boardRepository;
 
-    @RequestMapping({"/" , "/home"})
+    @RequestMapping({"/" , "/home", "/index"})
     public String index(Model model){
         System.out.println(">>>>>>>>>>index page<<<<<<<<<<");
 
@@ -44,16 +44,19 @@ public class MainController {
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "content";
     }
-
     @RequestMapping("/admin/content")
     public String adminContentLayout() {
         System.out.println(">>>>>>>>>>admin content page<<<<<<<<<<");
         return "/admin/content";
     }
 
+    @RequestMapping("/about")
+    public String about(){
+        System.out.println(">>>>>>>>>>about page<<<<<<<<<<");
+        return "/page/about";
+    }
     @RequestMapping("/map")
     public String map(){
-
         return "map";
     }
 

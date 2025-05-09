@@ -20,4 +20,10 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
   // 로그인한 회원의 예약을 페이징으로 조회
   Page<ReservationEntity> findByMember(MemberEntity member, Pageable pageable);
 
+  @Query("SELECT r FROM ReservationEntity r " +
+          "JOIN FETCH r.member " +
+          "JOIN FETCH r.hall " +
+          "ORDER BY r.idx DESC")
+  List<ReservationEntity> findAllWithMemberAndHall();
+
 }
