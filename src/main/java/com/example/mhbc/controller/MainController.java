@@ -45,7 +45,11 @@ public class MainController {
         return "content";
     }
 
-
+    @RequestMapping("/admin/content")
+    public String adminContentLayout() {
+        System.out.println(">>>>>>>>>>admin content page<<<<<<<<<<");
+        return "/admin/content";
+    }
 
     @RequestMapping("/map")
     public String map(){

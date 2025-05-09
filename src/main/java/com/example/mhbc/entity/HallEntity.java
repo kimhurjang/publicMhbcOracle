@@ -2,7 +2,10 @@ package com.example.mhbc.entity;
 
 import com.example.mhbc.dto.HallDTO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "HALL")

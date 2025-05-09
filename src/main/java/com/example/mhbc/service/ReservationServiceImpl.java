@@ -4,10 +4,13 @@ import com.example.mhbc.dto.ReservationDTO;
 import com.example.mhbc.entity.HallEntity;
 import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.entity.ReservationEntity;
-import com.example.mhbc.repository.HallRepository;
 import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,8 +51,12 @@ public class ReservationServiceImpl implements ReservationService {
    */
   @Override
   public void save(ReservationDTO dto) {
-    MemberEntity member = memberRepository.findById(dto.getMemberIdx())
-      .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 memberIdx입니다: " + dto.getMemberIdx()));
+    //MemberEntity member = memberRepository.findById(dto.getMemberIdx()).orElseThrow(() -> new IllegalArgumentException("유효하지 않은 memberIdx입니다: " + dto.getMemberIdx()));
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String loginUserid = auth.getName(); // 또는 ((UserDetailsImpl) auth.getPrincipal()).getUsername();
+    MemberEntity member = memberRepository.findByUserid(loginUserid)
+      .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다: " + loginUserid));
+
     HallEntity hall = hallService.findById(dto.getHallIdx()); // 홀 조회 실패 시 예외 발생
 
     // 연락처에 하이픈이 없을 경우 자동 추가
@@ -93,6 +100,36 @@ public class ReservationServiceImpl implements ReservationService {
             .map(ReservationEntity::toDTO) // Entity → DTO 변환
             .orElse(null); // 없으면 null 반환
   }
+
+  // 로그인 사용자 예약만 조회
+  @Override
+  public List<ReservationDTO> findByLoginUser() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String loginUserid = auth.getName();
+
+    MemberEntity member = memberRepository.findByUserid(loginUserid)
+            .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다: " + loginUserid));
+
+    List<ReservationEntity> list = reservationRepository.findByMemberOrderByIdxDesc(member);
+
+    return list.stream()
+            .map(ReservationEntity::toDTO)
+            .collect(Collectors.toList());
+  }
+
+  //로그인 사용자만 페이징 처리해서 조회
+  @Override
+  public Page<ReservationDTO> findByLoginUserPage(Pageable pageable) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String loginUserid = auth.getName();
+
+    MemberEntity member = memberRepository.findByUserid(loginUserid)
+            .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다: " + loginUserid));
+
+    return reservationRepository.findByMember(member, pageable)
+            .map(ReservationEntity::toDTO);
+  }
+
 
   // 예약 수정 처리  save()는 idx가 있으면 UPDATE로 작동
   @Override

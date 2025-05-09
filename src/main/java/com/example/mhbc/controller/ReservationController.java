@@ -2,7 +2,6 @@ package com.example.mhbc.controller;
 
 import com.example.mhbc.dto.ReservationDTO;
 import com.example.mhbc.entity.ReservationEntity;
-import com.example.mhbc.repository.HallRepository;
 import com.example.mhbc.repository.ReservationRepository;
 import com.example.mhbc.service.HallService;
 import com.example.mhbc.service.ReservationService;
@@ -29,6 +28,11 @@ public class ReservationController {
   private final HallService hallService;
 
   private final ReservationRepository reservationRepository;
+
+  @GetMapping("/")
+  public String mainPage(){
+    return "reservation/index";
+  }
 
   // 예약 등록 폼 화면
   @GetMapping("/form")
@@ -63,8 +67,7 @@ public class ReservationController {
     String link = "/reservation/list"; // 현재 페이지 링크
 
     Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
-    Page<ReservationDTO> paging = reservationRepository.findAll(pageable)
-      .map(ReservationEntity::toDTO);
+    Page<ReservationDTO> paging = reservationService.findByLoginUserPage(pageable);
 
     int totalCount = (int) paging.getTotalElements();
 
@@ -74,9 +77,6 @@ public class ReservationController {
     model.addAttribute("pagination", pagination);
     model.addAttribute("link", link);
 
-    //System.out.println(">>>> 전체 예약 수: " + reservationRepository.findAll().size());
-    //System.out.println(">>>> 변환된 DTO 수: " + reservationService.findAll().size());
-
     return "reservation/list";
   }
 
@@ -84,7 +84,7 @@ public class ReservationController {
   @GetMapping("/view")
   public String viewReservation(@RequestParam Long idx, Model model) {
     model.addAttribute("webtitle", "만화방초 | 예약 상세보기");
-    
+
     model.addAttribute("reservation", reservationService.findById(idx));
     return "reservation/view";
   }
@@ -93,7 +93,7 @@ public class ReservationController {
   @GetMapping("/edit")
   public String editReservation(@RequestParam Long idx, Model model) {
     model.addAttribute("webtitle", "만화방초 | 예약 수정하기");
-    
+
     ReservationDTO dto = reservationService.findById(idx);
     model.addAttribute("reservation", dto); // 기존 예약 정보
     model.addAttribute("halls", hallService.getAllHalls()); // 홀 목록

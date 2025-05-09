@@ -47,3 +47,31 @@ textarea{width:100%;padding:12px;font-size:0.95em;resize:vertical;border-radius:
     .form_group.align_start label {flex-grow:1;flex-shrink:1;}
 }
 
+
+/* 안내 페이지
+.process_title {font-size:24px; font-weight:700; margin-bottom:20px;}
+.process_steps {display:flex; flex-direction:column; gap:15px;}
+.step {background:#fff; padding:20px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); display:flex; align-items:center; gap:15px;}
+.step_num {background:#557895; color:#fff; font-weight:bold; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
+.step_desc {text-align:left;}
+.step_desc h3 {margin:0; font-size:18px; font-weight:600;}
+.step_desc p {margin:5px 0 0; font-size:15px; color:#555;}*/
+
+.process_section {padding:40px 20px;}
+.process_steps {display:flex;flex-wrap:wrap; justify-content:space-between;align-items:center;gap:10px;margin-bottom:30px;}
+.step {text-align:center;}
+.step .icon {width:60px;height:60px;line-height:60px;margin:0 auto 10px;border-radius:50%;background:#7768ae;color:#fff;font-weight:700;font-size:20px;}
+.step_title {font-size:15px;color:#333;}
+
+.arrow {display:flex;align-items:center;justify-content:center;font-size:24px;color:#7768ae;margin:0 10px;}
+
+.process_guide dt {font-weight:bold;color:#7768ae;margin-bottom:5px;}
+.process_guide dd {margin-bottom:15px;padding-left:10px;color:#555;}
+.process_guide div {margin-bottom:20px;}
+
+@media (max-width: 767px) {
+
+    .process_steps {justify-content:start;}
+    .step {width:calc(25% - 10px);}
+
+}

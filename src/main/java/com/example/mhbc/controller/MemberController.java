@@ -166,6 +166,16 @@ public class MemberController {
     return "member/join";
   }
 
+  // 아이디 중복 확인
+  @GetMapping("/idcheck")
+  @ResponseBody
+  public String checkUserId(@RequestParam("userid") String userid) {
+    if (memberRepository.existsByUserid(userid)) {
+      return "Y";  // 중복된 아이디
+    }
+    return "N";  // 사용 가능한 아이디
+  }
+
   @PostMapping("/join")
   public String joinProc(@RequestParam("userid") String userid,
                          @RequestParam("pwd") String pwd,
@@ -177,6 +187,7 @@ public class MemberController {
                          @RequestParam("mobile2") String mobile2,
                          @RequestParam("mobile3") String mobile3) {
 
+    // 모바일 번호 합치기
     String mobile = (!mobile1.isEmpty() && !mobile2.isEmpty() && !mobile3.isEmpty())
             ? mobile1 + "-" + mobile2 + "-" + mobile3 : null;
 
@@ -192,13 +203,17 @@ public class MemberController {
             .status("정상")
             .build();
 
+    // 아이디 중복 체크 후 저장
     if (!memberRepository.existsByUserid(userid)) {
       memberRepository.save(memberDTO.toEntity());
-      return "redirect:/api/member/login";
     } else {
-      return "redirect:/api/member/join";
+      System.out.println("이미 가입된 사용자입니다.");
+      return "redirect:/api/member/join";  // 이미 존재하는 경우 회원가입 페이지로 리디렉션
     }
+
+    return "redirect:/api/member/login";
   }
+
 
   @RequestMapping("/findidpw")
   public String findidpw() {

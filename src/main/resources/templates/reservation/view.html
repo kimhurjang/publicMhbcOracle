@@ -39,9 +39,9 @@
         </tr>
         <tr>
           <th>행사 예정일시</th>
-          <td
-            th:text="${reservation.eventTimeSelect != null && !reservation.eventTimeSelect.isEmpty() ? reservation.eventDate + ' ' + reservation.eventTimeSelect + '시' : reservation.eventDate}">
-            2025-05-31 14시
+          <td th:text="${reservation.eventTimeSelect != null && !reservation.eventTimeSelect.isEmpty()
+  ? #dates.format(reservation.eventDate, 'yyyy-MM-dd') + ' ' + reservation.eventTimeSelect + '시'
+  : #dates.format(reservation.eventDate, 'yyyy-MM-dd')}">
           </td>
         </tr>
         <tr>

@@ -4,9 +4,10 @@
 <head th:replace="~{admin/fragment/head :: head}"></head>
 <body id="admin">
 <head th:replace="~{admin/fragment/header :: header}"></head>
+<a href="" class="toggle_ic"><i class="xi-hamburger-back"></i></a>
 <div id="wrapper">
     <th:block layout:fragment="content"></th:block>
 </div><!--E wrapper-->
-<!-- footer th:replace="~{admin/fragment/footer :: footer}"></footer -->
+<th:block th:replace="~{admin/fragment/footer :: footer}"></th:block>
 </body>
 </html>

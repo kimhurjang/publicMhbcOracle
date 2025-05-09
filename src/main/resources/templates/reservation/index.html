@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/reservation.css"></th:block>
+<section layout:fragment="content" id="container" class="reservation list">
+    <h1>상담예약</h1>
+    <div id="content" class="content">
+
+      <section class="process_section">
+        <div class="process_steps">
+          <div class="step">
+            <div class="icon">1</div>
+            <p class="step_title">상담신청</p>
+          </div>
+          <i class="xi-angle-right arrow"></i>
+          <div class="step">
+            <div class="icon">2</div>
+            <p class="step_title">1차 전화상담</p>
+          </div>
+          <i class="xi-angle-right arrow"></i>
+          <div class="step">
+            <div class="icon">3</div>
+            <p class="step_title">2차 방문상담</p>
+          </div>
+          <i class="xi-angle-right arrow"></i>
+          <div class="step">
+            <div class="icon">4</div>
+            <p class="step_title">결제 및 확정</p>
+          </div>
+          <i class="xi-angle-right arrow"></i>
+          <div class="step">
+            <div class="icon">5</div>
+            <p class="step_title">행사진행</p>
+          </div>
+        </div>
+
+        <div class="process_guide">
+          <dl>
+            <dt>1. 상담신청</dt>
+            <dd>홈페이지를 통해 상담 신청서를 작성해 주세요.
+              <p><a th:href="@{/reservation/form}" class="btn color2">상담 예약하기</a></p>
+            </dd>
+          </dl>
+          <dl>
+            <dt>2. 1차 전화상담</dt>
+            <dd>담당 플래너가 전화 또는 이메일로 연락드립니다.</dd>
+          </dl>
+          <dl>
+            <dt>3. 2차 방문상담</dt>
+            <dd>직접 방문하여 예식 또는 행사에 대한 구체적인 상담을 진행합니다.</dd>
+          </dl>
+          <dl>
+            <dt>4. 결제 및 확정</dt>
+            <dd>상담 내용에 동의하시면 결제를 통해 예약을 확정합니다.</dd>
+          </dl>
+          <dl>
+            <dt>5. 행사진행</dt>
+            <dd>예정된 날짜에 맞춰 아름다운 예식 및 행사을 진행합니다.</dd>
+          </dl>
+        </div>
+      </section>
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
