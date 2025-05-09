@@ -14,9 +14,9 @@ body { position:relative; }
 #user nav.transparentNav #gnb li.login a span{color: white !important}
 
 #user nav { position:relative; transition: background-color 0.3s, color 0.3s;}
-#user #gnb li.toggle.icon{display: none;}
+#user #gnb .toggle.icon{display: none;}
 #user #gnb { width:750px; height:70px; display:flex; justify-content:space-around; text-align:center; background-color:#D6CAE8; border-radius:0 0 0 30px; transition:border-radius 0.8s ease; }
-#user #gnb a { color:#000; }
+#user #gnb .nav_item>a { color:#000; font-weight: 500;}
 #user #gnb .nav_item:hover>a { color:#F7F4ED; }
 #user #gnb .nav_item { min-width:120px; font-size:18px; padding:20px; border-radius:10px; }
 #user #gnb .nav_item:hover { background-color:#8676A1; }
@@ -37,7 +37,7 @@ a.nav_item.login span:last-child { font-size:14px; line-height:0; }
 #user .sub_group { min-width: 120px; }
 #user .sub_group:last-child { width: 150px; }
 #user .sub_group li { width: 80%; font-size: 15px; padding: 10px; text-align: center; border-radius: 8px; margin: 5px 0; }
-#user .sub_group>li:hover{ background-color: #8676A1; }
+#user .sub_group>li:hover{background-color: #8676A1; }
 #user .sub_group>li:hover a { color: #F7F4ED;}
 #user .sub_nav_layer a { color: #000; }
 #user .sub_group.group5{max-width: 150px;}
@@ -59,8 +59,8 @@ a.nav_item.login span:last-child { font-size:14px; line-height:0; }
 #user #wrapper { width:100%; padding:0; background:#f8f8f8; }
 #user #container { max-width:768px; margin:0 auto; padding: 100px 0;}
 #user #container > h1 {text-align:center; margin-bottom:15px; font-size:2.8em;}
-#user #container.sub { width:1500px;}
-#user #content { max-width:768px; margin:0 auto; padding:30px 40px; border-radius:12px; background:#fff; box-shadow:0 4px 15px rgba(0, 0, 0, 0.1); }
+#user #container.sub { max-width:1000px;}
+#user #content {  margin:0 auto; padding:30px 40px; border-radius:12px; background:#fff; box-shadow:0 4px 15px rgba(0, 0, 0, 0.1); }
 #user .sub #content {box-shadow:revert;}
 
 .section_title{font-size:1.2em;font-weight:bold;margin-bottom:5px;}
@@ -245,30 +245,92 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 ------------
 */
 @media screen and (max-width: 764px) {
-  /* 토글 아이콘 */
+  #user #gnb {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    background-color: #D6CAE8;
+    border-radius: 0 0 0 30px;
+    padding-top: 53px; /* 토글 아이콘 공간 확보 */
+  }
+
   #user #gnb li.toggle.icon {
     display: block;
     position: fixed;
-    top: 10px;
-    right: 10px;
+    top: 0;
+    right: 0;
     font-size: 2rem;
     color: #8676A1;
     text-shadow: 1px 1px 1px #111;
     cursor: pointer;
-    z-index: 1000;
+    /*z-index: 1000;*/
     background: #F7F4ED;
+    text-align: center;
     padding: 10px;
     border-radius: 10px 0 0 10px;
   }
-  #user #gnb li:not(.toggle) {
+
+  #user #gnb li:not(.toggle), .nav_item.login.xi-profile-o{
     display: none;
   }
-  #user #gnb {
+
+/**/
+  #user #gnb.active li {
     display: block;
     width: 100%;
-    background-color: #D6CAE8;
-    border-radius: 0 0 0 30px;
-    padding-top: 60px; /* 토글 아이콘 공간 확보 */
+    text-align: left;
+    padding: 1rem 0;
+    border-bottom: 1px solid #8676A1;
+    background: #D6CAE8;
   }
+
+  #user #gnb.active .nav_item {
+    width: 100%;
+    padding: 5px 0;
+    border-radius: 0px;
+  }
+   #user #gnb.active .nav_item>a{
+    margin: 10px 250px 10px 0;
+    color: black;
+    font-weight: 500;
+   }
+  #user #gnb.active .nav_item:last-child{
+    border-radius: 0 0 0 30px 0;
+    border-bottom: none;
+ }
+   #user gnb.active .nav_item:hover{
+    background-color: none;
+    color: black;
+   }
+  #user #gnb.active .sub_nav_layer {
+    display: block;
+    position: static;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    height: auto;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  #user #gnb.active .sub_group {
+    display: block;
+    padding: 0;
+  }
+
+  #user #gnb.active .sub_group li {
+    width: 100%;
+    padding: 0.5rem 0;
+    border-bottom: 0px;
+    text-align: center;
+  }
+
+  #user #gnb.active .sub_group li:hover {
+    background-color: #8676A1;
+  }
+  /**/
+}
+
 
 }
