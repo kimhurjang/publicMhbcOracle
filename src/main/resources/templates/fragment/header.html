@@ -10,14 +10,24 @@
         <nav>
             <!-- 메인 메뉴 -->
             <ul id="gnb">
+                <!--모바일 토클 버튼-->
+                <li class="toggle icon xi-list"></li>
+
                 <li><a href="/home" class="nav_item">소개글</a></li>
                 <li><a href="#" class="nav_item">웨딩</a></li>
                 <li><a href="#" class="nav_item">이용 안내</a></li>
                 <li><a href="/board/cmct" class="nav_item">커뮤니티</a></li>
-                <li class="login"><a href="/member/login" class="nav_item login">
-                    <span class="xi-profile-o"></span><br>
-                    <span>로그인/회원가입</span>
-                </a>
+                <li class="login" th:if="${session.loginMember == null and session.loginSnsUser == null}">
+                    <a href="/api/member/login" class="nav_item login">
+                        <span class="xi-profile-o"></span><br>
+                        <span>로그인/회원가입</span>
+                    </a>
+                </li>
+                <li class="login" th:if="${session.loginMember != null or session.loginSnsUser != null}">
+                    <a href="/logout" class="nav_item login">
+                        <span class="xi-profile-o"></span><br>
+                        <span>로그아웃</span>
+                    </a>
                 </li>
             </ul>
 

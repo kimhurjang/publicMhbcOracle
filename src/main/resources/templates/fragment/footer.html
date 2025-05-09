@@ -2,30 +2,31 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <footer th:fragment="footer">
     <div class="footerBox copy">
-        <h2>logo img</h2>
+        <img src="./image/logo_1-2.png">
         <p>©ManHwaBangCho</p>
         <div id="snsIcon">
-            <a href=""><img src=""></a>
-            <a href=""><img src=""></a>
-            <a href=""><img src=""></a>
-            <a href=""><img src=""></a>
+            <a href="" class="xi-facebook"></a>
+            <a href="" class="xi-instagram"></a>
+            <a href="" class="xi-kakaotalk"></a>
+            <a href="" class="xi-twitter"></a>
         </div>
     </div>
-    <div class="footerBox myAccount">
-        <p>내 정보</p>
-        <p><a href="">마이 페이지</a></p>
-        <p><a href="">예약 정보 조회 / 수정</a></p>
+    <div class="footerBox info">
+        <div class="footerBox myAccount">
+            <p>내 정보</p>
+            <p><a href="">마이 페이지</a></p>
+            <p><a href="">예약 정보 조회 / 수정</a></p>
+        </div>
+        <div class="footerBox address">
+            <p>주소</p>
+            <p>경상남도 고성군 거류면 은월리 17-5</p>
+        </div>
+        <div class="footerBox tel">
+            <p>연락처</p>
+            <p>TEL : 00-000-0000</p>
+            <p>Email : abcd1234@mail.com</p>
+        </div>
     </div>
-    <div class="footerBox address">
-        <p>주소</p>
-        <p>경상남도 고성군 거류면 은월리 17-5</p>
-    </div>
-    <div class="footerBox tel">
-        <p>연락처</p>
-        <p>TEL : 00-000-0000</p>
-        <p>Email : abcd1234@mail.com</p>
-    </div>
-
     <!--패럴렉스 스크롤링 라이브러리 임폴트-->
     <script src="/js/jquery.parallax-scroll.min.js"></script>
 
@@ -113,15 +114,32 @@
             window.addEventListener("scroll", function () {
                 checkScroll(); // 스크롤 시마다 스크롤 위치에 따라 투명 상태 체크
             });
+          const gnb      = document.getElementById("gnb");
+          const toggleEl = gnb.querySelector(".toggle.icon");
+
+          toggleEl.addEventListener("click", function() {
+            gnb.classList.toggle("active");
+          });
+
+          // —> Optional: 메뉴 바깥 클릭 시 닫기
+          document.addEventListener("click", function(e) {
+            if ( !gnb.contains(e.target) && gnb.classList.contains("active") ) {
+              gnb.classList.remove("active");
+            }
+          });
         });
 
-      AOS.init({
-       duration: 600,  // 애니메이션 지속 시간 (밀리초)
-       easing: 'ease-in-out',  // 애니메이션의 이징 함수
-       delay: 0,  // 애니메이션 지연 시간 (밀리초)
-       offset: 10,  // 스크롤 감지의 시작 위치 (픽셀)
-        once: false
-     });
+        AOS.init({
+           duration: 600,  // 애니메이션 지속 시간 (밀리초)
+           easing: 'ease-in-out',  // 애니메이션의 이징 함수
+           delay: 0,  // 애니메이션 지연 시간 (밀리초)
+           offset: 10,  // 스크롤 감지의 시작 위치 (픽셀)
+            once: false
+         });
+        window.addEventListener('load', () => {
+          AOS.refresh();
+          checkScroll(); // 이 위치에서 호출
+        });
 
     </script>
 </footer>

@@ -6,14 +6,15 @@ body { position:relative; }
 #user .logo a span{ background-size: cover; width:100px; height:100px; display: block; background-image: url("/image/logo_1-2.png"); border-radius:10px;}
 
 /* nav */
-
 /* 캐러셀 위에서만 적용될 클래스 */
+
 #user .logo.transparentNav a span{background-image: url("/image/logo_1-1.png") !important;}
 #user nav.transparentNav #gnb {background-color: transparent !important;}
 #user nav.transparentNav #gnb a {color: white !important;}
 #user nav.transparentNav #gnb li.login a span{color: white !important}
 
 #user nav { position:relative; transition: background-color 0.3s, color 0.3s;}
+#user #gnb .toggle.icon{display: none;}
 #user #gnb { width:750px; height:70px; display:flex; justify-content:space-around; text-align:center; background-color:#D6CAE8; border-radius:0 0 0 30px; transition:border-radius 0.8s ease; }
 #user #gnb a { color:#000; }
 #user #gnb li:hover a { color:#F7F4ED; }
@@ -37,10 +38,13 @@ nav:hover .sub_nav_layer { display:flex; position:absolute; top:70px; left:0; ba
 .sub_group:nth-child(3) li:first-child { font-size:14px; }
 
 /* footer */
-#user footer { background-color:#9b89b3; color:#F7F4ED; padding:80px; display:flex; } /* 보라색 배경 */
-#user footer div { width:300px; }
-#user .copy { margin-right:600px; line-height:50px; }
-#snsIcon { justify-content:space-around; }
+#user footer { background-color:#9b89b3; color:#F7F4ED; padding:80px; display:flex; justify-content:space-between;} /* 보라색 배경 */
+#user footer div { /*width:300px;*/ }
+#user .copy { /*margin-right:600px;*/ line-height:50px; }
+#user footer img{width: 12rem; height: auto; }
+.footerBox.info{display: flex; max-width:500px; width: 60%;}
+#snsIcon { justify-content:space-around; margin: 20px 0;}
+#snsIcon a{width: 50px; height: 50px; font-size: 25px;}
 .myAccount { display:block; }
 .myAccount a { color:#F7F4ED; }
 
@@ -189,3 +193,45 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 .paging li.active a {background-color:#D6CAE8; color:#5c437e; border-color:#9b89b3;}
 
 
+/*
+------------
+반응형 nav
+------------
+*/
+@media screen and (max-width: 764px){
+    #user #gnb .toggle.icon {
+        display: block;
+        position: fixed;          /* 화면에 고정 */
+        top: 1rem;                /* 위치 조절 */
+        right: 1rem;
+        font-size: 1.8rem;
+        color: #
+        cursor: pointer;
+        z-index: 1000;
+    }
+    #user #gnb li:not(.toggle) {display: none;}
+    #user #gnb.active li {
+         display: block;
+         width: 100%;
+         text-align: center;
+         padding: 1rem 0;
+         background: #D6CAE8;
+         border-bottom: 1px solid #8676A1;
+     }
+    #user #gnb {
+        position: fixed;
+        top: 70px; /* header 높이 */
+        right: -100%;
+        width: 200px;
+        max-width: 80%;
+        height: calc(100% - 70px);
+        background: #fff;
+        flex-direction: column;
+        transition: right 0.3s ease;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+        z-index: 998;
+    }
+    #user #gnb.active {
+        right: 0;
+    }
+}

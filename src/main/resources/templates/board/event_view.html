@@ -25,7 +25,7 @@
       <span th:text="'작성일 ' + ${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></span>
       <span th:text="'조회수 '+${board.viewCnt}"></span>
     </div>
-    <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}"><button>[관리자]삭제</button></a>
+    <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button>[관리자]삭제</button></a>
     <!--sec:authorize="hasRole('ADMIN')"-->
     <a th:href="@{/board/event}"><button>뒤로가기</button></a>
 

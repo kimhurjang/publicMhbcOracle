@@ -115,23 +115,24 @@
     </div>
 
     <div id="ms3" class="container bg-holder" data-width="1200" data-height="700">
+        <!--이벤트-->
+
         <!--중간 배너-->
-        <article id="banner">
+        <div id="banner">
             <div>
                 <p>EVENT</p>
                 <p>만화방초에서 진행되는 다양한 이벤트</p>
                 <a href="/board/event"><button>보러가기</button></a>
             </div>
-        </article>
+        </div>
 
-        <!--이벤트-->
-        <article id="event">
+        <article class="event">
 
             <div th:if="${#lists.size(event) == 0}" id="nullEvent">
                 <h2>현재 진행 중인 이벤트가 없습니다.</h2>
             </div>
 
-            <div th:each="event : ${event}"  data-aos="fade-down" data-aos-delay="200">
+            <div th:each="event : ${event}"  data-aos="fade-down" data-aos-delay="200" class="event card">
                 <img th:src="@{|/data/${event.attachment.filePath}|}">
                 <div>
                     <span>
@@ -153,13 +154,13 @@
                 <div class="ga-prev"></div>
 
             <ul class="gaSlider">
-                <li><img src="/image/12.jfif" alt="갤러리 이미지 1"></li>
-                <li><img src="/image/13.jpg" alt="갤러리 이미지 2"></li>
-                <li><img src="/image/16.jfif" alt="갤러리 이미지 3"></li>
-                <li><img src="/image/18.jpg" alt="갤러리 이미지 4"></li>
-                <li><img src="/image/img.jpg" alt="갤러리 이미지 5"></li>
-                <li><img src="/image/kuk202306110112.680x.0.jpg" alt="갤러리 이미지 6"></li>
-                <li><img src="/image/L7940277.jfif" alt="갤러리 이미지 7"></li>
+                <li><a th:href="@{/board/gallery_view(idx=${91}, board_type=${1}, group_idx=${4})}"><img src="/image/12.jfif" alt="갤러리 이미지 1"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${89}, board_type=${1}, group_idx=${4})}"><img src="/image/13.jpg" alt="갤러리 이미지 2"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${90}, board_type=${1}, group_idx=${4})}"><img src="/image/16.jfif" alt="갤러리 이미지 3"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${92}, board_type=${1}, group_idx=${4})}"><img src="/image/18.jpg" alt="갤러리 이미지 4"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${93}, board_type=${1}, group_idx=${4})}"><img src="/image/img.jpg" alt="갤러리 이미지 5"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${94}, board_type=${1}, group_idx=${4})}"><img src="/image/kuk202306110112.680x.0.jpg" alt="갤러리 이미지 6"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${95}, board_type=${1}, group_idx=${4})}"><img src="/image/L7940277.jfif" alt="갤러리 이미지 7"></a></li>
             </ul>
 
             <div class="ga-next"></div>
@@ -170,7 +171,8 @@
     <div id="ms5" class="container bg-holder" data-width="1200" data-height="700">
         <!--게시판 / 오시는 길-->
         <article id="board">
-            <div data-aos="fade-right" data-aos-delay="200">
+
+            <div data-aos="fade-right" data-aos-delay="200" class="boardBox">
                 <div class="board boards">
                     <h2>게시판</h2>
                     <a href="/board/notice"><button class="btn more">더 보기</button></a>
@@ -183,9 +185,9 @@
                         <p th:text="${board.content.length() > 30} ? ${#strings.substring(board.content, 0, 30) + '...'} : ${board.content}"></p>
                         <a th:href="@{/board/notice_view(group_idx=${board.group.groupIdx}, board_type=${board.group.boardType}, idx=${board.idx})}"><button class="xi-arrow-right"></button></a>
                     </div>
-
                 </div>
             </div>
+
             <div class="mapBox" data-aos="fade-left" data-aos-delay="200">
                 <div id="map"></div><!--맵스-->
                 <div id="boardMap">

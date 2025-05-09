@@ -25,7 +25,7 @@ public class Utility {
     private final MemberRepository memberRepository;
     private final AttachmentRepository attachmentRepository;
     private final CommentsRepository commentsRepository;
-    private String uploadDir = "D:/SpringProject/data/";
+    private String uploadDir = "Z:/public/data/";
     /**
     * 파일
     * */
@@ -72,7 +72,7 @@ public class Utility {
             for (AttachmentEntity attachment : attachments) {
                 String filepath = attachment.getFilePath();
                 System.out.println("파일 경로: " + filepath);
-                String dir = "D:/SpringProject/data/";
+                String dir = "Z:/public/data/";
 
                 // 실제 파일 삭제
                 File file = new File(dir + filepath);

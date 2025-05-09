@@ -597,7 +597,7 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
         if (attachment.getFilePath() == null || attachment.getFilePath().isEmpty()) {
             throw new RuntimeException("파일 경로가 존재하지 않습니다: " + attachment);
         }
-        String uploadDir = "D:/SpringProject/data/";
+        String uploadDir = "Z:/public/data/";
         Resource resource = new FileSystemResource(uploadDir + attachment.getFilePath());
 
 
