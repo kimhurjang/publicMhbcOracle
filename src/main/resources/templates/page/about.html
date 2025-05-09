@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+    <h1>Content 제목</h1>
+    <div id="content" class="content">
+        content영역
+
+        aaaaaaaaaaa
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
