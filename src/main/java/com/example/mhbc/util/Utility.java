@@ -33,7 +33,6 @@ public class Utility {
     public void saveAttachment(MultipartFile attachment, BoardEntity board) throws IOException {
         if (!attachment.isEmpty()) {
             String uuidFileName = UUID.randomUUID().toString() + "_" + attachment.getOriginalFilename();
-            //uploadDir = "D:/SpringProject/data/";
 
             File directory = new File(uploadDir);
             if (!directory.exists()) {
@@ -156,10 +155,15 @@ public class Utility {
     * 검색
     * */
     public List<BoardDTO> searchByTitle(String keyword, long groupIdx, Long boardType) {
+
         keyword = keyword.trim();
-        System.out.println("Searching for: " + keyword + " with groupIdx: " + groupIdx + " and boardType: " + boardType);
+
+        System.out.println("검색어: " + keyword + " groupIdx: " + groupIdx + " boardType: " + boardType);
+
         List<BoardEntity> results = boardRepository.findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(keyword, groupIdx, boardType);
-        System.out.println("Search Results: " + results.size());
+
+        System.out.println("검색 결과: " + results.size());
+
         return results.stream()
                 .map(BoardDTO::fromEntity)
                 .collect(Collectors.toList());
