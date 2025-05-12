@@ -4,8 +4,11 @@ import com.example.mhbc.dto.BoardDTO;
 import com.example.mhbc.entity.AttachmentEntity;
 import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.repository.*;
+import com.example.mhbc.service.UserDetailsImpl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +36,6 @@ public class Utility {
     public void saveAttachment(MultipartFile attachment, BoardEntity board) throws IOException {
         if (!attachment.isEmpty()) {
             String uuidFileName = UUID.randomUUID().toString() + "_" + attachment.getOriginalFilename();
-            //uploadDir = "D:/SpringProject/data/";
 
             File directory = new File(uploadDir);
             if (!directory.exists()) {
@@ -97,8 +99,8 @@ public class Utility {
     }
 
     /*
-    페이징
-    */
+    *   페이징
+    * */
     @Getter
     public static class Pagination {
 
@@ -153,17 +155,51 @@ public class Utility {
     }
 
     /*
-    * 검색
+    *   검색
     * */
     public List<BoardDTO> searchByTitle(String keyword, long groupIdx, Long boardType) {
+
         keyword = keyword.trim();
-        System.out.println("Searching for: " + keyword + " with groupIdx: " + groupIdx + " and boardType: " + boardType);
+
+        System.out.println("검색어: " + keyword + " groupIdx: " + groupIdx + " boardType: " + boardType);
+
         List<BoardEntity> results = boardRepository.findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(keyword, groupIdx, boardType);
-        System.out.println("Search Results: " + results.size());
+
+        System.out.println("검색 결과: " + results.size());
+
         return results.stream()
                 .map(BoardDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     *  로그인 유저 정보 찾기
+     * */
+    /*
+    *   로그인 유저 idx 가져오기(일반)
+    * */
+    public static Long getLoginUserIdx() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            return userDetails.getIdx();
+        }
+
+        return null;
+    }
+    /*
+     * 현재 로그인한 사용자 UserDetailsImpl 전체 객체 반환(객체 보완 필요)
+     */
+    public static UserDetailsImpl getLoginUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl) {
+            return (UserDetailsImpl) authentication.getPrincipal();
+        }
+
+        return null;
+    }
 
 }

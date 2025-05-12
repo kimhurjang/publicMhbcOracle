@@ -10,8 +10,8 @@
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <a th:href="@{/board/event}"><h1>이벤트</h1></a>
   <a th:href="@{/board/event_write(group_idx=${groupIdx},board_type=${boardType})}"><button>[관리자]글쓰기</button></a>
-  <div id="content" class="content">
 
+  <div id="content" class="content event">
     <a th:if="${groupIdx == 3}" th:each="board : ${boardList}" th:href="@{/board/event_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}" class="event board">
       <div class="event card">
         <div th:if="${board.attachment != null}" class="card-img">

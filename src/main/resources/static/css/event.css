@@ -4,7 +4,9 @@
     width: 100%;
     height: auto;
 }
-
+.content.event{
+    display: block !important;
+}
 .event.at{
     line-height:50px;
     padding: 20px 0;
@@ -22,16 +24,17 @@
 }
 
 
-.event.card{
+.event.board{
     padding: 20px;
     height: 500px;
     width: 400px;
     position: relative;
-    margin: 20px 35%;
+    margin: 30px auto;
     display: block;
 }
 .event.board:not(:last-child) .event.card {
   border-bottom: 1px solid lightgray;
+  padding: 10px 0;
 }
 .event.board .card-img , .card-img img{
     width: 100%;
