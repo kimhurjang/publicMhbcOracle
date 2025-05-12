@@ -452,10 +452,11 @@ div#ms4 {
     color: #F7F4ED;
     background-color: #8676A1;
 }
-
+/*
 .mapBox{
    width: 50%;
 }
+*/
 #map{
    border: 1px solid black;
    margin: auto;
@@ -589,4 +590,56 @@ footer div{
 */
 @media screen and (max-width: 764px){
 
+/*
+        이벤트
+*/
+.event{
+    display: block;
+    justify-content: none;
+    height: 60%;
+}
+.event.card{
+    width: 100%;
+    display: flex;
+
+}
+.event div img{
+    width: 55%;
+    height: 100%;
+}
+.event div div{
+ padding: 0 20px;
+ text-align: left;
+ line-height: 100px;
+}
+.event div div a{
+    margin: 35% 0 0 65%;
+}
+
+/*
+        보드
+*/
+#board{
+    display: block;
+}
+.boardBox , .mapBox{
+    width: 100%;
+}
+#ms5{
+    height: 150vh;
+}
+
+/*
+        푸터
+*/
+.footerBox.info{
+    display: block;
+}
+#user footer{
+    padding: 30px;
+}
+footer div{
+    width: 250px;
+    margin: 20px 0;
+}
 }

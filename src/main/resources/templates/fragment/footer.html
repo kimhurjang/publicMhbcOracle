@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <footer th:fragment="footer">
     <div class="footerBox copy">
-        <img src="./image/logo_1-2.png">
+        <img src="/image/logo_1-2.png">
         <p>©ManHwaBangCho</p>
         <div id="snsIcon">
             <a href="" class="xi-facebook"></a>
@@ -17,17 +17,17 @@
                 <a href="/admin/content" target="_blank">관리자 페이지</a>
             </div>
             <div th:if="${session.loginMember != null and session.loginMember.grade == 1}">
-                <p>내 정보</p>
+                <p><b>내 정보</b></p>
                 <p><a href="">마이 페이지</a></p>
                 <p><a href="">예약 정보 조회 / 수정</a></p>
             </div>
         </div>
         <div class="footerBox address">
-            <p>주소</p>
+            <p><b>주소</b></p>
             <p>경상남도 고성군 거류면 은월리 17-5</p>
         </div>
         <div class="footerBox tel">
-            <p>연락처</p>
+            <p><b>연락처</b></p>
             <p>TEL : 00-000-0000</p>
             <p>Email : abcd1234@mail.com</p>
         </div>
@@ -86,6 +86,7 @@
           // —————————————
           // 3) 모바일: 전체 GNB 토글
           // —————————————
+          /*
           itemsWithSub.forEach(li => {
             const anchor = li.querySelector("a.nav_item");
             anchor.addEventListener("click", function(e) {
@@ -96,42 +97,8 @@
               }
             });
           });
-           document.querySelectorAll('#gnb > li > strong > a').forEach(link => {
-            link.addEventListener('click', (e) => {
-              const li = link.closest('li');
-              const sub = li.querySelector('.sub_group');
+*/
 
-              if (sub) {
-                e.preventDefault();
-                const isActive = li.classList.contains('active');
-
-                // 모든 메뉴 닫기
-                document.querySelectorAll('#gnb > li').forEach(item => {
-                  item.classList.remove('active');
-                  const subMenu = item.querySelector('.sub_group');
-                  if (subMenu) {
-                    subMenu.style.maxHeight = '0';
-                    subMenu.style.padding = '0 20px';
-                  }
-                });
-
-                // 해당 메뉴 열기
-                if (!isActive) {
-                  li.classList.add('active');
-                  sub.style.padding = '20px';
-                  sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
-                }
-              }
-            });
-          });
-
-          // 페이지 로드시 active가 붙은 메뉴 자동 펼침
-          window.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('#gnb > li.active .sub_group').forEach(sub => {
-              sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
-              sub.style.padding = '20px';
-            });
-          });
 
           // —————————————
           // 5) 외부 클릭 시 GNB 및 열린 서브 모두 닫기
@@ -145,22 +112,6 @@
         });
 
 
-        const header = document.querySelector('#user header');
-        const toggleBtn = document.querySelector('#user .toggle.icon');
-
-        toggleBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          header.classList.toggle('closed');
-        });
-
-        // 초기 active 메뉴 펼치기 유지
-        window.addEventListener('DOMContentLoaded', () => {
-          document.querySelectorAll('#gnb > li.active .sub_group').forEach(sub => {
-            sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
-            sub.style.padding = '20px';
-          });
-        });
-
         AOS.init({
            duration: 600,  // 애니메이션 지속 시간 (밀리초)
            easing: 'ease-in-out',  // 애니메이션의 이징 함수
@@ -173,6 +124,54 @@
           checkScroll(); // 이 위치에서 호출
         });
 
+        document.addEventListener('DOMContentLoaded', () => {
+            // ✅ 서브메뉴 아코디언 (윈도우 크기 764px 이하에서만 작동)
+            document.querySelectorAll('#gnb > li > strong > a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 764) {
+                        const li = link.closest('li');
+                        const sub = li.querySelector('.sub_group');
+
+                        if (sub) {
+                            e.preventDefault();
+                            const isActive = li.classList.contains('active');
+
+                            // 모든 메뉴 닫기
+                            document.querySelectorAll('#gnb > li').forEach(item => {
+                                item.classList.remove('active');
+                                const subMenu = item.querySelector('.sub_group');
+                                if (subMenu) {
+                                    subMenu.style.maxHeight = '0';
+                                }
+                            });
+
+                            // 해당 메뉴 열기
+                            if (!isActive) {
+                                li.classList.add('active');
+                                sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+                            }
+                        }
+                    }
+                });
+            });
+
+            // ✅ 초기 active 메뉴 자동 펼침 (모바일에서만)
+            if (window.innerWidth <= 764) {
+                document.querySelectorAll('#gnb > li.active .sub_group').forEach(sub => {
+                    sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+
+                });
+            }
+
+            // ✅ 헤더 토글
+            const header = document.querySelector('#user header');
+            const toggleBtn = document.querySelector('.toggle.icon');
+
+            toggleBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                header.classList.toggle('closed');
+            });
+        });
     </script>
 </footer>
 </html>

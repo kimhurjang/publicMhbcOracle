@@ -3,12 +3,10 @@ body { position:relative; }
 
 /* ----------------- user------------------*/
 #user .logo a span{ background-size: cover; width:100px; height:100px; display: block; background-image: url("/image/logo_1-2.png"); border-radius:10px;}
-#user header .logo {position:relative; z-index:999;}
+#user header .logo {position:relative; }
 
 /* nav */
 /* 캐러셀 위에서만 적용될 클래스 */
-
-
 
 /*
 ------------
@@ -17,6 +15,8 @@ body { position:relative; }
 */
 
 @media screen and (min-width: 765px) {
+
+    #user .toggle.icon{display: none;}
 
     #user header { width:100%; height:70px; display:flex; align-items:center; justify-content:space-between; position:fixed; z-index:999; top:0;}
 
@@ -48,7 +48,6 @@ body { position:relative; }
     #user .sub_group.group5{max-width: 150px;}
     #user .sub_group.group5 li {width: 100%}
 
-
     #user #gnb li { position: relative; }
     #user #gnb .sub_nav_layer { width: 750px; height: 220px; position: absolute; top: 100%; left: -12px; background-color:
                                 #D6CAE8; border: 1px solid #ccc; border-radius: 0 0 0 30px; padding: 10px; z-index: 998; display: flex;
@@ -59,9 +58,9 @@ body { position:relative; }
     #user #gnb:hover{border-radius: 0px;}
 
 }
-@media screen and (max-width: 764px) {
 
-nav.transparentNav {position:absolute; top:0; right:0; }
+@media screen and (max-width: 764px) {
+  .logo, .toggle.icon {height:52px;}
 
   #user #gnb {
     display: block;
@@ -69,10 +68,9 @@ nav.transparentNav {position:absolute; top:0; right:0; }
     max-width: 400px;
     background-color: #D6CAE8;
     border-radius: 0 0 0 30px;
-
   }
 
-  #user #gnb li.toggle.icon {
+  .toggle.icon {
     display: block;
     position: fixed;
     top: 0;
@@ -81,102 +79,25 @@ nav.transparentNav {position:absolute; top:0; right:0; }
     color: #8676A1;
     text-shadow: 1px 1px 1px #111;
     cursor: pointer;
-    background: #F7F4ED;
+    background: #D6CAE8;
     text-align: center;
     padding: 10px;
     border-radius: 10px 0 0 10px;
   }
-/*
-#user #gnb a {color:#fff;}
-#user #gnb li {margin-bottom:15px;}
-#user #gnb li:last-child {margin-bottom:0;}
-#user #gnb > li > strong {margin: 0 20px;}
 
-#user #gnb .sub_group {max-height:0; padding:0 20px; overflow:hidden; transition:max-height 0.3s ease, padding 0.3s ease; background:#292352;}
-#user #gnb li.active > .sub_group {max-height:1000px; padding:20px;}
-#user #gnb li.active > strong a  {padding-bottom:10px; color:#5ce1e6; font-weight:bold;}
-#user #gnb li.active > a { font-weight:500; color:#fff6c9;}
-*/
-/*
-#user li.toggle.icon:hover i {color:#f8f3c9;}
-#user li.toggle.icon i {color:#fff;font-size:24px;}
+  #user nav {position: fixed;top:0;right:0;height: 100vh;background: #d6cae8;}
+  #user #gnb {margin-top: 52px;}
+  #user #gnb a {padding:20px 30px; display: block;}
+  #user #gnb .nav_item a{color:#453d35;}
+  #user #gnb .sub_group {max-height:0; overflow:hidden; transition:max-height 0.3s ease, padding 0.3s ease; background:#8676A1; border-radius: 0 0 20px 20px;}
+  #user #gnb li.active > .sub_group {max-height:1000px; }
+  #user #gnb li.active > strong a  {color:#453d35; font-weight:bold;}
+  #user #gnb li.active > a { font-weight:500; color:#fff6c9;}
+  #user #gnb .sub_group a {color: #F7F4ED;}
 
-#user .open ~ #wrapper {padding-left:220px;}
-*/
-/*
-#user nav {position:fixed; transform:translateX(0); transition:transform 0.3s ease; z-index:999;}
-#user nav.closed { transform:translateX(-100%); }
-#user li.toggle.icon { position:fixed; top:30px; left:150px; z-index:999; transition:left 0.3s ease;}
-#user nav.closed ~ .toggle_ic { left:10px; }
-#user nav.closed ~ .toggle_ic i {color:#333;}
-#user nav.closed ~ #wrapper {padding-left:50px;}
-
-#user header.closed ~ .toggle_ic .xi-hamburger-back:before {content:"\eb45"}
-
-  */
-/*
-  #user #gnb li:not(.toggle), .nav_item.login.xi-profile-o{
-    display: none;
-  }
-
-  #user #gnb.active li {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 1rem 0;
-    border-bottom: 1px solid #8676A1;
-    background: #D6CAE8;
-  }
-
-  #user #gnb.active .nav_item {
-    width: 100%;
-    padding: 5px 0;
-    border-radius: 0px;
-  }
-   #user #gnb.active .nav_item>a{
-    margin: 10px 250px 10px 0;
-    color: black;
-    font-weight: 500;
-   }
-  #user #gnb.active .nav_item:last-child{
-    border-radius: 0 0 0 30px 0;
-    border-bottom: none;
- }
-   #user gnb.active .nav_item:hover{
-    background-color: none;
-    color: black;
-   }
-  #user #gnb.active .sub_nav_layer {
-    display: block;
-    position: static;
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-    height: auto;
-    background: none;
-    border: none;
-    padding: 0;
-  }
-
-  #user #gnb.active .sub_group {
-    display: block;
-    padding: 0;
-  }
-
-  #user #gnb.active .sub_group li {
-    width: 100%;
-    padding: 0.5rem 0;
-    border-bottom: 0px;
-    text-align: center;
-  }
-
-  #user #gnb.active .sub_group li:hover {
-    background-color: #8676A1;
-  }
-}
-*/
-
-
+  #user header {}
+  #user header nav {position:fixed; right: -100%; transition: right 0.3s ease; z-index:999; width: 200px;}
+  #user header.closed nav { right: 0; }
 }
 
 /* footer */
@@ -223,6 +144,7 @@ nav.transparentNav {position:absolute; top:0; right:0; }
 #admin #gnb li.active > .sub {max-height:1000px; padding:20px;}
 #admin #gnb li.active > strong a  {padding-bottom:10px; color:#5ce1e6; font-weight:bold;}
 #admin #gnb li.active > a { font-weight:500; color:#fff6c9;}
+
 
 /* wrapper */
 #admin > #wrapper {min-width:1080px; padding:26px 20px; flex-grow:1; height:100vh; overflow-y:auto; background:#fafafa; }
@@ -372,4 +294,3 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
   padding:6px 10px; border:1px solid #ccc; border-radius:4px; font-size:14px; min-width:150px;
 }
 .search_form input[type="checkbox"] {margin-right:5px;}
-
