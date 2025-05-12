@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -263,22 +264,26 @@ public class MemberController {
       return "redirect:/api/member/findidpw"; // 존재하지 않으면 아이디/비밀번호 찾기 페이지로
     }
   }
+
   @GetMapping("/reset-pwd-confirm")
   public String resetPasswordConfirm(@ModelAttribute("message") String message, Model model) {
     model.addAttribute("message", message);
     return "member/popup"; // popup.html로 렌더링 (파일명에 맞게 수정)
   }
 
+  @GetMapping("/adminuser")
+  public String adminuser(Model model) {
+    // member 테이블에서 모든 데이터를 조회
+    List<MemberEntity> memberList = memberRepository.findAll();
 
+    // 데이터를 모델에 추가하여 뷰로 전달
+    model.addAttribute("memberList", memberList);
 
-
-  @RequestMapping("/adminuser")
-  public String adminuser() {
-    return "member/adminuser";
+    return "member/adminuser"; // adminuser.html 페이지로 이동
   }
 
   @RequestMapping("/adminuserinfo")
   public String adminuserinfo() {
-    return "member/adminuserinfo";
+    return "member/adminuserinfo"; // 필요한 경우 다른 페이지로 이동
   }
 }
