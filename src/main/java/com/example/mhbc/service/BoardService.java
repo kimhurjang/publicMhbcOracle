@@ -127,29 +127,6 @@ public class BoardService {
     @Transactional
     public void deleteBoard(long boardIdx) {
 
-//        List<AttachmentEntity> attachments = attachmentRepository.findByBoard_Idx(boardIdx);
-//
-//        for (AttachmentEntity attachment : attachments) {
-//            String filepath = attachment.getFilePath();
-//            System.out.println("파일 경로: " + filepath);
-//            String dir = "D:/SpringProject/data/";
-//
-//            // 실제 파일 삭제
-//            File file = new File(dir + filepath);
-//            if (file.exists()) {
-//                if (file.delete()) {
-//                    System.out.println("파일 삭제 성공: " + filepath);
-//                } else {
-//                    System.out.println("파일 삭제 실패: " + filepath);
-//                }
-//            } else {
-//                System.out.println("파일이 존재하지 않음: " + filepath);
-//            }
-//        }
-//
-//        // 1. 첨부파일 삭제
-//        attachmentRepository.deleteByIdx(boardIdx);
-
         // 2. 게시글 삭제
         boardRepository.deleteByIdx(boardIdx);
     }

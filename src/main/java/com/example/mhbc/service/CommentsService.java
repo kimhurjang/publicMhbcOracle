@@ -21,8 +21,10 @@ public class CommentsService {
     private final MemberRepository memberRepository;
 
     public void saveComment(CommentsDTO dto, Long memberId) {
+
         BoardEntity board = boardRepository.findById(dto.getBoardIdx())
                 .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+
         MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 없음"));
 

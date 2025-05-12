@@ -86,18 +86,6 @@
           // —————————————
           // 3) 모바일: 전체 GNB 토글
           // —————————————
-          toggleBtn.addEventListener("click", function(e) {
-            e.stopPropagation();
-            gnb.classList.toggle("active");
-            // 열린 GNB 닫을 때, 열려있던 서브도 모두 닫기
-            if (!gnb.classList.contains("active")) {
-              itemsWithSub.forEach(li => li.classList.remove("active"));
-            }
-          });
-
-          // —————————————
-          // 4) 모바일: 각 has-sub 클릭해서 서브 열기/닫기
-          // —————————————
           itemsWithSub.forEach(li => {
             const anchor = li.querySelector("a.nav_item");
             anchor.addEventListener("click", function(e) {
@@ -106,6 +94,42 @@
                 e.stopPropagation();
                 li.classList.toggle("active");
               }
+            });
+          });
+           document.querySelectorAll('#gnb > li > strong > a').forEach(link => {
+            link.addEventListener('click', (e) => {
+              const li = link.closest('li');
+              const sub = li.querySelector('.sub_group');
+
+              if (sub) {
+                e.preventDefault();
+                const isActive = li.classList.contains('active');
+
+                // 모든 메뉴 닫기
+                document.querySelectorAll('#gnb > li').forEach(item => {
+                  item.classList.remove('active');
+                  const subMenu = item.querySelector('.sub_group');
+                  if (subMenu) {
+                    subMenu.style.maxHeight = '0';
+                    subMenu.style.padding = '0 20px';
+                  }
+                });
+
+                // 해당 메뉴 열기
+                if (!isActive) {
+                  li.classList.add('active');
+                  sub.style.padding = '20px';
+                  sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+                }
+              }
+            });
+          });
+
+          // 페이지 로드시 active가 붙은 메뉴 자동 펼침
+          window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('#gnb > li.active .sub_group').forEach(sub => {
+              sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+              sub.style.padding = '20px';
             });
           });
 
@@ -117,6 +141,23 @@
               gnb.classList.remove("active");
               itemsWithSub.forEach(li => li.classList.remove("active"));
             }
+          });
+        });
+
+
+        const header = document.querySelector('#user header');
+        const toggleBtn = document.querySelector('#user .toggle.icon');
+
+        toggleBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          header.classList.toggle('closed');
+        });
+
+        // 초기 active 메뉴 펼치기 유지
+        window.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('#gnb > li.active .sub_group').forEach(sub => {
+            sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+            sub.style.padding = '20px';
           });
         });
 

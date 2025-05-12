@@ -2,47 +2,182 @@
 body { position:relative; }
 
 /* ----------------- user------------------*/
-#user header { width:100%; height:70px; display:flex; align-items:center; justify-content:space-between; position:fixed; z-index:999; top:0;}
 #user .logo a span{ background-size: cover; width:100px; height:100px; display: block; background-image: url("/image/logo_1-2.png"); border-radius:10px;}
 #user header .logo {position:relative; z-index:999;}
 
 /* nav */
 /* 캐러셀 위에서만 적용될 클래스 */
-#user .logo.transparentNav a span{background-image: url("/image/logo_1-1.png") !important;}
-#user nav.transparentNav #gnb {background-color: transparent !important;}
-#user nav.transparentNav #gnb a {color: white !important;}
-#user nav.transparentNav #gnb li.login a span{color: white !important}
 
-#user nav { position:relative; transition: background-color 0.3s, color 0.3s;}
-#user #gnb .toggle.icon{display: none;}
-#user #gnb { width:750px; height:70px; display:flex; justify-content:space-around; text-align:center; background-color:#D6CAE8; border-radius:0 0 0 30px; transition:border-radius 0.8s ease; }
-#user #gnb .nav_item>a { color:#000; font-weight: 500;}
-#user #gnb .nav_item:hover>a { color:#F7F4ED; }
-#user #gnb .nav_item { min-width:120px; font-size:18px; padding:20px; border-radius:10px; }
-#user #gnb .nav_item:hover { background-color:#8676A1; }
-#user #gnb .nav_item:last-child { width:150px; padding:5px; }
-#user #gnb .nav_item:last-child:hover>a span { color:#F7F4ED; }
-#user #gnb li { position: relative; }
-#user #gnb .sub_nav_layer { width: 750px; height: 220px; position: absolute; top: 100%; left: -12px; background-color:
-                            #D6CAE8; border: 1px solid #ccc; border-radius: 0 0 0 30px; padding: 10px; z-index: 998; display: flex;
-                            justify-content: space-between; opacity: 0; transform: translateY(-10px); pointer-events: none; transition:
-                            opacity 0.3s ease, transform 0.3s ease; }
-#user #gnb li:hover > .sub_nav_layer { display: flex; opacity: 1; transform: translateY(0); pointer-events: auto;}
-#user #gnb:hover .sub_nav_layer { display: flex; opacity: 1; transform: translateY(0); pointer-events: auto;}
-#user #gnb:hover{border-radius: 0px;}
 
-a.nav_item.login span:last-child { font-size:14px; line-height:0; }
-.xi-profile-o { font-size:30px; }
 
-#user .sub_group { min-width: 120px; }
-#user .sub_group:last-child { width: 150px; }
-#user .sub_group li { width: 80%; font-size: 15px; padding: 10px; text-align: center; border-radius: 8px; margin: 5px 0; }
-#user .sub_group>li:hover{background-color: #8676A1; }
-#user .sub_group>li:hover a { color: #F7F4ED;}
-#user .sub_nav_layer a { color: #000; }
-#user .sub_group.group5{max-width: 150px;}
-#user .sub_group.group5 li {width: 100%}
+/*
+------------
+반응형 nav
+------------
+*/
 
+@media screen and (min-width: 765px) {
+
+    #user header { width:100%; height:70px; display:flex; align-items:center; justify-content:space-between; position:fixed; z-index:999; top:0;}
+
+    #user .logo.transparentNav a span{background-image: url("/image/logo_1-1.png") !important;}
+
+    #user nav { position:relative; transition: background-color 0.3s, color 0.3s;}
+    #user nav.transparentNav #gnb {background-color: transparent !important;}
+    #user nav.transparentNav #gnb a {color: white !important;}
+    #user nav.transparentNav #gnb li.login a span{color: white !important}
+
+    #user #gnb .toggle.icon{display: none;}
+    #user #gnb { width:750px; height:70px; display:flex; justify-content:space-around; text-align:center; background-color:#D6CAE8; border-radius:0 0 0 30px; transition:border-radius 0.8s ease; }
+    #user #gnb .nav_item>a { color:#000; font-weight: 500;}
+    #user #gnb .nav_item:hover>a { color:#F7F4ED; }
+    #user #gnb .nav_item { min-width:120px; font-size:18px; padding:20px; border-radius:10px; }
+    #user #gnb .nav_item:hover { background-color:#8676A1; }
+    #user #gnb .nav_item:last-child { width:150px; padding:5px; }
+    #user #gnb .nav_item:last-child:hover>a span { color:#F7F4ED; }
+
+    a.nav_item.login span:last-child { font-size:14px; line-height:0; }
+    .xi-profile-o { font-size:30px; }
+
+    #user .sub_group { min-width: 120px; }
+    #user .sub_group:last-child { width: 150px; }
+    #user .sub_group li { width: 80%; font-size: 15px; padding: 10px; text-align: center; border-radius: 8px; margin: 5px 0; }
+    #user .sub_group>li:hover{background-color: #8676A1; }
+    #user .sub_group>li:hover a { color: #F7F4ED;}
+    #user .sub_nav_layer a { color: #000; }
+    #user .sub_group.group5{max-width: 150px;}
+    #user .sub_group.group5 li {width: 100%}
+
+
+    #user #gnb li { position: relative; }
+    #user #gnb .sub_nav_layer { width: 750px; height: 220px; position: absolute; top: 100%; left: -12px; background-color:
+                                #D6CAE8; border: 1px solid #ccc; border-radius: 0 0 0 30px; padding: 10px; z-index: 998; display: flex;
+                                justify-content: space-between; opacity: 0; transform: translateY(-10px); pointer-events: none; transition:
+                                opacity 0.3s ease, transform 0.3s ease; }
+    #user #gnb li:hover > .sub_nav_layer { display: flex; opacity: 1; transform: translateY(0); pointer-events: auto;}
+    #user #gnb:hover .sub_nav_layer { display: flex; opacity: 1; transform: translateY(0); pointer-events: auto;}
+    #user #gnb:hover{border-radius: 0px;}
+
+}
+@media screen and (max-width: 764px) {
+
+nav.transparentNav {position:absolute; top:0; right:0; }
+
+  #user #gnb {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    background-color: #D6CAE8;
+    border-radius: 0 0 0 30px;
+
+  }
+
+  #user #gnb li.toggle.icon {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    font-size: 2rem;
+    color: #8676A1;
+    text-shadow: 1px 1px 1px #111;
+    cursor: pointer;
+    background: #F7F4ED;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px 0 0 10px;
+  }
+/*
+#user #gnb a {color:#fff;}
+#user #gnb li {margin-bottom:15px;}
+#user #gnb li:last-child {margin-bottom:0;}
+#user #gnb > li > strong {margin: 0 20px;}
+
+#user #gnb .sub_group {max-height:0; padding:0 20px; overflow:hidden; transition:max-height 0.3s ease, padding 0.3s ease; background:#292352;}
+#user #gnb li.active > .sub_group {max-height:1000px; padding:20px;}
+#user #gnb li.active > strong a  {padding-bottom:10px; color:#5ce1e6; font-weight:bold;}
+#user #gnb li.active > a { font-weight:500; color:#fff6c9;}
+*/
+/*
+#user li.toggle.icon:hover i {color:#f8f3c9;}
+#user li.toggle.icon i {color:#fff;font-size:24px;}
+
+#user .open ~ #wrapper {padding-left:220px;}
+*/
+/*
+#user nav {position:fixed; transform:translateX(0); transition:transform 0.3s ease; z-index:999;}
+#user nav.closed { transform:translateX(-100%); }
+#user li.toggle.icon { position:fixed; top:30px; left:150px; z-index:999; transition:left 0.3s ease;}
+#user nav.closed ~ .toggle_ic { left:10px; }
+#user nav.closed ~ .toggle_ic i {color:#333;}
+#user nav.closed ~ #wrapper {padding-left:50px;}
+
+#user header.closed ~ .toggle_ic .xi-hamburger-back:before {content:"\eb45"}
+
+  */
+/*
+  #user #gnb li:not(.toggle), .nav_item.login.xi-profile-o{
+    display: none;
+  }
+
+  #user #gnb.active li {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 1rem 0;
+    border-bottom: 1px solid #8676A1;
+    background: #D6CAE8;
+  }
+
+  #user #gnb.active .nav_item {
+    width: 100%;
+    padding: 5px 0;
+    border-radius: 0px;
+  }
+   #user #gnb.active .nav_item>a{
+    margin: 10px 250px 10px 0;
+    color: black;
+    font-weight: 500;
+   }
+  #user #gnb.active .nav_item:last-child{
+    border-radius: 0 0 0 30px 0;
+    border-bottom: none;
+ }
+   #user gnb.active .nav_item:hover{
+    background-color: none;
+    color: black;
+   }
+  #user #gnb.active .sub_nav_layer {
+    display: block;
+    position: static;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    height: auto;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  #user #gnb.active .sub_group {
+    display: block;
+    padding: 0;
+  }
+
+  #user #gnb.active .sub_group li {
+    width: 100%;
+    padding: 0.5rem 0;
+    border-bottom: 0px;
+    text-align: center;
+  }
+
+  #user #gnb.active .sub_group li:hover {
+    background-color: #8676A1;
+  }
+}
+*/
+
+
+}
 
 /* footer */
 #user footer { background-color:#9b89b3; color:#F7F4ED; padding:80px; display:flex; justify-content:space-between;} /* 보라색 배경 */
@@ -238,99 +373,3 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 }
 .search_form input[type="checkbox"] {margin-right:5px;}
 
-
-/*
-------------
-반응형 nav
-------------
-*/
-@media screen and (max-width: 764px) {
-  #user #gnb {
-    display: block;
-    width: 100%;
-    max-width: 400px;
-    background-color: #D6CAE8;
-    border-radius: 0 0 0 30px;
-    padding-top: 53px; /* 토글 아이콘 공간 확보 */
-  }
-
-  #user #gnb li.toggle.icon {
-    display: block;
-    position: fixed;
-    top: 0;
-    right: 0;
-    font-size: 2rem;
-    color: #8676A1;
-    text-shadow: 1px 1px 1px #111;
-    cursor: pointer;
-    /*z-index: 1000;*/
-    background: #F7F4ED;
-    text-align: center;
-    padding: 10px;
-    border-radius: 10px 0 0 10px;
-  }
-
-  #user #gnb li:not(.toggle), .nav_item.login.xi-profile-o{
-    display: none;
-  }
-
-/**/
-  #user #gnb.active li {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 1rem 0;
-    border-bottom: 1px solid #8676A1;
-    background: #D6CAE8;
-  }
-
-  #user #gnb.active .nav_item {
-    width: 100%;
-    padding: 5px 0;
-    border-radius: 0px;
-  }
-   #user #gnb.active .nav_item>a{
-    margin: 10px 250px 10px 0;
-    color: black;
-    font-weight: 500;
-   }
-  #user #gnb.active .nav_item:last-child{
-    border-radius: 0 0 0 30px 0;
-    border-bottom: none;
- }
-   #user gnb.active .nav_item:hover{
-    background-color: none;
-    color: black;
-   }
-  #user #gnb.active .sub_nav_layer {
-    display: block;
-    position: static;
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-    height: auto;
-    background: none;
-    border: none;
-    padding: 0;
-  }
-
-  #user #gnb.active .sub_group {
-    display: block;
-    padding: 0;
-  }
-
-  #user #gnb.active .sub_group li {
-    width: 100%;
-    padding: 0.5rem 0;
-    border-bottom: 0px;
-    text-align: center;
-  }
-
-  #user #gnb.active .sub_group li:hover {
-    background-color: #8676A1;
-  }
-  /**/
-}
-
-
-}
