@@ -17,7 +17,7 @@ public class BoardDTO {
     private String title;
     private String content;
     private Integer viewCnt;
-    private long idx;
+    private Long idx;
     private Integer re;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
