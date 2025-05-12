@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>아이디 비밀번호 찾기</title>
-  <link rel="stylesheet" href="/css/find.css"> <!-- 여기에 스타일시트 링크 추가 -->
+  <link rel="stylesheet" href="/css/find.css">
 </head>
 <body>
 
@@ -20,33 +20,42 @@
     <div class="tabcontent">
       <!-- 아이디 찾기 폼 -->
       <div id="tab1" class="active">
-        <form id="find-id-form" method="POST" action="/api/member/findidpw">
-          <label for="name_input1">이름</label>
+        <form id="find-id-form" method="POST" action="/api/member/find-id">
+          <label for="name_input1">이름</label><br>
           <input type="text" id="name_input1" name="name" required placeholder="이름을 입력하세요"><br>
 
-          <label for="mobile_input1">전화번호</label>
-          <input type="tel" id="mobile_input1" name="mobile" required placeholder="전화번호를 입력하세요"><br>
+          <label for="mobile_input1">전화번호</label><br>
+          <input type="text" id="mobile_input1" name="mobile1" maxlength="3" required placeholder="010" style="width: 60px;"> -
+          <input type="text" id="mobile_input2" name="mobile2" maxlength="4" required placeholder="1234" style="width: 70px;"> -
+          <input type="text" id="mobile_input3" name="mobile3" maxlength="4" required placeholder="5678" style="width: 70px;"><br>
 
           <button type="submit" class="btn" id="find-id-btn">아이디 찾기</button>
         </form>
 
-        <div id="verification-section" style="display:none;">
-          <label for="verification-code">인증번호</label>
-          <input type="text" id="verification-code" placeholder="인증번호를 입력하세요">
-          <button type="button" id="verify-button" class="btn">인증번호 확인</button>
+        <!-- 결과 메시지 및 버튼 표시 영역 -->
+        <div style="margin-top: 15px;">
+          <p th:if="${message}" th:text="${message}" style="color: green;"></p>
+          <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+          <div th:if="${notFound}">
+            <button class="btn" onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=3a729b684852129622871e6b959a97e6&redirect_uri=http://localhost:8090/api/member/kakao&response_type=code'">
+              카카오로 로그인
+            </button>
+            <a href="/api/member/join"><button class="btn">회원가입</button></a>
+          </div>
         </div>
       </div>
 
       <!-- 비밀번호 찾기 폼 -->
       <div id="tab2">
-        <form action="/find-password" method="post">
-          <label for="id_input">아이디</label>
+        <form action="/api/member/find-password" method="post">
+          <label for="id_input">아이디</label> <br>
           <input type="text" id="id_input" name="id" placeholder="아이디" required><br>
 
-          <label for="name_input2">이름</label>
+          <label for="name_input2">이름</label> <br>
           <input type="text" id="name_input2" name="name" placeholder="이름" required><br>
 
-          <button type="submit">비밀번호 찾기</button>
+          <button type="submit" class="btn">비밀번호 찾기</button>
         </form>
       </div>
     </div>
@@ -82,11 +91,9 @@
       const targetTab = document.getElementById(hash);
 
       if (targetTab) {
-          // 모든 탭 비활성화
           tabLinks.forEach(t => t.classList.remove('active'));
           tabContents.forEach(c => c.classList.remove('active'));
 
-          // 해당 탭만 활성화
           targetTab.classList.add('active');
           const targetLink = document.querySelector(`.tabnav a[href="#${hash}"]`);
           if (targetLink) {
@@ -94,45 +101,6 @@
           }
       }
   });
-
-  // 폼 제출 시 인증번호 발송
-  const findIdForm = document.querySelector('#find-id-form');
-  const mobileInput = document.querySelector('#mobile_input1');
-  const nameInput = document.querySelector('#name_input1');
-  const verificationSection = document.querySelector('#verification-section');
-  const verifyButton = document.querySelector('#verify-button');
-  const verificationCodeInput = document.querySelector('#verification-code');
-
-  findIdForm.addEventListener('submit', function (event) {
-    event.preventDefault();  // 폼 제출을 막고 JavaScript로 처리
-
-    const phone = mobileInput.value;
-    const name = nameInput.value;
-
-    // 서버로 전화번호와 이름을 보내서 인증번호 발송
-    fetch('/find-id/send-verification-code', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name: name, mobile: phone })  // JSON으로 보내기
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Response Data:', data);  // 응답 데이터 확인
-        if (data.status === 'success') {
-            verificationSection.style.display = 'block';
-            alert('인증번호가 전송되었습니다!');
-        } else {
-            alert('해당 정보를 찾을 수 없습니다.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('오류가 발생했습니다: ' + error.message);
-    });
-});
-
 </script>
 
 </body>

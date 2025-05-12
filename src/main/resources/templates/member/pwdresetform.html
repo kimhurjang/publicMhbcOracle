@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>비밀번호 재설정</title>
+  <!-- CSS 파일 링크 -->
+  <link rel="stylesheet" href="/css/pwdresetform.css">
+</head>
+<body>
+
+<h2>비밀번호 재설정</h2>
+<div class="form-box" id="formBox">
+  <form id="resetPasswordForm" action="/api/member/reset-pwd" method="post">
+    <input type="hidden" name="userid" th:value="${userid}" /> <!-- 컨트롤러에서 model로 넘김 -->
+
+    <!-- 새 비밀번호 입력 -->
+    <label for="newPwd">새 비밀번호</label>
+    <input type="password" id="newPwd" name="newPwd" required>
+
+    <!-- 새 비밀번호 확인 입력 -->
+    <label for="confirmPwd">새 비밀번호 확인</label>
+    <input type="password" id="confirmPwd" name="confirmPwd" required>
+
+    <button type="submit">비밀번호 변경</button>
+  </form>
+</div>
+
+<!-- 팝업창 -->
+<div id="popup" class="popup" style="display: none;">
+  <p th:text="${message}">비밀번호가 변경되었습니다. 다시 로그인 해주세요.</p>
+  <button onclick="window.location.href='/api/member/login'">로그인 페이지로</button>
+</div>
+
+<!-- JavaScript 팝업 띄우기 및 비밀번호 확인 -->
+<script>
+  window.onload = function() {
+    // Thymeleaf에서 message를 받습니다.
+    var message = /*[[${message}]]*/ '';
+
+    if (message) {
+      // 팝업을 보여주기
+      document.getElementById('popup').classList.add('active');
+      document.getElementById('popup').style.display = 'block';  // 팝업을 보이게 설정
+
+      // 비밀번호 변경 폼 숨기기
+      document.getElementById('formBox').style.display = 'none';
+
+      // 3초 후에 로그인 페이지로 리디렉션
+      setTimeout(function() {
+        window.location.href = '/api/member/login'; // 로그인 페이지로 리디렉션
+      }, 3000); // 3초 후
+    }
+  };
+
+  // 비밀번호 확인 유효성 검사
+  document.getElementById("resetPasswordForm").addEventListener("submit", function(event) {
+    var newPwd = document.getElementById("newPwd").value;
+    var confirmPwd = document.getElementById("confirmPwd").value;
+
+    // 비밀번호가 일치하지 않으면 폼 제출을 막고 경고 메시지 출력
+    if (newPwd !== confirmPwd) {
+      event.preventDefault(); // 폼 제출 방지
+      alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+      return;
+    }
+  });
+</script>
+
+</body>
+</html>

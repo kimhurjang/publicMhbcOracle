@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -35,13 +33,11 @@ public class MemberController {
 
   @GetMapping("/login")
   public String loginForm(HttpSession session) {
-    // 세션에 로그인 정보가 있으면 로그인 페이지로 가는 대신 메인 페이지로 리디렉션
     if (session.getAttribute("loginMember") != null || session.getAttribute("loginSnsUser") != null) {
-      return "redirect:/"; // 로그인 상태라면 메인 페이지로 리디렉션
+      return "redirect:/";
     }
-    return "member/login"; // 로그인 상태가 아니라면 로그인 페이지를 보여줌
+    return "member/login";
   }
-
 
   @PostMapping("/loginProc")
   public String loginPost(@RequestParam("userid") String userid,
@@ -53,10 +49,8 @@ public class MemberController {
 
     if (member != null) {
       session.setAttribute("loginMember", member);
-      System.out.println(">>>> 로그인 세션 저장됨: " + session.getAttribute("loginMember"));
       session.removeAttribute("loginSnsUser");
 
-      // 전화번호 없으면 입력 페이지로 이동
       if (member.getMobile() == null || member.getMobile().trim().isEmpty()) {
         return "redirect:/api/member/mobile";
       }
@@ -67,7 +61,6 @@ public class MemberController {
     }
   }
 
-  // 메인 페이지 접근 시 로그인 상태 확인
   @GetMapping("/")
   public String homePage(HttpSession session) {
     MemberEntity member = (MemberEntity) session.getAttribute("loginMember");
@@ -77,7 +70,6 @@ public class MemberController {
       return "redirect:/api/member/login";
     }
 
-    // 전화번호 없으면 입력 페이지로 이동
     if ((member != null && (member.getMobile() == null || member.getMobile().isEmpty())) ||
             (snsUser != null && (snsUser.getSnsMobile() == null || snsUser.getSnsMobile().isEmpty()))) {
       return "redirect:/api/member/mobile";
@@ -85,16 +77,6 @@ public class MemberController {
 
     return "index";
   }
-
-  @GetMapping("/home")
-  public String homePage(HttpSession session, Model model) {
-    String loggedInUser = (String) session.getAttribute("loggedInUser");
-    boolean isLoggedIn = (loggedInUser != null);
-
-    model.addAttribute("isLoggedIn", isLoggedIn);
-    return "index";  // index.html을 보여주기 위해
-  }
-
 
   @GetMapping("/mobile")
   public String phoneNumberPage(HttpSession session) {
@@ -168,14 +150,13 @@ public class MemberController {
     return "member/join";
   }
 
-  // 아이디 중복 확인
   @GetMapping("/idcheck")
   @ResponseBody
   public String checkUserId(@RequestParam("userid") String userid) {
     if (memberRepository.existsByUserid(userid)) {
-      return "Y";  // 중복된 아이디
+      return "Y";
     }
-    return "N";  // 사용 가능한 아이디
+    return "N";
   }
 
   @PostMapping("/join")
@@ -189,7 +170,6 @@ public class MemberController {
                          @RequestParam("mobile2") String mobile2,
                          @RequestParam("mobile3") String mobile3) {
 
-    // 모바일 번호 합치기
     String mobile = (!mobile1.isEmpty() && !mobile2.isEmpty() && !mobile3.isEmpty())
             ? mobile1 + "-" + mobile2 + "-" + mobile3 : null;
 
@@ -205,63 +185,90 @@ public class MemberController {
             .status("정상")
             .build();
 
-    // 아이디 중복 체크 후 저장
     if (!memberRepository.existsByUserid(userid)) {
       memberRepository.save(memberDTO.toEntity());
     } else {
-      System.out.println("이미 가입된 사용자입니다.");
-      return "redirect:/api/member/join";  // 이미 존재하는 경우 회원가입 페이지로 리디렉션
+      return "redirect:/api/member/join";
     }
 
     return "redirect:/api/member/login";
   }
-
 
   @RequestMapping("/findidpw")
   public String findidpw() {
     return "member/findidpw";
   }
 
-  // 아이디 찾기 인증번호 발송
-  @PostMapping("/find-id/send-verification-code")
-  @ResponseBody
-  public Map<String, Object> sendVerificationCode(@RequestBody Map<String, String> request) {
-    String name = request.get("name");
-    String mobile = request.get("mobile");
+  @PostMapping("/find-id")
+  public String findUserId(@RequestParam("name") String name,
+                           @RequestParam("mobile1") String mobile1,
+                           @RequestParam("mobile2") String mobile2,
+                           @RequestParam("mobile3") String mobile3,
+                           Model model) {
+
+    String mobile = mobile1 + "-" + mobile2 + "-" + mobile3;
 
     MemberEntity member = memberRepository.findByNameAndMobile(name, mobile);
-    Map<String, Object> response = new HashMap<>();
 
     if (member != null) {
-      // 인증번호 발송 로직 (여기서 인증번호 생성)
-      String verificationCode = String.valueOf((int) (Math.random() * 1000000));
-      // 인증번호를 저장하거나 발송하는 로직
-      response.put("status", "success");
-      response.put("verificationCode", verificationCode);
+      model.addAttribute("message", "당신의 아이디는: " + member.getUserid());
     } else {
-      response.put("status", "error");
-      response.put("message", "해당 정보를 찾을 수 없습니다.");
+      model.addAttribute("error", "아이디를 찾을 수 없습니다.");
+      model.addAttribute("notFound", true); // 이 부분 추가
     }
 
-    return response;
+    return "member/findidpw";
   }
 
-  // 비밀번호 찾기 처리
+
+  @GetMapping("/reset-pwd")
+  public String resetPasswordPage(@RequestParam("userid") String userid, Model model) {
+    model.addAttribute("userid", userid);
+    return "member/pwdresetform";
+  }
+
   @PostMapping("/find-password")
   public String findPassword(@RequestParam("id") String id,
                              @RequestParam("name") String name,
                              RedirectAttributes redirectAttributes) {
+
     MemberEntity member = memberRepository.findByUseridAndName(id, name);
 
     if (member != null) {
-      // 비밀번호 찾기 로직 처리, 예: 비밀번호를 이메일로 발송
-      redirectAttributes.addFlashAttribute("message", "비밀번호를 이메일로 전송했습니다.");
-      return "redirect:/api/member/login";
+      return "redirect:/api/member/reset-pwd?userid=" + id;
     } else {
-      redirectAttributes.addFlashAttribute("error", "아이디나 이름이 일치하지 않습니다.");
+      redirectAttributes.addFlashAttribute("error", "아이디 또는 이름이 일치하지 않습니다.");
       return "redirect:/api/member/findidpw";
     }
   }
+
+  @PostMapping("/reset-pwd")
+  public String resetPassword(@RequestParam("userid") String userid,
+                              @RequestParam("newPwd") String newPwd,
+                              RedirectAttributes redirectAttributes) {
+
+    Optional<MemberEntity> memberOptional = memberRepository.findByUserid(userid);
+
+    if (memberOptional.isPresent()) {
+      MemberEntity member = memberOptional.get();
+      member.setPwd(newPwd); // 비밀번호 저장
+      memberRepository.save(member);
+
+      // 비밀번호 변경 후 메시지와 함께 리디렉션
+      redirectAttributes.addFlashAttribute("message", "비밀번호가 변경되었습니다. 다시 로그인 해주세요.");
+      return "redirect:/api/member/reset-pwd-confirm"; // 비밀번호 변경 후 확인 페이지로 리디렉션
+    } else {
+      // 사용자가 없으면 아이디/비밀번호 찾기 페이지로 리디렉션
+      redirectAttributes.addFlashAttribute("error", "해당 사용자가 존재하지 않습니다.");
+      return "redirect:/api/member/findidpw"; // 존재하지 않으면 아이디/비밀번호 찾기 페이지로
+    }
+  }
+  @GetMapping("/reset-pwd-confirm")
+  public String resetPasswordConfirm(@ModelAttribute("message") String message, Model model) {
+    model.addAttribute("message", message);
+    return "member/popup"; // popup.html로 렌더링 (파일명에 맞게 수정)
+  }
+
 
 
 

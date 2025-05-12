@@ -1,0 +1,86 @@
+/* 팝업창 스타일 - 통일된 색감 적용 */
+
+h2 {
+  text-align: center;       /* 텍스트 중앙 정렬 */
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 20px; /* 화면 상단에서 20px 떨어지게 설정 */
+  left: 50%;
+  transform: translate(-50%, 0); /* 수직 중앙을 유지하면서 위쪽으로 위치 조정 */
+  background-color: #f4f2fa; /* 연한 보라빛 배경 */
+  padding: 25px;
+  border: 1px solid #c4b7e0;
+  border-radius: 10px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  width: 300px;
+  text-align: center;
+}
+
+.popup.active {
+  display: block;
+}
+
+.popup p {
+  color: #4c3e75;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.popup button {
+  padding: 8px 14px;
+  background-color: #8e7cc3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.popup button:hover {
+  background-color: #7768ae;
+}
+
+/* 비밀번호 재설정 폼 스타일 통일 */
+.form-box {
+  width: 320px;
+  margin: 0 auto;
+  padding: 25px;
+  background-color: #f9f7fd;
+  border: 1px solid #d2c8e8;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.form-box label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #4c3e75;
+}
+
+.form-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #bdaedb;
+  border-radius: 6px;
+}
+
+.form-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: #8e7cc3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.form-box button:hover {
+  background-color: #7768ae;
+}
