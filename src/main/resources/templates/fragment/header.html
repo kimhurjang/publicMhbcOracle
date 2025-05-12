@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <header th:fragment="header" class="open">
+    <header th:fragment="header" class="">
         <div class="logo">
             <a href="/home">
                 <span></span>
@@ -10,75 +10,83 @@
 
         <nav>
 
+            <i class="toggle icon xi-list"></i>
+
             <ul id="gnb">
                 <!--모바일 토클 버튼-->
-                <li class="toggle icon xi-list"></li>
-
-                <li class="nav_item">
-                    <strong><a href="/home">소개글</a></strong>
-                    <div class="sub_nav_layer">
+                <li class="nav_item" th:classappend="${currentPath.startsWith('/home')} ? 'active'">
+                    <strong><a th:href="@{/home}">소개글</a></strong>
+                    <div class="sub_nav_layer" >
                         <ul class="sub_group group1">
-                            <li><a href="/page/about">시설 소개</a></li>
-                            <li><a href="/page/map">오시는 길</a></li>
+                            <li><a th:href="@{/page/about}">시설 소개</a></li>
+                            <li><a th:href="@{/page/map}">오시는 길</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="nav_item">
-                    <strong><a href="#">웨딩</a></strong>
+                <li class="nav_item" th:classappend="${currentPath.startsWith('#')} ? 'active'">
+                    <strong><a th:href="@{#}"  onclick="return false;">웨딩</a></strong>
                     <div class="sub_nav_layer">
                         <ul class="sub_group group2">
-                            <li><a href="/page/place">장소 소개</a></li>
-                            <li><a href="/page/rental">대관 안내</a></li>
+                            <li><a th:href="@{/page/place}">장소 소개</a></li>
+                            <li><a th:href="@{/page/rental}">대관 안내</a></li>
                         </ul>
                     </div>
                 </li>
 
-                <li class="nav_item">
-                    <strong><a href="#">이용 안내</a></strong>
+                <li class="nav_item" th:classappend="${currentPath.startsWith('/reservation') or #strings.startsWith(currentPath, '/board/notice') ? 'active' : ''}">
+                <strong><a th:href="@{#}"  onclick="return false;">이용 안내</a></strong>
                     <div class="sub_nav_layer">
                         <ul class="sub_group group3">
-                            <li><a href="/reservation/index">상담 예약</a></li>
-                            <li><a href="/board/notice">공지 사항</a></li>
+                            <li th:classappend="${currentPath.startsWith('/reservation/')} ? 'active'"><a th:href="@{/reservation/}" >상담 예약</a></li>
+                            <li th:classappend="${currentPath.startsWith('/board/notice')} ? 'active'"><a th:href="@{/board/notice}">공지 사항</a></li>
                         </ul>
                     </div>
                 </li>
-                <li class="nav_item">
-                    <strong><a href="/board/cmct">커뮤니티</a></strong>
+                <li class="nav_item" th:classappend="${#strings.startsWith(currentPath, '/board') and !#strings.startsWith(currentPath, '/board/notice') ? 'active' : ''}">
+                    <strong><a th:href="@{/board/cmct}">커뮤니티</a></strong>
                     <div class="sub_nav_layer">
                         <ul class="sub_group group4">
-                            <li><a href="/board/event">이벤트</a></li>
-                            <li><a href="/board/gallery">갤러리</a></li>
-                            <li><a href="/board/oftenquestion">문의 사항</a></li>
+                            <li th:classappend="${#strings.startsWith(currentPath, '/board/event') ? 'active' : ''}">
+                                <a th:href="@{/board/event}">이벤트</a>
+                            </li>
+                            <li th:classappend="${#strings.startsWith(currentPath, '/board/gallery') ? 'active' : ''}">
+                                <a th:href="@{/board/gallery}">갤러리</a>
+                            </li>
+                            <li th:classappend="${#strings.startsWith(currentPath, '/board/oftenquestion') ? 'active' : ''}">
+                                <a th:href="@{/board/oftenquestion}">문의 사항</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
+
                 <li class="nav_item login" th:if="${session.loginMember == null and session.loginSnsUser == null}">
                     <strong>
-                        <a href="/api/member/login">
+                        <a th:href="@{/api/member/login}">
                             <span class="xi-profile-o"></span><br>
                             <span>로그인/회원가입</span>
                         </a>
                     </strong>
                     <div class="sub_nav_layer">
                         <ul class="sub_group group5">
-                            <li><a href="/member/mypage">회원정보수정</a></li>
-                            <li><a href="/reservation/list">나의 예약 현황</a></li>
+                            <li><a th:href="@{/member/mypage}">회원정보수정</a></li>
+                            <li><a th:href="@{/reservation/list}">나의 예약 현황</a></li>
                             <li><a th:href="@{/board/myboard_page(group_idx=${groupIdx},board_type=${boardType},member=1)}">작성글 확인</a></li>
                         </ul>
                     </div>
                 </li>
-                <li class="nav_item login" th:if="${session.loginMember != null or session.loginSnsUser != null}">
+                <li class="nav_item login" th:if="${session.loginMember != null or session.loginSnsUser != null}"
+                    th:classappend="${currentPath.startsWith('/api/member')} ? 'active'">
                     <strong>
-                        <a href="/logout">
+                        <a th:href="@{/logout}">
                             <span class="xi-profile-o"></span><br>
                             <span>로그아웃</span>
                         </a>
                     </strong>
                     <div class="sub_nav_layer">
                         <ul class="sub_group group5">
-                            <li><a href="/member/mypage">회원정보수정</a></li>
-                            <li><a href="/reservation/list">나의 예약 현황</a></li>
+                            <li><a th:href="@{/member/mypage}">회원정보수정</a></li>
+                            <li><a th:href="@{/reservation/list}">나의 예약 현황</a></li>
                             <li><a th:href="@{/board/myboard_page(group_idx=${5},board_type=${2},member=1)}">작성글 확인</a></li>
                         </ul>
                     </div>

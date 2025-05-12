@@ -44,26 +44,26 @@ public class MainController {
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "content";
     }
-    @RequestMapping("/admin/content")
+    @RequestMapping("/admin/")
     public String adminContentLayout() {
         System.out.println(">>>>>>>>>>admin content page<<<<<<<<<<");
         return "/admin/content";
     }
 
-    @RequestMapping("/about")
+    @RequestMapping("/page/about")
     public String about(){
         System.out.println(">>>>>>>>>>about page<<<<<<<<<<");
         return "/page/about";
     }
-    @RequestMapping("/map")
+    @RequestMapping("/page/map")
     public String map(){
         return "/page/map";
     }
-    @RequestMapping("/place")
+    @RequestMapping("/page/place")
     public String place(){
         return "/page/place";
     }
-    @RequestMapping("/rental")
+    @RequestMapping("/page/rental")
     public String rental(){
         return "/page/rental";
     }
