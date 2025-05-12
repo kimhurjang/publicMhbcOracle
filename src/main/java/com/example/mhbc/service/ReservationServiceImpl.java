@@ -55,7 +55,7 @@ public class ReservationServiceImpl implements ReservationService {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String loginUserid = auth.getName(); // 또는 ((UserDetailsImpl) auth.getPrincipal()).getUsername();
     MemberEntity member = memberRepository.findByUserid(loginUserid)
-      .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다: " + loginUserid));
+            .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다: " + loginUserid));
 
     HallEntity hall = hallService.findById(dto.getHallIdx()); // 홀 조회 실패 시 예외 발생
 
