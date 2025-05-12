@@ -1,7 +1,10 @@
 package com.example.mhbc.dto;
 
 import com.example.mhbc.entity.HallEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor

@@ -48,6 +48,7 @@ body {
     align-items: center;
     gap: 10px;
     margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
 .form_group label {
@@ -63,7 +64,9 @@ body {
 input[type="text"],
 input[type="password"],
 input[type="date"] {
-    width: 30%;
+    flex: 1;
+    width: 100%;
+    max-width: 400px; /* 최대 너비 설정 */
     padding: 10px 12px;
     font-size: 0.95em;
     border: 1px solid #ccc;
@@ -81,19 +84,22 @@ input:focus {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
 }
 
 .mobile input[type="text"] {
-    width: 22%;
+    flex: 1;
+    max-width: 300px; /* 최대 너비 설정 */
+    width: 100%;
 }
 
 /* 라디오 그룹 (통신사 선택) */
 .hall {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
-    flex-shrink: 1;
+    gap: 10px;
+    width: 100%;
 }
 
 .hall label {

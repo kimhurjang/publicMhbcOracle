@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+<body>
+<!--
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/common.js">
+</th:block>
+-->
+<section layout:fragment="content" id="container" class="schedule form"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <h1>일정 차단 등록</h1>
+  <div id="content" class="content">
+    <!-- 에러 메시지 영역 -->
+    <th:block th:if="${param.error} == 'duplicate'">
+      <p class="error_msg" style="color:red; font-weight:bold;">이미 등록된 일정입니다.</p>
+    </th:block>
+    <form th:action="@{/admin/schedule/save}" th:object="${schedule}" method="post" autocomplete="off">
+      <div class="form_group">
+        <label for="eventDate">차단일자</label>
+        <input type="date" id="eventDate" name="eventDate" th:field="*{eventDate}" min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+      </div>
+
+      <div class="form_group">
+        <label>차단 타임</label>
+        <div>
+          <label><input type="radio" name="timeSlot" value="10시" th:checked="${schedule.timeSlot == '10시'}">10시</label>
+          <label><input type="radio" name="timeSlot" value="12시" th:checked="${schedule.timeSlot == '12시'}">12시</label>
+          <label><input type="radio" name="timeSlot" value="14시" th:checked="${schedule.timeSlot == '14시'}">14시</label>
+          <label><input type="radio" name="timeSlot" value="16시" th:checked="${schedule.timeSlot == '16시'}">16시</label>
+          <label><input type="radio" name="timeSlot" value="ALL" th:checked="${schedule.timeSlot == 'ALL'}">전체</label>
+        </div>
+      </div>
+
+      <div class="form_group">
+        <label for="reason">차단 사유</label>
+        <input type="text" id="reason" name="reason" th:field="*{reason}" maxlength="100" placeholder="예: 공사중">
+      </div>
+
+      <div class="form_group">
+        <button type="submit" class="btn color1 small">저장</button>
+        <a th:href="@{/admin/schedule/list}" class="btn gray small">목록</a>
+      </div>
+
+    </form>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const radios = document.querySelectorAll('input[name="timeSlot"]');
+        radios.forEach(radio => {
+          radio.addEventListener('change', function () {
+            if (this.value === 'ALL') {
+              alert("전체 시간 차단을 선택하셨습니다.\n기존 시간별 차단은 삭제됩니다.");
+            }
+          });
+        });
+      });
+    </script>
+
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
+

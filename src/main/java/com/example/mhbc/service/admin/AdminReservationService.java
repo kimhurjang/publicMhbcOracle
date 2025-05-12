@@ -1,7 +1,7 @@
 package com.example.mhbc.service.admin;
 
 import com.example.mhbc.dto.ReservationDTO;
-import com.example.mhbc.entity.HallEntity;
+import com.example.mhbc.dto.ReservationSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,4 +17,6 @@ public interface AdminReservationService {
   void updateStatuses(List<String> updatedStatuses); // 상태변경
   void updateStatusesByAjax(List<Map<String, String>> updates); // 상태변경 ajax
   void updateAdminNote(Long idx, String adminNote, String loginId);
+  Page<ReservationDTO> findByCondition(ReservationSearchCondition condition, Pageable pageable);
+
 }

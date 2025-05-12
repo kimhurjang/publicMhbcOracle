@@ -13,48 +13,72 @@
                 <!--모바일 토클 버튼-->
                 <li class="toggle icon xi-list"></li>
 
-                <li><a href="/home" class="nav_item">소개글</a></li>
-                <li><a href="#" class="nav_item">웨딩</a></li>
-                <li><a href="#" class="nav_item">이용 안내</a></li>
-                <li><a href="/board/cmct" class="nav_item">커뮤니티</a></li>
-                <li class="login" th:if="${session.loginMember == null and session.loginSnsUser == null}">
-                    <a href="/api/member/login" class="nav_item login">
+                <li class="nav_item">
+                    <a href="/home">소개글</a>
+                    <div class="sub_nav_layer">
+                        <ul class="sub_group group1">
+                            <li><a href="/page/about">시설 소개</a></li>
+                            <li><a href="/page/map">오시는 길</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="nav_item">
+                    <a href="#">웨딩</a>
+                    <div class="sub_nav_layer">
+                        <ul class="sub_group group2">
+                            <li><a href="/page/place">장소 소개</a></li>
+                            <li><a href="/page/rental">대관 안내</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav_item">
+                    <a href="#">이용 안내</a>
+                    <div class="sub_nav_layer">
+                        <ul class="sub_group group3">
+                            <li><a href="/reservation/index">상담 예약</a></li>
+                            <li><a href="/board/notice">공지 사항</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav_item">
+                    <a href="/board/cmct">커뮤니티</a>
+                    <div class="sub_nav_layer">
+                        <ul class="sub_group group4">
+                            <li><a href="/board/event">이벤트</a></li>
+                            <li><a href="/board/gallery">갤러리</a></li>
+                            <li><a href="/board/oftenquestion">문의 사항</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav_item login" th:if="${session.loginMember == null and session.loginSnsUser == null}">
+                    <a href="/api/member/login">
                         <span class="xi-profile-o"></span><br>
                         <span>로그인/회원가입</span>
                     </a>
+                    <div class="sub_nav_layer">
+                        <ul class="sub_group group5">
+                            <li><a href="/member/mypage">회원정보수정</a></li>
+                            <li><a href="/reservation/list">나의 예약 현황</a></li>
+                            <li><a th:href="@{/board/myboard_page(group_idx=${groupIdx},board_type=${boardType},member=1)}">작성글 확인</a></li>
+                        </ul>
+                    </div>
                 </li>
-                <li class="login" th:if="${session.loginMember != null or session.loginSnsUser != null}">
-                    <a href="/logout" class="nav_item login">
+                <li class="nav_item login" th:if="${session.loginMember != null or session.loginSnsUser != null}">
+                    <a href="/logout">
                         <span class="xi-profile-o"></span><br>
                         <span>로그아웃</span>
                     </a>
+                    <div class="sub_nav_layer">
+                        <ul class="sub_group group5">
+                            <li><a href="/member/mypage">회원정보수정</a></li>
+                            <li><a href="/reservation/list">나의 예약 현황</a></li>
+                            <li><a th:href="@{/board/myboard_page(group_idx=${5},board_type=${2},member=1)}">작성글 확인</a></li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
 
-            <!-- 서브 메뉴 레이어 -->
-            <div class="sub_nav_layer">
-                <ul class="sub_group">
-                    <li><a href="#">시설 소개</a></li>
-                    <li><a href="#">오시는 길</a></li>
-                </ul>
-                <ul class="sub_group">
-                    <li><a href="#">장소 소개</a></li>
-                    <li><a href="#">대관 안내</a></li>
-                </ul>
-                <ul class="sub_group">
-                    <li><a href="#">상담 예약</a></li>
-                    <li><a href="#">이용료</a></li>
-                    <li><a href="/board/notice">공지 사항</a></li>
-                </ul>
-                <ul class="sub_group">
-                    <li><a href="/board/event">이벤트</a></li>
-                    <li><a href="/board/gallery">갤러리</a></li>
-                    <li><a href="/board/oftenquestion">문의 사항</a></li>
-                </ul>
-                <ul class="sub_group">
-                    <li><a href="#">마이 페이지</a></li>
-                </ul>
-            </div>
         </nav>
     </header>
 </html>

@@ -40,8 +40,9 @@
           <td th:text="${r.mobile}">010-1234-5678</td>
           <td th:text="${r.contactTime}">오전</td>
           <td th:text="${r.eventType}">예식</td>
-          <td th:text="${r.eventTimeSelect != null and r.eventTimeSelect != '' ? r.eventDate + ' ' + r.eventTimeSelect + '시' : r.eventDate}">
-            2025-05-01 14:00
+          <td th:text="${r.eventTimeSelect != null and r.eventTimeSelect != ''
+  ? #dates.format(r.eventDate, 'yyyy-MM-dd') + ' ' + r.eventTimeSelect + '시'
+  : #dates.format(r.eventDate, 'yyyy-MM-dd')}">
           </td>
           <td th:text="${r.status}">상담대기</td>
           <td>

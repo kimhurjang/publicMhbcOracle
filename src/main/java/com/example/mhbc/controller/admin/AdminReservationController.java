@@ -1,6 +1,9 @@
 package com.example.mhbc.controller.admin;
 
 import com.example.mhbc.dto.ReservationDTO;
+import com.example.mhbc.dto.ReservationSearchCondition;
+import com.example.mhbc.repository.HallRepository;
+import com.example.mhbc.repository.ReservationRepository;
 import com.example.mhbc.service.admin.AdminReservationService;
 import com.example.mhbc.util.Utility;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -25,19 +29,65 @@ import java.util.Map;
 public class AdminReservationController {
 
   private final AdminReservationService adminReservationService;
+  private final ReservationRepository reservationRepository;
+  private final HallRepository hallRepository;
 
   // 예약 리스트 출력
   @GetMapping("/list")
-  public String reservationList(@RequestParam(value = "page", defaultValue = "1") int page,
-                                Model model) {
+  public String reservationList(
+    @RequestParam(value = "page", defaultValue = "1") int page,
+    @RequestParam(required = false) String searchType,
+    @RequestParam(required = false) String keyword,
+    @RequestParam(required = false) String startDate,
+    @RequestParam(required = false) String endDate,
+    @RequestParam(required = false) List<String> status,
+    @RequestParam(required = false) List<String> hallIdx,
+    Model model
+  ) {
+    model.addAttribute("webtitle", "예약관리 | 예약현황");
+    model.addAttribute("hallList", hallRepository.findAll()); //홀 리스트
 
-    int itemsPerPage = 10; // 페이지당 10개
-    int groupSize = 5;     // 페이징 그룹 5개
-    String link = "/admin/reservation/list"; // 현재 페이지 링크
+    // 조건 없이 진입했는지 여부
+    boolean isEmptySearch = (searchType == null && keyword == null &&
+      startDate == null && endDate == null &&
+      status == null && hallIdx == null);
 
+    int itemsPerPage = 10;
+    int groupSize = 5;
+    String link = "/admin/reservation/list";
     Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
-    Page<ReservationDTO> paging = adminReservationService.findAll(pageable);
 
+    if (isEmptySearch) {
+      // 전체 리스트 출력
+      Page<ReservationDTO> paging = adminReservationService.findAll(pageable);
+      int totalCount = (int) paging.getTotalElements();
+      Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, link);
+
+      model.addAttribute("paging", paging);
+      model.addAttribute("pagination", pagination);
+      model.addAttribute("link", link);
+
+      // 검색조건 비움
+      model.addAttribute("searchType", null);
+      model.addAttribute("keyword", null);
+      model.addAttribute("startDate", null);
+      model.addAttribute("endDate", null);
+      model.addAttribute("status", Collections.emptyList());
+      model.addAttribute("hallIdx", Collections.emptyList());
+
+      return "admin/reservation/list";
+    }
+
+    // 검색 조건 있는 경우
+    ReservationSearchCondition condition = new ReservationSearchCondition();
+    condition.setSearchType(searchType);
+    condition.setKeyword(keyword);
+    condition.setStartDate(startDate);
+    condition.setEndDate(endDate);
+    condition.setStatus(status);
+    condition.setHallIdx(hallIdx);
+
+    Page<ReservationDTO> paging = adminReservationService.findByCondition(condition, pageable);
     int totalCount = (int) paging.getTotalElements();
     Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, link);
 
@@ -45,16 +95,22 @@ public class AdminReservationController {
     model.addAttribute("pagination", pagination);
     model.addAttribute("link", link);
 
+    // 기존 조건 유지
+    model.addAttribute("searchType", searchType);
+    model.addAttribute("keyword", keyword);
+    model.addAttribute("startDate", startDate);
+    model.addAttribute("endDate", endDate);
+    model.addAttribute("status", status != null ? status : Collections.emptyList());
+    model.addAttribute("hallIdx", hallIdx != null ? hallIdx : Collections.emptyList());
+
     return "admin/reservation/list";
   }
 
+
   // 예약 상태 변경 저장 처리 (기존 방식)
   @PostMapping("/status")
-  public String updateReservationStatus(
-    @RequestParam(value = "statuses") List<String> statuses,
-    @RequestParam(value = "statuses", defaultValue = "") List<String> updatedStatuses) {
-
-    adminReservationService.updateStatuses(updatedStatuses);
+  public String updateReservationStatus(@RequestParam(value = "statuses") List<String> statuses) {
+    adminReservationService.updateStatuses(statuses);
     return "redirect:/admin/reservation/list";
   }
 

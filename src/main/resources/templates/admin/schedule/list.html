@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+<body>
+
+<th:block layout:fragment="css">
+  <!--fullcalendar 언어 설정관련 script
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>-->
+
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+  <style>
+    .fc .fc-button-primary {background:#fff;}
+    .fc .fc-button-primary:hover {background:#ccc;}
+    .fc .fc-today-button {background:#2C3E50;}
+    .fc .fc-button-primary:focus { box-shadow: none; }
+    .fc-toolbar-chunk:nth-child(2) {margin-left:-150px;}
+    .fc-h-event {border:1px solid #ccc; background:transparent; cursor:pointer;}
+    .fc-h-event * {font-size:13px;}
+  </style>
+</th:block>
+<section layout:fragment="content" id="container" class="schedule list">
+    <h2>일정관리</h2>
+    <div id="content" class="content">
+      <a href="/admin/schedule/form" class="btn color1 small">+ 일정 등록</a>
+      <div id='calendar'></div>
+      <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        document.addEventListener('DOMContentLoaded', function () {
+          const calendarEl = document.getElementById('calendar');
+
+          const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'ko', // 한국어
+            height: 800,
+            eventOrder: 'timeSlot', // timeSlot 기준 정렬
+
+            // 일정차단 데이터 가져오기 (서버에서 전달된 list)
+            events: [
+              /* 서버에서 전달된 차단 목록을 반복문으로 events에 주입 */
+              /* ex: { title: '공사중 (10시)', date: '2025-05-10' } */
+              /*[# th:each="s : ${list}" ]*/
+              {
+                title: /*[[${s.reason}]]*/ '사유',
+                date: /*[[${#dates.format(s.eventDate, 'yyyy-MM-dd')}]]*/ '2025-05-10',
+                extendedProps: {
+                  timeSlot: /*[[${s.timeSlot}]]*/ '10시',
+                  idx: /*[[${s.idx}]]*/ 1
+                }
+              },
+              /*[/]*/
+            ],
+
+            eventClick: function(info) {
+              // 일정 클릭 시 상세보기로 이동
+              const idx = info.event.extendedProps.idx;
+              location.href = '/admin/schedule/view/' + idx;
+            },
+
+            eventOrder: function(a, b) {
+              const order = {'10시': 1, '12시': 2, '14시': 3, '16시': 4, 'ALL': 9};
+              return (order[a.extendedProps.timeSlot] || 99) - (order[b.extendedProps.timeSlot] || 99);
+            },
+
+            // 주말 강조 등 옵션 필요시 추가 가능
+          });
+
+          calendar.render();
+        });
+
+        /*]]>*/
+      </script>
+
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
+
