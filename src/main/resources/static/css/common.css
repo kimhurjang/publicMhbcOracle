@@ -111,6 +111,13 @@ body { position:relative; }
 .myAccount { display:block; }
 .myAccount a { color:#F7F4ED; }
 
+@media screen and (max-width: 764px) {
+    #user footer {padding:30px 10px; gap:15px;}
+    #user footer img {width:9rem;}
+    .footerBox.info {display:block; }
+    .footerBox.info > dif {margin-bottom:15px;}
+}
+
 /* container */
 #user #wrapper { width:100%; padding:0; background:#f8f8f8; }
 #user #container { max-width:768px; margin:0 auto; padding: 100px 0;}
