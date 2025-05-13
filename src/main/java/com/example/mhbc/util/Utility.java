@@ -1,12 +1,14 @@
 package com.example.mhbc.util;
 
 import com.example.mhbc.dto.BoardDTO;
+import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.entity.AttachmentEntity;
 import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.repository.*;
 import com.example.mhbc.service.UserDetailsImpl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -201,5 +203,31 @@ public class Utility {
 
         return null;
     }
+
+    /**
+     * 현재 로그인한 사용자 정보를 MemberDTO 형태로 반환
+     * 로그인하지 않은 경우 AccessDeniedException을 발생시킴
+     */
+    public static MemberDTO getLoginMemberDTO() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // 로그인되지 않은 경우 예외 발생 (비회원 상태)
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            throw new AccessDeniedException("로그인이 필요합니다.");
+        }
+
+        // 로그인한 사용자 정보가 UserDetailsImpl 타입일 경우 DTO로 변환
+        if (auth.getPrincipal() instanceof UserDetailsImpl userDetails) {
+            MemberDTO dto = new MemberDTO();
+            dto.setIdx(userDetails.getIdx());           // 회원 IDX
+            dto.setUserid(userDetails.getUsername());   // 사용자 ID
+            dto.setGrade(userDetails.getGrade());       // 회원 등급
+            return dto;
+        }
+
+        return null;
+    }
+
+
 
 }
