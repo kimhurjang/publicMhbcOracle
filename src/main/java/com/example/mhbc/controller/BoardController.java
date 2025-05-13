@@ -428,6 +428,21 @@ public class BoardController {
             return "redirect:/board/oftenquestion_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
         }
     }
+    @RequestMapping("/personalquestion_view")
+    public String personalquestion_view(@RequestParam("group_idx") Long groupIdx,
+                                        @RequestParam("board_type") Long boardType,
+                                        @RequestParam("idx") Long idx,
+                                        Model model){
+
+        BoardEntity board = boardRepository.findByIdx(idx);
+
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("board", board);
+
+        return "/board/personalquestion_view";
+
+    }
 
 
 

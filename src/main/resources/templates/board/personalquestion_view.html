@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <h1>1 대 1 질문</h1>
+  <div id="content" class="content">
+    <table>
+      <tr>
+        <td>성명</td>
+        <td>
+          <input type="text" name="name" th:value="${board.member.name}" required placeholder="성명을 입력해주세요.">
+        </td>
+      </tr>
+      <tr>
+        <td>이메일</td>
+        <td>
+          <input type="text" name="email" th:value="${board.member.email}" required placeholder="이메일을 입력해주세요.">
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>작성 날짜</td>
+        <td><input type="date" name="createdAt" id="createdAt" th:value="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 HH시 mm분')}" readonly></td>
+      </tr>
+      <tr>
+        <td>제목</td>
+        <td><textarea name="title" id="title" th:value="${board.title}" readonly></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>메시지</td>
+        <td>
+          <textarea name="content" th:value="${board.content}" readonly></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>답변 상태</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="2"><a th:href="@{/board/myboard}"><button type="button">뒤로 가기</button></a></td>
+      </tr>
+    </table>
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
