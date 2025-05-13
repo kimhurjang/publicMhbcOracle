@@ -34,7 +34,8 @@
     </ul>
   </nav>
   <div class="login_info">
-    <span th:text="'접속자: ' + ${loginId}">접속자: admin</span>
+    <span th:if="${loginMember != null}" th:text="'접속자: ' + ${loginMember.userid}">접속자: admin</span>
+    <span th:unless="${loginMember != null}">접속자: 비회원</span>
     <a href="" class="btn small s tr ml5">로그아웃</a>
   </div>
 

@@ -61,6 +61,10 @@ public class UserDetailsImpl implements UserDetails {  // Spring Security의 Use
         return member.map(MemberEntity::getIdx)
                 .orElseThrow(() -> new IllegalStateException("유저(idx)가 없습니다"));
     }
+    public Integer getGrade() {
+        return member.map(MemberEntity::getGrade)
+                .orElseThrow(() -> new IllegalStateException("등급(grade)이 없습니다"));
+    }
 
 
 }

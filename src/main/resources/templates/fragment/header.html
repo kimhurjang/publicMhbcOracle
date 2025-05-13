@@ -60,7 +60,9 @@
                     </div>
                 </li>
 
-                <li class="nav_item login" th:if="${session.loginMember == null and session.loginSnsUser == null}">
+                <!-- 로그인 / 회원가입 (비로그인 상태) -->
+                <li class="nav_item login"
+                    th:if="${loginMember == null}">
                     <strong>
                         <a th:href="@{/api/member/login}">
                             <span class="xi-profile-o"></span><br>
@@ -75,7 +77,10 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav_item login" th:if="${session.loginMember != null or session.loginSnsUser != null}"
+
+                <!-- 로그인 상태 (로그아웃 버튼 노출) -->
+                <li class="nav_item login"
+                    th:if="${loginMember != null}"
                     th:classappend="${currentPath.startsWith('/api/member')} ? 'active'">
                     <strong>
                         <a th:href="@{/logout}">
@@ -91,6 +96,7 @@
                         </ul>
                     </div>
                 </li>
+
             </ul>
         </nav>
     </header>
