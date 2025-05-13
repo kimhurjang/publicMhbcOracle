@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
         return "error"; // 타임리프 error.html 로 이동
     }
 
+    /*
     // 403 Forbidden (접근 금지) 예외 처리
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -32,6 +33,14 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorCode", HttpStatus.FORBIDDEN.value()); // 403 코드 추가
         model.addAttribute("errorDetails", ex.toString()); // 예외의 상세 정보 추가
         return "error"; // 타임리프 error.html 로 이동
+    }*/
+    /**
+     * 로그인하지 않은 사용자가 접근했을 때 로그인 페이지로 리다이렉트
+     * (AccessDeniedException 처리)
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public String handleAccessDenied() {
+        return "redirect:/api/member/login"; // 절대 이건 View 이름 아님!
     }
 
     // 일반적인 예외 처리

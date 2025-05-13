@@ -1,10 +1,14 @@
 package com.example.mhbc.controller;
 
 import com.example.mhbc.entity.BoardEntity;
+import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.repository.BoardRepository;
+import com.example.mhbc.util.Utility;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
@@ -67,6 +71,5 @@ public class MainController {
     public String rental(){
         return "/page/rental";
     }
-
 
 }

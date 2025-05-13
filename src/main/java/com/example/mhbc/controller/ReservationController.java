@@ -55,27 +55,30 @@ public class ReservationController {
     return "redirect:/reservation/list";
   }
 
-  // 예약 목록 화면
+  /**
+   * 로그인한 사용자의 예약현황 페이지
+   * 로그인하지 않으면 로그인 페이지로 리다이렉트
+   */
   @GetMapping("/list")
   public String showList(@RequestParam(value="page", defaultValue="1") int page,
                          Model model) {
-
-    model.addAttribute("webtitle", "만화방초 | 예약 현황");
 
     int itemsPerPage = 5; // 한 페이지당 5개씩 출력
     int groupSize = 3;    // 페이징 그룹 크기
     String link = "/reservation/list"; // 현재 페이지 링크
 
     Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
+
+    // 로그인하지 않은 경우 예외 → 전역 리다이렉트 처리
     Page<ReservationDTO> paging = reservationService.findByLoginUserPage(pageable);
 
     int totalCount = (int) paging.getTotalElements();
-
     Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, "link");
 
     model.addAttribute("paging", paging);
     model.addAttribute("pagination", pagination);
     model.addAttribute("link", link);
+    model.addAttribute("webtitle", "만화방초 | 예약 현황");
 
     return "reservation/list";
   }
