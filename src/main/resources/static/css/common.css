@@ -115,7 +115,7 @@ body { position:relative; }
     #user footer {padding:30px 10px; gap:15px;}
     #user footer img {width:9rem;}
     .footerBox.info {display:block; }
-    .footerBox.info > dif {margin-bottom:15px;}
+    .footerBox.info > div {margin-bottom:15px;}
 }
 
 /* container */
