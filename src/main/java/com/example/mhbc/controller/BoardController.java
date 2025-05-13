@@ -35,6 +35,7 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/board")
@@ -60,14 +61,24 @@ public class BoardController {
     @RequestMapping("/gallery")
     public String gallery() {
         System.out.println(">>>>>>>>>>gallery page<<<<<<<<<<");
-        long boardType = 1;
-        long groupIdx = 4;
+        Long boardType = 1L;
+        Long groupIdx = 4L;
+
         return "redirect:/board/gallery_page?board_type=" + boardType + "&group_idx=" + groupIdx;
     }
     @RequestMapping("/gallery_page")
-    public String gallery_page(@RequestParam("board_type") long boardType,
-                               @RequestParam("group_idx") long groupIdx,
+    public String gallery_page(@RequestParam("board_type") Long boardType,
+                               @RequestParam("group_idx") Long groupIdx,
                                Model model) {
+
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
 
@@ -75,6 +86,7 @@ public class BoardController {
             AttachmentEntity attachment = attachmentRepository.findByBoard(board);
             board.setAttachment(attachment); // BoardEntity에 Attachment 필드 추가
         }
+
         model.addAttribute("webtitle", "만화방초 | 갤러리");
         model.addAttribute("boardList", boardList);
         model.addAttribute("boardType", boardType);
@@ -84,9 +96,9 @@ public class BoardController {
         return "board/gallery_page";
     }
     @RequestMapping("/gallery_view")
-    public String gallery_iew(@RequestParam("idx") long idx,
-                              @RequestParam("group_idx") long groupIdx,
-                              @RequestParam("board_type") long boardType,
+    public String gallery_iew(@RequestParam("idx") Long idx,
+                              @RequestParam("group_idx") Long groupIdx,
+                              @RequestParam("board_type") Long boardType,
                               Model model) {
 
         BoardEntity board = boardService.getBoardByIdx(idx);
@@ -97,8 +109,8 @@ public class BoardController {
         return "board/gallery_view";
     }
     @RequestMapping("/gallery_write")
-    public String gallery_write(@RequestParam("group_idx") long groupIdx,
-                                @RequestParam("board_type") long boardType,
+    public String gallery_write(@RequestParam("group_idx") Long groupIdx,
+                                @RequestParam("board_type") Long boardType,
                                 Model model){
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
@@ -117,8 +129,8 @@ public class BoardController {
                                @ModelAttribute BoardEntity board,
                                @ModelAttribute AttachmentEntity attachmentEntity,
                                @RequestParam("attachment") MultipartFile attachment,
-                               @RequestParam("group_idx") long groupIdx,
-                               @RequestParam("board_type") long boardType,
+                               @RequestParam("group_idx") Long groupIdx,
+                               @RequestParam("board_type") Long boardType,
                                RedirectAttributes redirectAttributes) {
 
         /*유효성 검사*/
@@ -153,16 +165,25 @@ public class BoardController {
     @RequestMapping("/event")
     public String event() {
         System.out.println(">>>>>>>>>>event page<<<<<<<<<<");
-        long boardType = 1;
-        long groupIdx = 3;
+        Long boardType = 1L;
+        Long groupIdx = 3L;
         return "redirect:/board/event_page?board_type="+boardType+"&group_idx="+groupIdx;
     }
     @RequestMapping("/event_page")
-    public String event_Page(@RequestParam("board_type") long boardType,
-                             @RequestParam("group_idx") long groupIdx,
+    public String event_Page(@RequestParam("board_type") Long boardType,
+                             @RequestParam("group_idx") Long groupIdx,
                              Model model) {
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
 
         model.addAttribute("webtitle", "만화방초 | 이벤트");
         model.addAttribute("boardType", boardType);
@@ -172,9 +193,9 @@ public class BoardController {
         return "board/event_page";
     }
     @RequestMapping("/event_view")
-    public String event_view(@RequestParam("idx") long idx,
-                             @RequestParam("group_idx") long groupIdx,
-                             @RequestParam("board_type") long boardType,
+    public String event_view(@RequestParam("idx") Long idx,
+                             @RequestParam("group_idx") Long groupIdx,
+                             @RequestParam("board_type") Long boardType,
                              Model model) {
 
         BoardEntity board = boardService.getBoardByIdx(idx);
@@ -185,8 +206,8 @@ public class BoardController {
         return "board/event_view";
     }
     @RequestMapping("/event_write")
-    public String event_write(@RequestParam("group_idx") long groupIdx,
-                              @RequestParam("board_type") long boardType,
+    public String event_write(@RequestParam("group_idx") Long groupIdx,
+                              @RequestParam("board_type") Long boardType,
                               Model model){
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
@@ -205,8 +226,8 @@ public class BoardController {
                              @ModelAttribute BoardEntity board,
                              @ModelAttribute AttachmentEntity attachmentEntity,
                              @RequestParam("attachment") MultipartFile attachment,
-                             @RequestParam("group_idx") long groupIdx,
-                             @RequestParam("board_type") long boardType,
+                             @RequestParam("group_idx") Long groupIdx,
+                             @RequestParam("board_type") Long boardType,
                              RedirectAttributes redirectAttributes){
 
         /*유효성 검사*/
@@ -242,14 +263,14 @@ public class BoardController {
     @RequestMapping("/oftenquestion")
     public String oftenquestion() {
         System.out.println(">>>>>>>>>>oftenquestion page<<<<<<<<<<");
-        long boardType = 2;
-        long groupIdx = 5;
+        Long boardType = 2L;
+        Long groupIdx = 5L;
         int page = 1;
         return "redirect:/board/oftenquestion_page?page="+page+"&board_type="+boardType+"&group_idx="+groupIdx;
     }
     @RequestMapping("/oftenquestion_page")
-    public String oftenquestion_page(@RequestParam("board_type") long boardType,
-                                     @RequestParam("group_idx") long groupIdx,
+    public String oftenquestion_page(@RequestParam("board_type") Long boardType,
+                                     @RequestParam("group_idx") Long groupIdx,
                                      @RequestParam("page") int page,
                                      Model model) {
 
@@ -273,10 +294,10 @@ public class BoardController {
         return "board/oftenquestion_page";
     }
     @RequestMapping("/oftenquestion_view")
-    public String oftenquestion_view(@RequestParam("idx") long idx,
+    public String oftenquestion_view(@RequestParam("idx") Long idx,
                                      @RequestParam("title") String title,
-                                     @RequestParam("board_type") long boardType,
-                                     @RequestParam("group_idx") long groupIdx,
+                                     @RequestParam("board_type") Long boardType,
+                                     @RequestParam("group_idx") Long groupIdx,
                                      Model model) {
 
         List<BoardEntity> boardList = boardService.getBoardListByTitle(title);
@@ -296,19 +317,29 @@ public class BoardController {
     public String personalquestion_page(Model model) {
         System.out.println(">>>>>>>>>>personalquestionpage page<<<<<<<<<<");
 
-        long boardType = 2;
-        long groupIdx = 6;
+        Long boardType = 2L;
+        Long groupIdx = 6L;
 
-        return "redirect:/board/personalquestion_page?board_type="+boardType+"&group_idx="+groupIdx;
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser == null) {
+            return  "/member/login";
+        }
+
+        return "redirect:/board/personalquestion_page?board_type="+boardType+"&group_idx="+groupIdx+"&idx="+loginUser;
     }
     @RequestMapping("/personalquestion_page")
-    public String personalquestion_page(@RequestParam("board_type") long boardType,
-                                        @RequestParam("group_idx") long groupIdx,
+    public String personalquestion_page(@RequestParam("board_type") Long boardType,
+                                        @RequestParam("group_idx") Long groupIdx,
+                                        @RequestParam("idx") Long loginUser,
                                         Model model) {
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        MemberEntity member = memberRepository.findByIdx(loginUser);
+
+        model.addAttribute("member", member);
         model.addAttribute("webtitle", "만화방초 | 1대1 질문");
         model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("today", today);
@@ -318,29 +349,53 @@ public class BoardController {
 
         return "board/personalquestion_page";
     }
-    @RequestMapping("myboard_page")
-    public String myboard_page(@RequestParam("board_type") long boardType,
-                                      @RequestParam("group_idx") long groupIdx,
-                                      @RequestParam("member") long memberIdx,
-                                      Model model){
+    @RequestMapping("/myboard")
+    public String myboard(Model model) {
 
-        Optional<MemberEntity> member = memberRepository.findById(1L);
-        List<BoardEntity> boardList = boardRepository.findByMemberIdx(1L);
+        Long loginUser = Utility.getLoginUserIdx();
 
+        // 로그인 안 되어 있으면 로그인 페이지로 리다이렉트
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        // 해당 사용자의 게시물 목록을 가져오기
+        List<BoardEntity> boardList = boardRepository.findByMemberIdx(loginUser);
+
+        // boardList가 빈 리스트일 경우 처리
+        if (boardList.isEmpty()) {
+            boardList = new ArrayList<>();
+        }
+
+        // 개인 게시물(1:1 문의) 필터링
+        List<BoardEntity> personalList = boardList.stream()
+                .filter(b -> b.getGroup() != null && b.getGroup().equals(6L))
+                .collect(Collectors.toList());
+
+        // 커뮤니티 게시물 필터링
+        List<BoardEntity> communityList = boardList.stream()
+                .filter(b -> b.getGroup() != null && b.getGroup().equals(2L))
+                .collect(Collectors.toList());
+
+        // 로그인한 사용자 정보 조회
+        MemberEntity member = memberRepository.findByIdx(loginUser);
+        model.addAttribute("member", member);
+
+        // 모델에 데이터 추가
+        model.addAttribute("personalList", personalList);
+        model.addAttribute("communityList", communityList);
         model.addAttribute("webtitle", "만화방초 | 내가 작성한 게시글");
         model.addAttribute("boardList", boardList);
-        model.addAttribute("member", member.get());
-        model.addAttribute("boardType", boardType);
-        model.addAttribute("groupIdx", groupIdx);
 
-        return "board/myboard_page";
+        return "/board/myboard_page";
     }
+
     @PostMapping("/pq_proc")
     public String handleForm(@Valid CommonForm form,
                              BindingResult result,
                              Model model,
-                             @RequestParam("board_type") long boardType,
-                             @RequestParam("group_idx") long groupIdx,
+                             @RequestParam("board_type") Long boardType,
+                             @RequestParam("group_idx") Long groupIdx,
                              @ModelAttribute BoardDTO boardDTO,
                              @ModelAttribute MemberDTO memberDTO,
                              RedirectAttributes redirectAttributes) {
@@ -370,16 +425,16 @@ public class BoardController {
     public String notice(){
         System.out.println(">>>>>>>>>>notice page<<<<<<<<<<");
 
-        long groupIdx = 1;
-        long boardType = 0;
+        Long groupIdx = 1L;
+        Long boardType = 0L;
         int page = 1;
 
         return "redirect:/board/notice_page?page="+page+"&board_type="+boardType+"&group_idx="+groupIdx;
     }
     @RequestMapping("/notice_page")
     public String notice_page(Model model,
-                              @RequestParam("group_idx") long groupIdx,
-                              @RequestParam("board_type") long boardType,
+                              @RequestParam("group_idx") Long groupIdx,
+                              @RequestParam("board_type") Long boardType,
                               @RequestParam(value="page", defaultValue = "1") int page){
         System.out.println(">>>>>>>>>>noticepage page<<<<<<<<<<");
 
@@ -405,9 +460,9 @@ public class BoardController {
     }
     @RequestMapping("/notice_view")
     public String notice_view(Model model,
-                              @RequestParam("group_idx") long groupIdx,
-                              @RequestParam("board_type") long boardType,
-                              @RequestParam("idx") long idx){
+                              @RequestParam("group_idx") Long groupIdx,
+                              @RequestParam("board_type") Long boardType,
+                              @RequestParam("idx") Long idx){
         System.out.println(">>>>>>>>>>noticeview page<<<<<<<<<<");
 
         BoardEntity board = boardRepository.findByIdx(idx);
@@ -421,8 +476,8 @@ public class BoardController {
     }
     @RequestMapping("/notice_write")
     public String notice_write(Model model,
-                               @RequestParam("group_idx")long groupIdx,
-                               @RequestParam("board_type")long boardType){
+                               @RequestParam("group_idx")Long groupIdx,
+                               @RequestParam("board_type")Long boardType){
         //로그인 구현 후 수정
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
@@ -437,8 +492,8 @@ public class BoardController {
                               @ModelAttribute BoardEntity board,
                               BindingResult result,
                               @RequestParam("attachment") MultipartFile attachment,
-                              @RequestParam("group_idx") long groupIdx,
-                              @RequestParam("board_type") long boardType,
+                              @RequestParam("group_idx") Long groupIdx,
+                              @RequestParam("board_type") Long boardType,
                               RedirectAttributes redirectAttributes,
                               Model model){
         /*유효성 검사*/
@@ -468,20 +523,29 @@ public class BoardController {
     @RequestMapping("/cmct")
     public String cmct(Model model){
 
-        long boardType = 0;
-        long groupIdx = 2;
+        Long boardType = 0L;
+        Long groupIdx = 2L;
         int page = 1;
 
         return "redirect:/board/cmct_page?page="+page+"&board_type="+boardType+"&group_idx="+groupIdx;
     }
     @RequestMapping("/cmct_page")
-    public String cmct_page(@RequestParam("board_type") long boardType,
-                            @RequestParam("group_idx") long groupIdx,
+    public String cmct_page(@RequestParam("board_type") Long boardType,
+                            @RequestParam("group_idx") Long groupIdx,
                             @RequestParam("page") int page,
                             Model model){
 
         int itemsPerPage = 4;
         int groupSize = 3;
+
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
 
         Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
@@ -500,10 +564,10 @@ public class BoardController {
         return"/board/cmct_page";
     }
     @RequestMapping("/cmct_view")
-    public String cmct_view(@RequestParam("group_idx") long groupIdx,
-                            @RequestParam("board_type") long boardType,
-                            @RequestParam("idx") long idx,
-                            @RequestParam("member") long memberIdx,
+    public String cmct_view(@RequestParam("group_idx") Long groupIdx,
+                            @RequestParam("board_type") Long boardType,
+                            @RequestParam("idx") Long idx,
+                            @RequestParam("member") Long memberIdx,
                             Model model){
 
         MemberEntity member = memberRepository.findById(memberIdx).orElse(null);
@@ -523,13 +587,20 @@ public class BoardController {
     }
     @RequestMapping("/cmct_write")
     public String cmct_write(Model model,
-                             @RequestParam("group_idx")long groupIdx,
-                             @RequestParam("board_type")long boardType){
-        //로그인 구현 후 수정
+                             @RequestParam("group_idx")Long groupIdx,
+                             @RequestParam("board_type")Long boardType,
+                             @RequestParam("idx")Long memberIdx){
+
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        if(memberIdx == null){
+            return "redirect:/api/member/login";
+        }
         BoardEntity board = new BoardEntity();
 
+        MemberEntity memberEn = memberRepository.findByIdx(memberIdx);
+
+        model.addAttribute("member", memberEn);
         model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("boardType", boardType);
         model.addAttribute("board", board);
@@ -542,8 +613,8 @@ public class BoardController {
                                   @ModelAttribute BoardEntity board,
                                   BindingResult result,
                                   @RequestParam("attachment") MultipartFile attachment,
-                                  @RequestParam("group_idx") long groupIdx,
-                                  @RequestParam("board_type") long boardType,
+                                  @RequestParam("group_idx") Long groupIdx,
+                                  @RequestParam("board_type") Long boardType,
                                   RedirectAttributes redirectAttributes,
                                   Model model) {
 
@@ -570,10 +641,10 @@ public class BoardController {
 @PostMapping("cmct_comment_proc")
 public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
                            RedirectAttributes redirectAttributes,
-                           @RequestParam("groupIdx") long groupIdx,
-                           @RequestParam("boardIdx") long idx,
+                           @RequestParam("groupIdx") Long groupIdx,
+                           @RequestParam("boardIdx") Long idx,
                            Model model,
-                           @RequestParam(value = "boardType", required = false) long boardType){
+                           @RequestParam(value = "boardType", required = false) Long boardType){
 
 
     commentsService.saveComment(commentsDTO,1L);
@@ -624,11 +695,11 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
     public String delete(BoardEntity board,
                          MemberEntity member,
                          AttachmentEntity attachment,
-                         @RequestParam("group_idx") long groupIdx,
-                         @RequestParam("board_type") long boardType,
-                         @RequestParam("memberIdx") long memberIdx,
-                         @RequestParam("idx") long boardIdx,
-                         @RequestParam("comments_idx") long commentsIdx){
+                         @RequestParam("group_idx") Long groupIdx,
+                         @RequestParam("board_type") Long boardType,
+                         @RequestParam("memberIdx") Long memberIdx,
+                         @RequestParam("idx") Long boardIdx,
+                         @RequestParam("comments_idx") Long commentsIdx){
 
         String redirectUrl = "";
 
@@ -661,8 +732,8 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
     }
 
     @GetMapping("search")
-    public String search(@RequestParam("group_idx") long groupIdx,
-                         @RequestParam("board_type") long boardType,
+    public String search(@RequestParam("group_idx") Long groupIdx,
+                         @RequestParam("board_type") Long boardType,
                          @RequestParam("keyword") String keyword,
                          Model model){
 

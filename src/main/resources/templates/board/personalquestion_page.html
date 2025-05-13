@@ -11,21 +11,20 @@
       <input type="hidden" name="board_type" th:value="${boardType}">
       <input type="hidden" name="group_idx" th:value="${groupIdx}">
       <!--유효성 검사 통과용-->
-      <input type="hidden" name="userid" value="user123" />
-      <input type="hidden" name="name" value="홍길동" />
-      <input type="hidden" name="pwd" value="password123" />
+      <input type="hidden" name="userid" th:value="${member.userid}" />
+      <input type="hidden" name="pwd" th:value="${member.pwd}" />
       <table>
         <tr>
           <td>성명</td>
           <td>
-            <input type="text" name="name" value="" required placeholder="성명을 입력해주세요.">
+            <input type="text" name="name" th:value="${member.name}" required placeholder="성명을 입력해주세요.">
             <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="display: none;"></div>
           </td>
         </tr>
         <tr>
           <td>이메일</td>
           <td>
-            <input type="text" name="email" value="" required placeholder="이메일을 입력해주세요.">
+            <input type="text" name="email" th:value="${member.email}" required placeholder="이메일을 입력해주세요.">
             <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="display: none;"></div>
           </td>
         </tr>

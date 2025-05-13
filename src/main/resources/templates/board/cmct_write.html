@@ -10,19 +10,18 @@
     <form name="cmct_write_proc" method="post" action="/board/cmct_write_proc" enctype="multipart/form-data" th:object="${commonForm}">
       <input type="hidden" name="board_type" th:value="${boardType}">
       <input type="hidden" name="group_idx" th:value="${groupIdx}">
-      <input type="hidden" name="member" th:value="1">
-      <input type="hidden" name="idx" th:value="${board.idx}">
+      <input type="hidden" name="idx" th:value="${member.idx}">
 
       <!--유효성 검사 통과용-->
-      <input type="hidden" name="email" value="user@example.com" />
-      <input type="hidden" name="name" value="홍길동" />
-      <input type="hidden" name="userid" value="user123" />
-      <input type="hidden" name="pwd" value="password123" />
+      <input type="hidden" name="email" th:value="${member.email}" />
+      <input type="hidden" name="name" th:value="${member.name}" />
+      <input type="hidden" name="userid" th:value="${member.userid}" />
+      <input type="hidden" name="pwd" th:value="${member.pwd}" />
 
       <table>
         <tr>
           <td>작성자</td>
-          <td><input type="text" name="name" value="익명" readonly></td>
+          <td><input type="text" name="name" th:value="${member.name != null ? member.name : '익명'}" readonly></td>
           <!--로그인 기능 구현 후 수정-->
         </tr>
         <tr>
