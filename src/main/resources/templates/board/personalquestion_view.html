@@ -26,17 +26,19 @@
       </tr>
       <tr>
         <td>작성 날짜</td>
-        <td><input type="date" name="createdAt" id="createdAt" th:value="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 HH시 mm분')}" readonly></td>
+        <td>
+          <input type="text" name="createdAt" id="createdAt" th:value="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 HH시 mm분')}" readonly>
+        </td>
       </tr>
       <tr>
         <td>제목</td>
-        <td><textarea name="title" id="title" th:value="${board.title}" readonly></textarea>
+        <td><textarea name="title" id="title" th:text="${board.title}" readonly></textarea>
         </td>
       </tr>
       <tr>
         <td>메시지</td>
         <td>
-          <textarea name="content" th:value="${board.content}" readonly></textarea>
+          <textarea name="content" th:text="${board.content}" readonly></textarea>
         </td>
       </tr>
       <tr>
