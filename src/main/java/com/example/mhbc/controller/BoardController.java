@@ -281,6 +281,15 @@ public class BoardController {
         Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
+
         int totalCount = (int) paging.getTotalElements();
 
         Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize,"link");
@@ -324,7 +333,7 @@ public class BoardController {
         Long loginUser = Utility.getLoginUserIdx();
 
         if (loginUser == null) {
-            return  "/member/login";
+            return  "redirect:/api/member/login";
         }
 
         return "redirect:/board/personalquestion_page?board_type="+boardType+"&group_idx="+groupIdx+"&idx="+loginUser;
@@ -357,7 +366,7 @@ public class BoardController {
 
         // 로그인 안 되어 있으면 로그인 페이지로 리다이렉트
         if (loginUser == null) {
-            return "redirect:/login";
+            return "redirect:/api/member/login";
         }
 
         // 해당 사용자의 게시물 목록을 가져오기
@@ -378,7 +387,6 @@ public class BoardController {
         List<BoardEntity> communityList = boardList.stream()
                 .filter(b -> b.getGroup() != null && b.getGroup().getGroupIdx().equals(2L))
                 .collect(Collectors.toList());
-
 
         // 로그인한 사용자 정보 조회
         MemberEntity memberEn = memberRepository.findByIdx(loginUser);
@@ -541,16 +549,7 @@ public class BoardController {
         int itemsPerPage = 4;
         int groupSize = 3;
 
-        Long loginUser = Utility.getLoginUserIdx();
-
-        if (loginUser != null) {
-            MemberEntity member = memberRepository.findByIdx(loginUser);
-            model.addAttribute("member", member);
-        } else {
-            model.addAttribute("member", null);  // 로그인되지 않은 경우
-        }
-
-        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.ASC, "createdAt");
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
         int totalCount = (int) paging.getTotalElements();
@@ -570,8 +569,13 @@ public class BoardController {
     public String cmct_view(@RequestParam("group_idx") Long groupIdx,
                             @RequestParam("board_type") Long boardType,
                             @RequestParam("idx") Long idx,
-                            @RequestParam("member") Long memberIdx,
                             Model model){
+
+        Long memberIdx = Utility.getLoginUserIdx();
+        if (memberIdx == null) {
+            return "redirect:/api/member/login";
+        }
+
 
         MemberEntity member = memberRepository.findById(memberIdx).orElse(null);
         BoardEntity board = boardRepository.findByIdx(idx);

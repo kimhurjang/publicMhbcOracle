@@ -36,6 +36,7 @@ public class BoardDTO {
                 .closedAt(closedAt)
                 .member(member)
                 .group(group)
+                .re(re)
                 .build();
     }
     public static BoardDTO fromEntity(BoardEntity entity) {
@@ -44,6 +45,7 @@ public class BoardDTO {
         dto.setContent(entity.getContent());
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setClosedAt(entity.getClosedAt());
+        dto.setRe(entity.getRe());
         dto.setStartAt(entity.getStartAt());
         dto.setMember(entity.getMember());  // entity의 member를 DTO의 member에 할당
         return dto;

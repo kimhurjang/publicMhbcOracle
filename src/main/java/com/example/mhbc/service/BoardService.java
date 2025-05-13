@@ -63,11 +63,10 @@ public class BoardService {
 
     public void processBoardForm(long groupIdx, BoardDTO boardDTO, MemberDTO memberDTO) {
         // 1. 회원 정보 조회
-        Optional<MemberEntity> optionalMember = Optional.ofNullable(memberRepository.findByNameAndEmail(memberDTO.getName().trim(), memberDTO.getEmail().trim()));
-        if (optionalMember.isEmpty()) {
-            throw new IllegalArgumentException("회원 정보가 존재하지 않습니다.");
-        }
-        MemberEntity member = optionalMember.get();
+        Long loginUser = Utility.getLoginUserIdx();
+        MemberEntity member = memberRepository.findByIdx(loginUser);
+
+        System.out.println("---------------------MEMBER = " + member.getName());
 
         // 2. 게시판 그룹 조회 (필요 시)
         Optional<BoardGroupEntity> optionalGroup = boardGroupRepository.findById((long) groupIdx);

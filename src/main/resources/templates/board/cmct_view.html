@@ -15,7 +15,7 @@
             <table>
                 <tr>
                     <td>제목</td>
-                    <td>
+                    <td style="width:65%">
                         <span th:text="${board.title}"></span>
                         <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${member.idx}, comments_idx=${0})}"><button type="button" class="small">삭제</button></a>
                     </td>
@@ -46,7 +46,7 @@
                 </tr>
 
                 <tr>
-                    <td><textarea cols="50" rows="3" name="content"></textarea></td>
+                    <td style="width: 70%"><textarea cols="50" rows="3" name="content"></textarea></td>
                     <td><button type="submit">등록</button></td>
                 </tr>
 
