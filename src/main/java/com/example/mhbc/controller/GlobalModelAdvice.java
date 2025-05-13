@@ -1,5 +1,7 @@
 package com.example.mhbc.controller;
 
+import com.example.mhbc.dto.MemberDTO;
+import com.example.mhbc.service.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,16 +34,15 @@ public class GlobalModelAdvice {
 
   /**
    * 현재 로그인된 사용자 ID (없으면 "비회원")
-   */
   @ModelAttribute("loginId")
   public String loginId() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    /* 실제사용용
+    //실제사용용
+
     return auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getName())
       ? auth.getName()
       : "비회원";
-     */
     // ✅ 임시 개발용: SecurityContext가 비었거나 비회원이면 "admin" 강제 로그인
     if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
       Authentication fakeAuth = new UsernamePasswordAuthenticationToken(
@@ -49,9 +50,27 @@ public class GlobalModelAdvice {
       );
       SecurityContextHolder.getContext().setAuthentication(fakeAuth);
       return "admin";
+
     }
     return auth.getName();
+  }
+  */
 
+  @ModelAttribute("loginMember")
+  public MemberDTO loginMember() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    if (auth != null && auth.getPrincipal() instanceof UserDetailsImpl) {
+      UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+
+      MemberDTO dto = new MemberDTO();
+      dto.setIdx(userDetails.getIdx());         // 회원 IDX
+      dto.setUserid(userDetails.getUsername()); // 아이디
+      dto.setGrade(userDetails.getGrade());     // 등급
+      return dto;
+    }
+
+    return null;
   }
 
   /**
