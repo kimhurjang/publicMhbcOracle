@@ -13,7 +13,7 @@ import lombok.*;
 public class BoardGroupEntity {
 
     @Id
-    //직접 값 넣어주세요 노션 참고
+    @Column(name = "group_idx")
     private Long groupIdx; // 그룹 번호
 
     private Long boardType; // 게시판 타입
@@ -24,6 +24,7 @@ public class BoardGroupEntity {
     public BoardGroupDTO toDTO() {
         return BoardGroupDTO.builder()
                 .boardType(boardType)
+                .groupIdx(groupIdx)
                 .name(name)
                 .orderNo(orderNo)
                 .role(role)

@@ -24,8 +24,8 @@
 
       <table th:if="${not #lists.isEmpty(paging)}">
         <tr th:each=" board : ${paging}">
-          <td>
-            <a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member?.idx ?: 'Default Value'},board_type=${boardType})}"
+          <td style="70%">
+            <a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member?.idx ?: 'Default Value'},board_type=${boardType},memberIdx=${member.idx})}"
                th:text="${board.title}"></a>
           </td>
           <td th:text="${#strings.substring(board.member.name, 0, 1) + '*' + #strings.substring(board.member.name, 2)}"></td>

@@ -9,7 +9,7 @@
     <div id="content" class="content">
         <form name="comment" method="post" action="/board/cmct_comment_proc">
             <input type="hidden" name="boardIdx" th:value="${board.idx}">
-            <input type="hidden" name="memberIdx" value="1"><!--로그인 구현 후 th:value-->
+            <input type="hidden" name="memberIdx" th:value="${member.idx}"><!--로그인 구현 후 th:value-->
             <input type="hidden" name="groupIdx" th:value="${groupIdx}">
             <input type="hidden" name="boardType" th:value="${boardType}">
             <table>
@@ -17,7 +17,7 @@
                     <td>제목</td>
                     <td>
                         <span th:text="${board.title}"></span>
-                        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button type="button" class="small">삭제</button></a>
+                        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${member.idx}, comments_idx=${0})}"><button type="button" class="small">삭제</button></a>
                     </td>
                 </tr>
                 <tr>
@@ -57,7 +57,9 @@
                         #strings.substring(comments.member.name, 0, 1) + '*' + #strings.substring(comments.member.name, 2) :
                         '알 수 없음'}">
                         </span>
-                        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType},idx=${board.idx}, comments_idx=${comments.idx},memberIdx=${1})}"><button type="button" class="small">X</button></a>
+                        <div th:if="${member == board.member.idx || grade == 10}">
+                            <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType},idx=${board.idx}, comments_idx=${comments.idx},memberIdx=${member.idx})}"><button type="button" class="small">X</button></a>
+                        </div>
                         <br>
                         <span th:text="${#dates.format(comments.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></span>
                     </td>

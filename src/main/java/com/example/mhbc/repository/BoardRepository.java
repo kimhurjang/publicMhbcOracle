@@ -1,6 +1,7 @@
 package com.example.mhbc.repository;
 
 import com.example.mhbc.entity.BoardEntity;
+import com.example.mhbc.entity.MemberEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -34,7 +35,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     Page<BoardEntity> findByGroupIdx(@Param("groupIdx") long groupIdx, Pageable pageable);
 
     // 작성자 기준으로 전체 게시글 조회
-    List<BoardEntity> findByMemberIdx(Long memberIdx);
+    List<BoardEntity> findByMember(MemberEntity member);
 
     List<BoardEntity> findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(String title, long groupIdx, Long boardType);
 

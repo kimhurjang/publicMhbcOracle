@@ -12,11 +12,13 @@ public class BoardGroupDTO {
     private String name;
     private Integer orderNo;
     private String role;
+    private Long groupIdx;
 
     public BoardGroupEntity toEntity() {
         return BoardGroupEntity.builder()
                 .boardType(boardType)
                 .name(name)
+                .groupIdx(groupIdx)
                 .orderNo(orderNo)
                 .role(role)
                 .build();

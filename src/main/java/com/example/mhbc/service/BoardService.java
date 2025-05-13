@@ -6,6 +6,7 @@ import com.example.mhbc.dto.CommentsDTO;
 import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.entity.*;
 import com.example.mhbc.repository.*;
+import com.example.mhbc.util.Utility;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -116,7 +117,9 @@ public class BoardService {
         board.setGroup(group);
 
         // 임시: 로그인 사용자
-        board.setMember(memberRepository.findByIdx(1L));
+        Long loginUser = Utility.getLoginUserIdx();
+
+        board.setMember(memberRepository.findByIdx(loginUser));
 
         // 게시글 저장
         boardRepository.save(board);

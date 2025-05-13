@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -360,7 +361,9 @@ public class BoardController {
         }
 
         // 해당 사용자의 게시물 목록을 가져오기
-        List<BoardEntity> boardList = boardRepository.findByMemberIdx(loginUser);
+        MemberEntity member = memberRepository.findByIdx(loginUser);
+        List<BoardEntity> boardList = boardRepository.findByMember(member);
+
 
         // boardList가 빈 리스트일 경우 처리
         if (boardList.isEmpty()) {
@@ -369,17 +372,17 @@ public class BoardController {
 
         // 개인 게시물(1:1 문의) 필터링
         List<BoardEntity> personalList = boardList.stream()
-                .filter(b -> b.getGroup() != null && b.getGroup().equals(6L))
+                .filter(b -> b.getGroup() != null && b.getGroup().getGroupIdx().equals(6L))
                 .collect(Collectors.toList());
 
-        // 커뮤니티 게시물 필터링
         List<BoardEntity> communityList = boardList.stream()
-                .filter(b -> b.getGroup() != null && b.getGroup().equals(2L))
+                .filter(b -> b.getGroup() != null && b.getGroup().getGroupIdx().equals(2L))
                 .collect(Collectors.toList());
+
 
         // 로그인한 사용자 정보 조회
-        MemberEntity member = memberRepository.findByIdx(loginUser);
-        model.addAttribute("member", member);
+        MemberEntity memberEn = memberRepository.findByIdx(loginUser);
+        model.addAttribute("member", memberEn);
 
         // 모델에 데이터 추가
         model.addAttribute("personalList", personalList);
@@ -588,22 +591,19 @@ public class BoardController {
     @RequestMapping("/cmct_write")
     public String cmct_write(Model model,
                              @RequestParam("group_idx")Long groupIdx,
-                             @RequestParam("board_type")Long boardType,
-                             @RequestParam("idx")Long memberIdx){
+                             @RequestParam("board_type")Long boardType){
 
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-        if(memberIdx == null){
+        Long memberIdx = Utility.getLoginUserIdx();
+        if (memberIdx == null) {
             return "redirect:/api/member/login";
         }
-        BoardEntity board = new BoardEntity();
 
         MemberEntity memberEn = memberRepository.findByIdx(memberIdx);
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         model.addAttribute("member", memberEn);
         model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("boardType", boardType);
-        model.addAttribute("board", board);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("today", today);
         return "board/cmct_write";
@@ -643,11 +643,12 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
                            RedirectAttributes redirectAttributes,
                            @RequestParam("groupIdx") Long groupIdx,
                            @RequestParam("boardIdx") Long idx,
+                           @RequestParam("memberIdx") Long member,
                            Model model,
                            @RequestParam(value = "boardType", required = false) Long boardType){
 
 
-    commentsService.saveComment(commentsDTO,1L);
+    commentsService.saveComment(commentsDTO,member);
 
     Long memberIdx = commentsDTO.getMemberIdx();
 
