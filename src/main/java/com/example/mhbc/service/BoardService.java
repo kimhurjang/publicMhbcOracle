@@ -76,6 +76,8 @@ public class BoardService {
         BoardEntity board = boardDTO.toEntity(member, group);
         board.setCreatedAt(boardDTO.getCreatedAt()); // createdAt 수동 설정 시 필요
         board.setViewCnt(0); // 기본 조회수 0
+        board.setRe(1);//1===답변가능한 게시물
+        board.setRequest(0);//시작은 답변 전 상태
 
         // 4. 저장
         boardRepository.save(board);
@@ -132,6 +134,9 @@ public class BoardService {
         // 2. 게시글 삭제
         boardRepository.deleteByIdx(boardIdx);
     }
+
+
+
 
 
 }

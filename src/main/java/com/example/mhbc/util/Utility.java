@@ -58,8 +58,8 @@ public class Utility {
             attachmentEntity.setFileSize((int) attachment.getSize());
 
             // 파일과 게시글 연결
-            attachmentEntity.setBoard(board);
-            attachmentRepository.save(attachmentEntity);
+            //attachmentEntity.setBoard(board);
+            //attachmentRepository.save(attachmentEntity);
 
             // 게시글에 첨부파일 정보 반영
             board.setAttachment(attachmentEntity);

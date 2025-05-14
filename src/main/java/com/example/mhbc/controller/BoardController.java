@@ -642,10 +642,11 @@ public class BoardController {
             model.addAttribute("errors", result.getAllErrors());
             return "redirect:/board/cmct_write";
         }
-
         try {
+
             boardService.saveBoard(board,groupIdx);
             utility.saveAttachment(attachment,board);
+
         } catch (IOException e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "파일 업로드 실패");

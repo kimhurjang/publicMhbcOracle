@@ -32,7 +32,7 @@
       </tr>
       <tr>
         <td>제목</td>
-        <td><textarea name="title" id="title" th:text="${board.title}" readonly></textarea>
+        <td><input type="text" name="title" id="title" th:value="${board.title}" readonly>
         </td>
       </tr>
       <tr>
@@ -43,7 +43,20 @@
       </tr>
       <tr>
         <td>답변 상태</td>
-        <td></td>
+        <td th:if="${board.request == 0}">
+          <span>미확인</span>
+        </td>
+        <td th:if="${board.request == 1}">
+          <span>답변 완료</span>
+        </td>
+      </tr>
+      <tr th:if="${board.request == 1}">
+        <td>답변</td>
+        <td>
+          <textarea name="requestContent"
+                    readonly
+                    th:text="'질문 제목 : ' + ${board.title} + '\n\n질문 답변 : ' + ${board.requestContent}"></textarea>
+        </td>
       </tr>
       <tr>
         <td colspan="2"><a th:href="@{/board/myboard}"><button type="button">뒤로 가기</button></a></td>

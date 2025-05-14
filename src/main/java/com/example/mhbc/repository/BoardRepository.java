@@ -17,8 +17,8 @@ import java.util.List;
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
-    @Query("SELECT b FROM BoardEntity b WHERE b.group.groupIdx = :groupIdx")
-    public List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") long groupIdx);
+    @Query("SELECT DISTINCT b FROM BoardEntity b JOIN b.attachment a WHERE b.group.groupIdx = :groupIdx")
+    List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") long groupIdx);
 
     public BoardEntity findByIdx(long idx);
 

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+<body>
+<!--<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block>넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+    <h1>게시판 그룹별 관리</h1>
+    <div id="content" class="content">
+        <select id="categorySelect">
+            <option  value="" disabled selected>카테고리</option>
+            <option value="notice">공지</option>
+            <option value="gallery">갤러리</option>
+            <option value="event">이벤트</option>
+            <option value="cmct">커뮤니티</option>
+            <option value="oftenquestion">자주 묻는 질문</option>
+            <option value="personalquestion">1 대 1 질문</option>
+        </select>
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="allCheck"></th>
+                    <th style="width: 40%;">제목</th>
+                    <th>등록 일자</th>
+                    <th colspan="3" style="width:30%;">설정</th>
+                </tr>
+            </thead>
+            <tbody id="adminBoardList">
+            </tbody>
+        </table>
+        <div id="paging"></div>
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
+<script>
+    document.getElementById('categorySelect').addEventListener('change', function () {
+        loadCategoryData(this.value, 1); // 첫 페이지
+    });
+
+    function loadCategoryData(category, page) {
+        if (!category) return;
+
+        fetch(`/admin/board/api/list?category=${category}&page=${page - 1}`) // 0부터 시작
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('adminBoardList');
+                tbody.innerHTML = '';
+
+                if (data.content.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7">해당 카테고리의 데이터가 없습니다.</td></tr>';
+                    return;
+                }
+
+                data.content.forEach(item => {
+                    const row = `
+                        <tr>
+                            <td><input type="checkbox" value="${item.id}"/></td>
+                            <td>${item.title}</td>
+                            <td>${item.createdAt}</td>
+                            <td>삭제</td>
+                            <td>수정</td>
+                            <td>상세보기</td>
+                        </tr>
+                    `;
+                    tbody.insertAdjacentHTML('beforeend', row);
+                });
+
+                renderPaging(data.totalPages, data.number + 1, category);
+            })
+            .catch(error => {
+                console.error("데이터 요청 실패:", error);
+            });
+    }
+
+    function renderPaging(totalPages, currentPage, category) {
+        const pagingContainer = document.getElementById('paging');
+        pagingContainer.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.innerText = i;
+            if (i === currentPage) {
+                pageBtn.disabled = true;
+            }
+            pageBtn.addEventListener('click', () => loadCategoryData(category, i));
+            pagingContainer.appendChild(pageBtn);
+        }
+    }
+</script>
+
+

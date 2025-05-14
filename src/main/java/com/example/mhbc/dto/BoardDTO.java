@@ -23,6 +23,9 @@ public class BoardDTO {
     private Date createdAt;
     private Date closedAt;
     private Date startAt;
+    private Integer request;
+    private String requestTitle;
+    private String requestContent;
 
     private Long groupIdx;
     private MemberEntity member;
@@ -37,6 +40,9 @@ public class BoardDTO {
                 .member(member)
                 .group(group)
                 .re(re)
+                .request(request)
+                .requestTitle(requestTitle)
+                .requestContent(requestContent)
                 .build();
     }
     public static BoardDTO fromEntity(BoardEntity entity) {
@@ -48,6 +54,10 @@ public class BoardDTO {
         dto.setRe(entity.getRe());
         dto.setStartAt(entity.getStartAt());
         dto.setMember(entity.getMember());  // entity의 member를 DTO의 member에 할당
+        dto.setRequest(entity.getRequest());
+        dto.setRequestTitle(entity.getRequestTitle());
+        dto.setRequest(entity.getRequest());
+        dto.setRequestContent(entity.getRequestContent());
         return dto;
     }
 }
