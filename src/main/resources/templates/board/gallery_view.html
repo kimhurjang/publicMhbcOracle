@@ -17,7 +17,10 @@
     <div th:text="${board.content}"></div>
     <div th:text="${board.viewCnt}"></div>
     <div>작성일 : <div th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></div></div>
-    <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button>[관리자]삭제</button></a>
+    <div class="btn_group mt20">
+      <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button>[관리자]삭제</button></a>
+      <button type="button"  onclick="goBack()">뒤로가기</button>
+    </div>
     <!--sec:authorize="hasRole('ADMIN')"-->
 
   </div><!--E content-->

@@ -15,10 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -129,10 +127,61 @@ public class BoardService {
 
     /*게시물 삭제*/
     @Transactional
-    public void deleteBoard(long boardIdx) {
+    public void deleteBoard(Long boardIdx) {
 
         // 2. 게시글 삭제
         boardRepository.deleteByIdx(boardIdx);
+    }
+
+
+    /**
+     *
+     *      수정
+     *
+     * */
+    /*파일 재업로드*/
+    @Transactional
+    public void modifyBoard(Long boardIdx , String title, String content){
+
+     BoardEntity board = boardRepository.findByIdx(boardIdx);
+
+        board.setUpdatedAt(new Date());
+        board.setTitle(title);
+        board.setContent(content);
+
+
+    }
+    @Transactional
+    public void modifyAttachment(MultipartFile file, Long boardIdx) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return;
+        }
+
+        // 1) 파일 저장
+        String uuidFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        File up = new File(uploadDir);
+        if (!up.exists()) up.mkdirs();
+        file.transferTo(new File(up, uuidFileName));
+
+        // 2) BoardEntity 프록시 가져오기 (실제 조회 쿼리 지연)
+        BoardEntity board = boardRepository.getReferenceById(boardIdx);
+
+        // 3) 기존 첨부 있으면 가져오고, 없으면 새로 생성
+        AttachmentEntity attach = attachmentRepository
+                .findByBoard_idx(boardIdx)
+                .orElseGet(() -> new AttachmentEntity());
+
+        // 4) 연관관계 편의 메서드로 양쪽 세팅
+        attach.setBoard(board);
+
+        // 5) 파일 메타데이터 세팅
+        attach.setFileName(file.getOriginalFilename());
+        attach.setFilePath(uuidFileName);
+        attach.setFileType(file.getContentType());
+        attach.setFileSize((int) file.getSize());
+
+        // 6) 저장
+        attachmentRepository.save(attach);
     }
 
 

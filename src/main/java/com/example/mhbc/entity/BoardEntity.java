@@ -72,6 +72,7 @@ public class BoardEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATE_AT")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt; // 수정일
 
     @PrePersist

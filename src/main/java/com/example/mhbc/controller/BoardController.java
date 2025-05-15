@@ -26,6 +26,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.FileNotFoundException;
@@ -256,6 +257,7 @@ public class BoardController {
         // 게시글 저장 및 리다이렉트 로직 추가되어야 함 (예: boardRepository.save(board), 등)
         return "redirect:/board/event_page?board_type=" + boardType + "&group_idx=" + groupIdx;
     }
+
 
 
 
@@ -658,25 +660,28 @@ public class BoardController {
 
         return "redirect:/board/cmct_page?page=1&board_type=" + boardType + "&group_idx=" + groupIdx;
     }
-@PostMapping("cmct_comment_proc")
-public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
-                           RedirectAttributes redirectAttributes,
-                           @RequestParam("groupIdx") Long groupIdx,
-                           @RequestParam("boardIdx") Long idx,
-                           @RequestParam("memberIdx") Long member,
-                           Model model,
-                           @RequestParam(value = "boardType", required = false) Long boardType){
+    @PostMapping("cmct_comment_proc")
+    public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
+                               RedirectAttributes redirectAttributes,
+                               @RequestParam("groupIdx") Long groupIdx,
+                               @RequestParam("boardIdx") Long idx,
+                               @RequestParam("memberIdx") Long member,
+                               Model model,
+                               @RequestParam(value = "boardType", required = false) Long boardType){
 
 
-    commentsService.saveComment(commentsDTO,member);
+        commentsService.saveComment(commentsDTO,member);
 
-    Long memberIdx = commentsDTO.getMemberIdx();
+        Long memberIdx = commentsDTO.getMemberIdx();
 
-    redirectAttributes.addAttribute("idx", commentsDTO.getBoardIdx());
-    model.addAttribute("groupIdx", groupIdx);
-    model.addAttribute("boardType", boardType);
-    return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx+"&idx="+idx+"&member="+memberIdx;
-}
+        redirectAttributes.addAttribute("idx", commentsDTO.getBoardIdx());
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+        return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx+"&idx="+idx+"&member="+memberIdx;
+    }
+    @RequestMapping("/cmct_modify")
+
+
 
 
 
@@ -708,6 +713,19 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + encodedFilename + "\"")
                 .body(resource);
+    }
+    @GetMapping("/file/delete")
+    public String filedelete(@RequestParam("board_idx") Long boardIdx,
+                             @RequestHeader(value = "Referer", required = false) String referer) throws FileNotFoundException {
+        utility.deleteAttachments(boardIdx);
+
+        // 2) 이전 페이지가 있으면 거기로, 없으면 기본 경로로
+        if (referer != null && !referer.isEmpty()) {
+            return "redirect:" + referer;
+        } else {
+            return "redirect:/board/cmct";  // 기본 복귀 URL
+        }
+
     }
 
     /*삭제*/
@@ -769,4 +787,79 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
         return "/board/cmct_page";
     }
 
+    @RequestMapping("/modify")
+    public String modify(@RequestParam("group_idx") Long groupIdx,
+                         @RequestParam("board_type") Long boardType,
+                         @RequestParam("idx") Long idx,
+                         Model model) {
+
+        Long memberIdx = Utility.getLoginUserIdx();
+        if (memberIdx == null) {
+            return "redirect:/api/member/login";
+        }
+
+        MemberEntity member = memberRepository.findById(memberIdx).orElse(null);
+        BoardEntity board = boardRepository.findByIdx(idx);
+        Optional<AttachmentEntity> attachment = attachmentRepository.findByBoard_idx(idx);
+        List<CommentsEntity> commentsList = commentsRepository.findByBoard_idxWithMember(idx);
+
+        commentsList.sort((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt()));
+
+        model.addAttribute("commentsList", commentsList);
+        model.addAttribute("attachment", attachment);
+        model.addAttribute("board", board);
+        model.addAttribute("member", member);
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("groupIdx", groupIdx);
+
+        String viewName = switch (groupIdx.intValue()) {
+            case 1 -> "/board/notice_modify";
+            case 2 -> "/board/cmct_modify";
+            case 3 -> "/board/event_modify";
+            case 4 -> "/board/gallery_modify";
+            case 5 -> "/board/oftenquestion_modify";
+            default -> "redirect:/";
+        };
+
+        return viewName;
+    }
+
+    @PostMapping("/modify_proc")
+    public String modify(@ModelAttribute BoardEntity board,
+                         @RequestParam("group_idx") Long groupIdx,
+                         @RequestParam("attachment") MultipartFile attachment,
+                         @RequestParam("board_type") Long boardType,
+                         @RequestParam("memberIdx") Long memberIdx,
+                         @RequestParam("boardIdx") Long boardIdx,
+                         @RequestParam("comments_idx") Long commentsIdx) throws IOException {
+
+        String base = switch (groupIdx.intValue()) {
+            case 1 -> "notice_page";
+            case 2 -> "cmct_page";
+            case 3 -> "event_page";
+            case 4 -> "gallery_page";
+            case 5 -> "oftenquestion_page";
+            default -> "cmct_page";
+        };
+
+        if(boardIdx >= 1 && commentsIdx == 0 && !attachment.isEmpty()) {
+            boardService.modifyBoard(boardIdx,board.getTitle(),board.getContent());
+            boardService.modifyAttachment(attachment,boardIdx);
+        }
+        if(boardIdx >= 1 && commentsIdx == 0 && attachment.isEmpty()) {
+            boardService.modifyBoard(boardIdx,board.getTitle(),board.getContent());
+        }
+        if(commentsIdx >= 1 && boardIdx >= 1){
+            commentsService.deleteComment(commentsIdx);//수정
+            return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx+"&idx="+boardIdx+"&member="+memberIdx;
+
+        }
+
+        return "redirect:/board/" +
+                UriComponentsBuilder.fromPath(base)
+                        .queryParam("page", 1)
+                        .queryParam("group_idx", groupIdx)
+                        .queryParam("board_type", boardType)
+                        .build();
+    }
 }

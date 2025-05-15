@@ -6,6 +6,7 @@ import com.example.mhbc.entity.AttachmentEntity;
 import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.repository.*;
 import com.example.mhbc.service.UserDetailsImpl;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -69,35 +70,28 @@ public class Utility {
     /*파일 삭제*/
     @Transactional
     public void deleteAttachments(long boardIdx) {
-        try {
+        // 1) 게시글(boardIdx)에 연결된 Attachment 한 건 조회
+        AttachmentEntity attachment = attachmentRepository
+                .findByBoard_idx(boardIdx)
+                .orElseThrow(() -> new EntityNotFoundException("첨부파일이 없습니다. boardIdx=" + boardIdx));
 
-            List<AttachmentEntity> attachments = attachmentRepository.findByBoard_Idx(boardIdx);
-
-            for (AttachmentEntity attachment : attachments) {
-                String filepath = attachment.getFilePath();
-                System.out.println("파일 경로: " + filepath);
-                String dir = "Z:/public/data/";
-
-                // 실제 파일 삭제
-                File file = new File(dir + filepath);
-
-                if (file.exists()) {
-                    if (file.delete()) {
-                        System.out.println("파일 삭제 성공: " + filepath);
-                    } else {
-                        System.out.println("파일 삭제 실패: " + filepath);
-                    }
-                } else {
-                    System.out.println("파일이 존재하지 않음: " + filepath);
-                }
+        // 2) 물리 파일 삭제
+        String dir = "Z:/public/data/";
+        File file = new File(dir, attachment.getFilePath());
+        if (file.exists()) {
+            if (!file.delete()) {
+                System.out.println("파일 삭제 실패: {}" + file.getAbsolutePath());
             }
-
-            // 1. 첨부파일 삭제
-            attachmentRepository.deleteByIdx(boardIdx);
-        } catch (Exception e) {
-            System.out.println("예외 발생: " + e.getMessage());
-            e.printStackTrace();
+        } else {
+            System.out.println("파일이 존재하지 않음: {}"+ file.getAbsolutePath());
         }
+
+        // 3) 엔티티 연관관계 제거
+        BoardEntity board = attachment.getBoard();
+        board.setAttachment(null);   // orphanRemoval=true 이므로 이 한 줄로 DB에서도 삭제
+
+        // 4) (선택) 영속성 컨텍스트 강제 플러시
+        // entityManager.flush();
     }
 
     /*

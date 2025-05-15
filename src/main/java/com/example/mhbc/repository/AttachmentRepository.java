@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AttachmentRepository extends JpaRepository<AttachmentEntity, Long> {
@@ -17,7 +18,9 @@ public interface AttachmentRepository extends JpaRepository<AttachmentEntity, Lo
 
     public AttachmentEntity findByIdx(long idx);
 
-    List<AttachmentEntity> findByBoard_Idx(Long boardIdx);
+    List<AttachmentEntity> findBoardsByBoard_Idx(Long boardIdx);
+
+    Optional<AttachmentEntity> findByBoard_idx(Long boardIdx);
 
     @Transactional
     @Modifying

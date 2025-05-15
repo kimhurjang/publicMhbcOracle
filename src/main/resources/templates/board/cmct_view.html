@@ -14,25 +14,25 @@
             <input type="hidden" name="boardType" th:value="${boardType}">
             <table>
                 <tr>
-                    <td>제목</td>
+                    <th>제목</th>
                     <td style="width:65%">
                         <span th:text="${board.title}"></span>
                         <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${member.idx}, comments_idx=${0})}"><button type="button" class="small">삭제</button></a>
                     </td>
                 </tr>
                 <tr>
-                    <td>작성 날짜</td>
+                    <th>작성 날짜</th>
                     <td th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></td>
                 </tr>
                 <tr>
                     <td colspan="2" th:text="${board.content}"></td>
                 </tr>
                 <tr th:if="${board.attachment != null}">
-                    <td>첨부 파일</td>
+                    <th>첨부 파일</th>
                     <td>
                         <span th:text="${board.attachment.fileName}"></span>
                         <a th:href="@{/board/file/download/{idx}(idx=${board.attachment.idx})}">
-                            <button type="button">다운로드</button>
+                            <button type="button" class="small"><i class="xi-save"></i></button>
                         </a>
                     </td>
                 </tr>
@@ -41,10 +41,9 @@
                         <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, comments_idx=${0})}"><button type="button">삭제</button></a>
                     </td>
                 </tr>
-                <tr>
-                    <td colspan="2">댓글</td>
-                </tr>
-
+            </table>
+                <h3 class="mt20">댓글</h3>
+            <table>
                 <tr>
                     <td style="width: 70%"><textarea cols="50" rows="3" name="content"></textarea></td>
                     <td><button type="submit">등록</button></td>
@@ -64,10 +63,13 @@
                         <span th:text="${#dates.format(comments.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></span>
                     </td>
                 </tr>
-                <tr>
-                    <td colspan="2"><a th:href="@{/board/cmct}"><button type="button">뒤로가기</button></a></td>
-                </tr>
             </table>
+            <div class="btn_group mt20">
+                <button type="button" onclick="goBack()">뒤로가기</button>
+                <div th:if="${member.idx == board.member.idx || grade == 10}">
+                    <a th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}"><button type="button" class="color2">수정</button></a>
+                </div>
+            </div>
         </form>
     </div><!--E content-->
 </section><!--E container-->

@@ -31,6 +31,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     @Query("DELETE FROM BoardEntity b WHERE b.idx = :idx")
     void deleteByIdx(@Param("idx") long idx);
 
+
     @Query("SELECT b FROM BoardEntity b WHERE b.group.groupIdx = :groupIdx")
     Page<BoardEntity> findByGroupIdx(@Param("groupIdx") long groupIdx, Pageable pageable);
 
