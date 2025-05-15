@@ -13,69 +13,6 @@
   <link rel="stylesheet" href="/css/common.css">
   <th:block layout:fragment="css"></th:block>
 
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    $(document).ready(function(){
-
-            $(".slider").bxSlider({
-                auto: true,
-                autoControls: true,
-                stopAutoOnClick: true,
-                pager: false,
-                controls: false,  // 좌우 화살표 숨김
-                speed: 1000
-            });
-
-            var subSlider = $(".subSlider").bxSlider({
-                auto: true,
-                autoControls: true,
-                stopAutoOnClick: true,
-                pager: false,
-                controls: false,
-                speed: 1000
-            });
-            $('.sub-left').on('click', function () {
-                subSlider.stopAuto();
-                subSlider.goToPrevSlide();
-                subSlider.startAuto();
-            });
-            $('.sub-right').on('click', function () {
-                subSlider.stopAuto();
-                subSlider.goToNextSlide();
-                subSlider.startAuto();
-            });
-
-
-            $('.gallerySlider .gaSlider').bxSlider({
-                slideWidth: 900,
-                minSlides: 1,
-                maxSlides: 2,
-                moveSlides: 1,
-                slideMargin: 10,
-                slideWidth: 750,
-                infiniteLoop: true,
-                startSlide: 1,
-                auto: false,
-                pager: false,
-
-                controls: true,
-                prevSelector: '.gallerySlider .ga-prev',
-                nextSelector: '.gallerySlider .ga-next',
-                prevText: '<i class="xi-angle-left"></i>',
-                nextText: '<i class="xi-angle-right"></i>'
-
-            });
-    });
-
-  </script>
-
-
-
   <!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3bf69ce9275feb61004f536b17f363b9"></script>-->
 </head>
 </html>

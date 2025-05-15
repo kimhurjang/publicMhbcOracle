@@ -6,6 +6,66 @@
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" href="/css/main.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+
+                $(".slider").bxSlider({
+                    auto: true,
+                    autoControls: true,
+                    stopAutoOnClick: true,
+                    pager: false,
+                    controls: false,  // 좌우 화살표 숨김
+                    speed: 1000
+                });
+
+                var subSlider = $(".subSlider").bxSlider({
+                    auto: true,
+                    autoControls: true,
+                    stopAutoOnClick: true,
+                    pager: false,
+                    controls: false,
+                    speed: 1000
+                });
+                $('.sub-left').on('click', function () {
+                    subSlider.stopAuto();
+                    subSlider.goToPrevSlide();
+                    subSlider.startAuto();
+                });
+                $('.sub-right').on('click', function () {
+                    subSlider.stopAuto();
+                    subSlider.goToNextSlide();
+                    subSlider.startAuto();
+                });
+
+
+                $('.gallerySlider .gaSlider').bxSlider({
+                    slideWidth: 900,
+                    minSlides: 1,
+                    maxSlides: 2,
+                    moveSlides: 1,
+                    slideMargin: 10,
+                    slideWidth: 750,
+                    infiniteLoop: true,
+                    startSlide: 1,
+                    auto: false,
+                    pager: false,
+
+                    controls: true,
+                    prevSelector: '.gallerySlider .ga-prev',
+                    nextSelector: '.gallerySlider .ga-next',
+                    prevText: '<i class="xi-angle-left"></i>',
+                    nextText: '<i class="xi-angle-right"></i>'
+
+                });
+        });
+
+    </script>
 </th:block>
 
 <body>
@@ -63,7 +123,6 @@
                     <div class="buttons">
                         <button class="btn sub-left"><i class="xi-angle-left"></i></button>
                         <button class="btn sub-right"><i class="xi-angle-right"></i></button>
-                        <a href="#"><button class="more">더 보기</button></a>
                     </div>
                     </div>
                 </div>
@@ -84,7 +143,6 @@
                     <div class="buttons">
                         <button class="btn sub-left"><i class="xi-angle-left"></i></button>
                         <button class="btn sub-right"><i class="xi-angle-right"></i></button>
-                        <a href="#"><button class="more">더 보기</button></a>
                     </div>
                 </div>
             </div>
@@ -105,7 +163,6 @@
                     <div class="buttons">
                         <button class="btn sub-left"><i class="xi-angle-left"></i></button>
                         <button class="btn sub-right"><i class="xi-angle-right"></i></button>
-                        <a href="#"><button class="more">더 보기</button></a>
                     </div>
                 </div>
             </div>
@@ -150,17 +207,15 @@
     <div id="ms4" class="container bg-holder" data-width="1200" data-height="700">
         <!--갤러리-->
         <div class="gallerySlider" data-aos="fade-down" data-aos-delay="200">
-
-                <div class="ga-prev"></div>
-
+            <div class="ga-prev"></div>
             <ul class="gaSlider">
-                <li><a th:href="@{/board/gallery_view(idx=${91}, board_type=${1}, group_idx=${4})}"><img src="/image/12.jfif" alt="갤러리 이미지 1"></a></li>
-                <li><a th:href="@{/board/gallery_view(idx=${89}, board_type=${1}, group_idx=${4})}"><img src="/image/13.jpg" alt="갤러리 이미지 2"></a></li>
-                <li><a th:href="@{/board/gallery_view(idx=${90}, board_type=${1}, group_idx=${4})}"><img src="/image/16.jfif" alt="갤러리 이미지 3"></a></li>
-                <li><a th:href="@{/board/gallery_view(idx=${92}, board_type=${1}, group_idx=${4})}"><img src="/image/18.jpg" alt="갤러리 이미지 4"></a></li>
-                <li><a th:href="@{/board/gallery_view(idx=${93}, board_type=${1}, group_idx=${4})}"><img src="/image/img.jpg" alt="갤러리 이미지 5"></a></li>
-                <li><a th:href="@{/board/gallery_view(idx=${94}, board_type=${1}, group_idx=${4})}"><img src="/image/kuk202306110112.680x.0.jpg" alt="갤러리 이미지 6"></a></li>
-                <li><a th:href="@{/board/gallery_view(idx=${95}, board_type=${1}, group_idx=${4})}"><img src="/image/L7940277.jfif" alt="갤러리 이미지 7"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${91}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/12.jfif')" title="갤러리 이미지 1"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${89}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/13.jpg')" title="갤러리 이미지 2"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${90}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/16.jfif')" title="갤러리 이미지 3"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${92}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/18.jpg')" title="갤러리 이미지 4"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${93}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/img.jpg')" title="갤러리 이미지 5"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${94}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/kuk202306110112.680x.0.jpg')" title="갤러리 이미지 6"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${95}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/L7940277.jfif')" title="갤러리 이미지 7"></a></li>
             </ul>
 
             <div class="ga-next"></div>
