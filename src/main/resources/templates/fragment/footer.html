@@ -47,130 +47,101 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-          const nav       = document.querySelector("nav");
-          const logo      = document.querySelector(".logo");
+          const header = document.querySelector("header");
+          const nav = document.querySelector("nav");
+          const logo = document.querySelector(".logo");
           const mainSlide = document.querySelector("#ms1");
-          const gnb       = document.getElementById("gnb");
-          const toggleBtn = gnb.querySelector(".toggle.icon");
-          const itemsWithSub = Array.from(gnb.querySelectorAll("li"))
-                                    .filter(li => li.querySelector(".sub_nav_layer"));
-          let hideTimeout;
+          const gnb = document.getElementById("gnb");
+          const toggleBtn = document.querySelector(".toggle.icon");
+          const navItems = document.querySelectorAll('#gnb .nav_item');
+          const itemsWithSub = Array.from(gnb.querySelectorAll("li")).filter(li => li.querySelector(".sub_nav_layer"));
+          const subMenuLinks = document.querySelectorAll('#gnb > li > strong > a');
 
-          // —————————————
-          // 1) 스크롤 투명 내비 제어
-          // —————————————
-          function checkScroll() {
-            if (!mainSlide) {
-              nav.classList.remove("transparentNav");
-              logo.classList.remove("transparentNav");
-              return;
-            }
-            if (window.scrollY <= mainSlide.offsetHeight - nav.offsetHeight) {
-              nav.classList.add("transparentNav");
-              logo.classList.add("transparentNav");
-            } else {
-              nav.classList.remove("transparentNav");
-              logo.classList.remove("transparentNav");
-            }
+          // 0) 초기 active 클래스 제거
+          navItems.forEach(item => item.classList.remove('active'));
+
+          if (window.innerWidth >= 765) {
+              // 1) 스크롤 시 헤더 투명 제어
+              function checkScroll() {
+                if (!mainSlide) {
+                  header.classList.add("transparentNav");
+                  return;
+                }
+                if (window.scrollY <= mainSlide.offsetHeight - nav.offsetHeight) {
+                  header.classList.remove("transparentNav");
+                } else {
+                  header.classList.add("transparentNav");
+                }
+              }
+              checkScroll();
+              window.addEventListener("scroll", checkScroll);
+
+              // 2) GNB hover 효과 (데스크탑)
+              navItems.forEach(item => {
+                    item.addEventListener('mouseenter', () => {
+                      navItems.forEach(i => i.classList.remove('active'));
+                      item.classList.add('active');
+                    });
+                    item.addEventListener('mouseleave', () => {
+                      item.classList.remove('active');
+                    });
+              });
           }
 
-          // 초기 및 스크롤 이벤트
-          checkScroll();
-          window.addEventListener("scroll", checkScroll);
-
-          // —————————————
-          // 2) 데스크탑 서브 메뉴 hover → CSS :hover 로 처리
-          //    (JS 로 제어하길 원하시면 itemsWithSub.forEach로 mouseenter/leave 추가)
-          // —————————————
-
-          // —————————————
-          // 3) 모바일: 전체 GNB 토글
-          // —————————————
-          /*
-          itemsWithSub.forEach(li => {
-            const anchor = li.querySelector("a.nav_item");
-            anchor.addEventListener("click", function(e) {
-              if (window.innerWidth <= 764) {
-                e.preventDefault();
-                e.stopPropagation();
-                li.classList.toggle("active");
-              }
-            });
-          });
-*/
-
-
-          // —————————————
-          // 5) 외부 클릭 시 GNB 및 열린 서브 모두 닫기
-          // —————————————
+          if (window.innerWidth <= 764) {
+          // 3) 외부 클릭 시 메뉴 닫기
           document.addEventListener("click", function(e) {
             if (!nav.contains(e.target)) {
               gnb.classList.remove("active");
               itemsWithSub.forEach(li => li.classList.remove("active"));
             }
           });
-        });
 
+          // 4) 모바일 메뉴 아코디언
+          subMenuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const li = link.closest('li');
+                const sub = li.querySelector('.sub_group');
+                if (sub) {
+                  e.preventDefault();
+                  const isActive = li.classList.contains('active');
+                  document.querySelectorAll('#gnb > li').forEach(item => {
+                    item.classList.remove('active');
+                    const subMenu = item.querySelector('.sub_group');
+                    if (subMenu) subMenu.style.maxHeight = '0';
+                  });
+                  if (!isActive) {
+                    li.classList.add('active');
+                    sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+                  }
+                }
+            });
+          });
 
-        AOS.init({
-           duration: 600,  // 애니메이션 지속 시간 (밀리초)
-           easing: 'ease-in-out',  // 애니메이션의 이징 함수
-           delay: 0,  // 애니메이션 지연 시간 (밀리초)
-           offset: 10,  // 스크롤 감지의 시작 위치 (픽셀)
+          // 5) 모바일에서 활성된 메뉴 자동 펼침
+            document.querySelectorAll('#gnb > li.active .sub_group').forEach(sub => {
+              sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+            });
+
+          // 6) 헤더 토글
+          if (toggleBtn) {
+            toggleBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              header.classList.toggle('closed');
+            });
+          }
+        }
+          // 7) AOS 초기화
+          AOS.init({
+            duration: 600,
+            easing: 'ease-in-out',
+            delay: 0,
+            offset: 10,
             once: false
-         });
+          });
+        });
         window.addEventListener('load', () => {
           AOS.refresh();
-          checkScroll(); // 이 위치에서 호출
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // ✅ 서브메뉴 아코디언 (윈도우 크기 764px 이하에서만 작동)
-            document.querySelectorAll('#gnb > li > strong > a').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    if (window.innerWidth <= 764) {
-                        const li = link.closest('li');
-                        const sub = li.querySelector('.sub_group');
-
-                        if (sub) {
-                            e.preventDefault();
-                            const isActive = li.classList.contains('active');
-
-                            // 모든 메뉴 닫기
-                            document.querySelectorAll('#gnb > li').forEach(item => {
-                                item.classList.remove('active');
-                                const subMenu = item.querySelector('.sub_group');
-                                if (subMenu) {
-                                    subMenu.style.maxHeight = '0';
-                                }
-                            });
-
-                            // 해당 메뉴 열기
-                            if (!isActive) {
-                                li.classList.add('active');
-                                sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
-                            }
-                        }
-                    }
-                });
-            });
-
-            // ✅ 초기 active 메뉴 자동 펼침 (모바일에서만)
-            if (window.innerWidth <= 764) {
-                document.querySelectorAll('#gnb > li.active .sub_group').forEach(sub => {
-                    sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
-
-                });
-            }
-
-            // ✅ 헤더 토글
-            const header = document.querySelector('#user header');
-            const toggleBtn = document.querySelector('.toggle.icon');
-
-            toggleBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                header.classList.toggle('closed');
-            });
         });
 
         //뒤로가기 버튼 -> onclick="goBack()"
@@ -178,5 +149,6 @@
             history.back();
           }
     </script>
+
 </footer>
 </html>
