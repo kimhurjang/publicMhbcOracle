@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/oftenquestion}"><h1>자주 묻는 질문</h1></a>
+  <div id="content" class="content">
+<form name="oftenquestion" method="post" action="/board/oftenquestion_write_proc">
+  <table>
+    <tr>
+      <td>질문 제목</td>
+      <td><input type="text" name="title" ></td>
+    </tr>
+    <tr>
+      <td>질문 내용</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>답변 제목</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>답변 내용</td>
+      <td></td>
+    </tr>
+  </table>
+      <div th:if="${board.re == 0}">
+        <div th:text="${board.title}"></div>
+        <div th:text="${board.content}"></div>
+      </div>
+
+      <div th:if="${board.re == 1}">
+        <div th:text="${board.title}"></div>
+        <div th:text="${board.content}"></div>
+      </div>
+
+</form>
+</section><!--E container-->
+</body>
+</html>

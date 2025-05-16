@@ -51,6 +51,7 @@ public class Utility {
             // 상대 경로만 DB에 저장
             String relativePath = uuidFileName;
 
+
             // AttachmentEntity 생성 및 설정
             AttachmentEntity attachmentEntity = new AttachmentEntity();
             attachmentEntity.setFilePath(relativePath); // 상대 경로
@@ -59,8 +60,8 @@ public class Utility {
             attachmentEntity.setFileSize((int) attachment.getSize());
 
             // 파일과 게시글 연결
-            //attachmentEntity.setBoard(board);
-            //attachmentRepository.save(attachmentEntity);
+            attachmentEntity.setBoard(board);
+            attachmentRepository.save(attachmentEntity);
 
             // 게시글에 첨부파일 정보 반영
             board.setAttachment(attachmentEntity);

@@ -27,7 +27,7 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final AttachmentRepository attachmentRepository;
     private final CommentsRepository commentsRepository;
-    private String uploadDir = "D:/SpringProject/data/";
+    private String uploadDir = "Z:/public/data/";
 
 
     // 게시글 조회 및 조회수 증가

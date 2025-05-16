@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/gallery}"><h1>갤러리 게시물 수정</h1></a>
+  <div id="content" class="content">
+    <form name="galleryModify" method="post" action="/board/modify_proc" enctype="multipart/form-data">
+      <input type="hidden" name="boardIdx" th:value="${board.idx}">
+      <input type="hidden" name="memberIdx" th:value="${member.idx}">
+      <input type="hidden" name="group_idx" th:value="${groupIdx}">
+      <input type="hidden" name="board_type" th:value="${boardType}">
+      <input type="hidden" name="comments_idx" value="0">
+      <!--유효성 검사 통과용-->
+      <input type="hidden" name="name" value="홍길동" />
+      <input type="hidden" name="email" value="user@example.com" />
+      <input type="hidden" name="userid" value="user123" />
+      <input type="hidden" name="pwd" value="password123" />
+      <table>
+        <tr>
+          <td colspan="2">현재 페이지는 관리자 전용 페이지입니다.</td>
+        </tr>
+        <tr>
+          <td>제목</td>
+          <td>
+            <input type="text" name="title" th:value="${board.title}" required placeholder="제목을 입력해주세요.">
+          </td>
+        </tr>
+        <tr>
+          <td>본문</td>
+          <td>
+            <textarea cols="30" rows="2" name="content" th:text="${board.content}" required placeholder="본문을 입력해주세요."></textarea>
+          </td>
+        </tr>
+        <!-- 첨부가 있을 때-->
+        <tr th:if="${board.attachment != null}">
+          <td>첨부 파일</td>
+          <td>
+            <span th:text="${board.attachment.fileName}">파일명</span>
+            <input type="file" name="attachment" style="visibility:hidden;">
+            <a th:href="@{/board/file/delete(idx=${board.attachment.idx},board_idx=${board.idx})}">
+              <button type="button">삭제</button>
+            </a>
+          </td>
+        </tr>
+        <!-- 첨부가 없을 때-->
+        <tr th:if="${board.attachment == null}">
+          <td>첨부 파일</td>
+          <td>
+            <input type="file" name="attachment" required placeholder="해당 페이지는 첨부파일 필수입니다.">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"><button type="submit">작성하기</button></td>
+        </tr>
+      </table>
+    </form>
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

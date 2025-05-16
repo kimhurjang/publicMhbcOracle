@@ -322,7 +322,20 @@ public class BoardController {
 
         return "board/oftenquestion_view";
     }
+    @RequestMapping("/oftenquestion_write")
+    public String oftenquestion_write( @RequestParam("board_type") Long boardType,
+                                       @RequestParam("group_idx") Long groupIdx,
+                                       Model model){
 
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        model.addAttribute("commonForm", new CommonForm());
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("today", today);
+
+        return "/board/oftenquestion_write";
+    }
 
     /*1대1문의*/
     @RequestMapping("/personalquestion")
@@ -586,6 +599,7 @@ public class BoardController {
     public String cmct_view(@RequestParam("group_idx") Long groupIdx,
                             @RequestParam("board_type") Long boardType,
                             @RequestParam("idx") Long idx,
+                            @RequestParam(value = "editingCommentId", required = false) Long editingCommentId,
                             Model model){
 
         Long memberIdx = Utility.getLoginUserIdx();
@@ -601,6 +615,7 @@ public class BoardController {
         /*정렬*/
         commentsList.sort((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt()));
 
+        model.addAttribute("editingCommentId", editingCommentId);
         model.addAttribute("commentsList", commentsList);
         model.addAttribute("board", board);
         model.addAttribute("member", member);
@@ -679,7 +694,6 @@ public class BoardController {
         model.addAttribute("boardType", boardType);
         return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx+"&idx="+idx+"&member="+memberIdx;
     }
-    @RequestMapping("/cmct_modify")
 
 
 
@@ -791,6 +805,7 @@ public class BoardController {
     public String modify(@RequestParam("group_idx") Long groupIdx,
                          @RequestParam("board_type") Long boardType,
                          @RequestParam("idx") Long idx,
+                         @RequestParam("commentsIdx") Long comments,
                          Model model) {
 
         Long memberIdx = Utility.getLoginUserIdx();
@@ -812,6 +827,12 @@ public class BoardController {
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
 
+        if(comments != null && comments > 0){
+            commentsRepository.findById(comments).ifPresent(c -> model.addAttribute("editingComment", c));
+            model.addAttribute("comments", comments);
+            return "/board/cmct_view";
+        }
+
         String viewName = switch (groupIdx.intValue()) {
             case 1 -> "/board/notice_modify";
             case 2 -> "/board/cmct_modify";
@@ -831,7 +852,8 @@ public class BoardController {
                          @RequestParam("board_type") Long boardType,
                          @RequestParam("memberIdx") Long memberIdx,
                          @RequestParam("boardIdx") Long boardIdx,
-                         @RequestParam("comments_idx") Long commentsIdx) throws IOException {
+                         @RequestParam("comments_idx")Long commentsIdx,
+                         @RequestParam(value = "commentContent", required = false) String commentContent) throws IOException {
 
         String base = switch (groupIdx.intValue()) {
             case 1 -> "notice_page";
@@ -849,10 +871,9 @@ public class BoardController {
         if(boardIdx >= 1 && commentsIdx == 0 && attachment.isEmpty()) {
             boardService.modifyBoard(boardIdx,board.getTitle(),board.getContent());
         }
-        if(commentsIdx >= 1 && boardIdx >= 1){
-            commentsService.deleteComment(commentsIdx);//수정
-            return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx+"&idx="+boardIdx+"&member="+memberIdx;
-
+        if(commentsIdx >= 1 && boardIdx >= 1 && attachment.isEmpty()){
+            commentsService.modifyComment(commentsIdx, commentContent);  // ← 수정 처리
+            return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx + "&idx=" + boardIdx + "&member=" + memberIdx;
         }
 
         return "redirect:/board/" +

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.xml.stream.events.Comment;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -36,10 +37,19 @@ public class CommentsService {
         commentsRepository.save(comment);
     }
 
-    public void deleteComment(long idx) {
+    public void deleteComment(Long idx) {
 
         commentsRepository.deleteByIdx(idx);
 
     }
 
+
+    public void modifyComment(Long idx, String content){
+        CommentsEntity comment = commentsRepository.findById(idx)
+                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+        comment.setIdx(idx);
+        comment.setContent(content);
+        comment.setUpdatedAt(new Date());
+        commentsRepository.save(comment);
+    }
 }

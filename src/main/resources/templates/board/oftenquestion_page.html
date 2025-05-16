@@ -21,6 +21,9 @@
     </div><!--E content-->
     <a th:href="@{/board/personalquestion}"><button>1 대 1 문의하러 가기</button></a>
     <a th:href="@{/board/myboard}"><button>내가 쓴 글 보러가기</button></a>
+    <div th:if="${member.idx == board.member.idx || member.grade == 10}">
+        <a th:href="@{/board/oftenquestion_write(group_idx=${groupIdx}, board_type=${boardType})}"><button type="button">[관리자] 글쓰기</button></a>
+    </div>
 </section><!--E container-->
 </body>
 </html>
