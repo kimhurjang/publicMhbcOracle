@@ -3,7 +3,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <a th:href="@{/board/oftenquestion}"><h1>자주 묻는 질문</h1></a>
   <div id="content" class="content">
