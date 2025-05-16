@@ -190,7 +190,7 @@
             </div>
 
             <div th:each="event : ${event}"  data-aos="fade-down" data-aos-delay="200" class="event card">
-                <img th:src="@{|/data/${event.attachment.filePath}|}">
+                <img th:if="${event.attachment != null}" th:src="@{|/data/${event.attachment.filePath}|}">
                 <div>
                     <span>
                         <sub th:text="${#dates.format(event.startAt, 'yyyy-MM-dd')}+' ~ '+${#dates.format(event.closedAt, 'yyyy-MM-dd')}"></sub>
