@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <footer th:fragment="footer">
+    <a href="#" class="scroll-top"><button class="btn xi-arrow-up"></button></a>
+
     <div class="footerBox copy">
         <img src="/image/logo_1-2.png">
         <p>©ManHwaBangCho</p>
@@ -32,19 +34,11 @@
             <p>Email : abcd1234@mail.com</p>
         </div>
     </div>
-    <!--패럴렉스 스크롤링 라이브러리 임폴트-->
-    <script src="/js/jquery.parallax-scroll.min.js"></script>
-
-    <!--제이쿼리 스크롤 효과 라이브러리 삽입-->
-    <script src="/js/jquery.scrollTo.min.js"></script>
-
-    <!--휠 효과 임폴트-->
-    <script src="/js/wheel.js"></script>
-
-    <script src="/js/main.js"></script>
 
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-
+    <!--제이쿼리 스크롤 효과 라이브러리 삽입
+    <script src="/js/jquery.scrollTo.min.js"></script>-->
+    <script src="/js/comm.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
           const header = document.querySelector("header");
@@ -150,5 +144,13 @@
           }
     </script>
 
+    <th:block layout:fragment="js">
+
+        <!--패럴렉스 스크롤링 라이브러리 임폴트-->
+        <script src="/js/jquery.parallax-scroll.min.js"></script>
+        <!--휠 효과 임폴트-->
+        <script src="/js/wheel.js"></script>
+
+    </th:block>
 </footer>
 </html>

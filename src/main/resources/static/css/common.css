@@ -32,6 +32,8 @@ body { position:relative; }
 
   #user nav {position:relative; }
 
+  #user header .logo {margin-left:10px;}
+
   #user nav #gnb {display:flex; gap:50px; justify-content:flex-end;}
   #user nav #gnb > li {min-width:100px; position:relative;}
 
@@ -81,6 +83,39 @@ body { position:relative; }
   #user header nav {position:fixed; right:-100%; transition:right 0.3s ease; z-index:999; width:200px;}
   #user header.closed nav { right:0; }
 }
+
+
+/*---------------------- 탑버튼----------------------*/
+.scroll-top {
+   position: fixed;
+   visibility: hidden;
+   opacity: 0;
+   right: 15px;
+   bottom: -15px;
+   z-index: 99999;
+   background-color: var(--accent-color);
+   transition: all 0.4s;
+ }
+ .scroll-top button{
+    width: 45px;
+    height: 45px;
+    border-radius: 80px;
+    padding:0;
+ }
+ .scroll-top i {
+   font-size: 24px;
+   color: var(--contrast-color);
+   line-height: 0;
+ }
+ .scroll-top:hover {
+   background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+   color: var(--contrast-color);
+ }
+ .scroll-top.active {
+   visibility: visible;
+   opacity: 1;
+   bottom: 15px;
+ }
 
 /* footer */
 #user footer { background-color:#9b89b3; color:#F7F4ED; padding:80px; display:flex; justify-content:space-between;} /* 보라색 배경 */

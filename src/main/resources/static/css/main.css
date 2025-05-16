@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
 
 section{
    width: 100%;
@@ -16,6 +18,10 @@ section{
     max-width: 1500px;
 }
 
+#ms2 {padding-top:150px;}
+#ms3 {padding-top:70px;}
+
+
 button:hover{
    color: #F7F4ED;
    background-color: #8676A1;
@@ -31,6 +37,15 @@ button:hover{
 --------------------------
 */
 
+#ms1 {position:relative;background:#333;width:100%;height:100vh;}
+.name, .subtitle {display:flex;position:absolute;left:50%;z-index:99;transform:translate(-50%, -50%);}
+.name {top:45%;}
+.subtitle {top:52%;}
+.name .letter, .subtitle .letter {display:inline-block;opacity:0;transform:scale(0.9);color:#fff;font-family:"Dancing Script";font-size:4rem;}
+.subtitle .letter {font-family:inherit ;font-size:2rem;}
+.subtitle .phrase { display:inline-block; white-space:nowrap; opacity:0; transform:scale(0.9); font-size:2rem; color:#fff; font-family:serif;}
+
+
 .slider {
     width: 100%;
     height: 100vh;  /* 화면 높이를 꽉 채움 */
@@ -43,7 +58,7 @@ button:hover{
     top: 0; left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.3); /* 반투명 검정 오버레이 */
+    background-color: rgba(0,0,0,0.45); /* 반투명 검정 오버레이 */
     z-index: 1;
 }
 .slider .slide img {
@@ -72,16 +87,16 @@ button:hover{
 -----------------------------------
 */
 
-
 .subSlideWrapper {
   display: flex;
-  align-items: center;      /* 세로 중앙 */
+   /* align-items: center;     세로 중앙 */
   justify-content: center;  /* 가로 중앙 */
   height: 100%;             /* 부모(.bx-viewport) 기준 100% */
   width: 100%;
   gap: 2rem;
   font-family: sans-serif;
-  margin: 9rem auto;
+  margin:0 auto;
+  /*margin: 9rem auto;*/
 }
 
 /* 메인 이미지 */
@@ -104,7 +119,7 @@ button:hover{
 .sideContent {
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 3rem;
   width: 50%;
 }
 
@@ -274,6 +289,7 @@ button:hover{
    height: 65%;
    display: flex;
    justify-content: space-between;
+   position:relative
 }
 .event.card{
    width: 45%;
@@ -291,14 +307,16 @@ button:hover{
    margin: 0 auto;
 }
 .event div div a{
-   margin-left: 90%;
+   position:absolute;
+   bottom:20px; right:20px;
+
 }
 .event button{
    width: 50px; height: 50px;
    border: 3px solid #9b89b3;
    padding: 10px;
    border-radius: 30px;
-   background-color: rgba(0,0,0,0);
+   background-color: rgba(255,255,255,0.6);
 }
 .event button:hover{
    background-color: #9b89b3;
@@ -497,51 +515,6 @@ div#ms4 {
 }
 
 
-/*
-----------------------
-         탑버튼
-----------------------
-*/
-.scroll-top {
-   position: fixed;
-   visibility: hidden;
-   opacity: 0;
-   right: 15px;
-   bottom: -15px;
-   z-index: 99999;
-   background-color: var(--accent-color);
-   transition: all 0.4s;
- }
- .scroll-top button{
-    width: 45px;
-    height: 45px;
-    border-radius: 80px;
- }
-
- .scroll-top i {
-   font-size: 24px;
-   color: var(--contrast-color);
-   line-height: 0;
- }
-
- .scroll-top:hover {
-   background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
-   color: var(--contrast-color);
- }
-
- .scroll-top.active {
-   visibility: visible;
-   opacity: 1;
-   bottom: 15px;
- }
-
-
-/*
----------------
-  푸터
----------------
-*/
-
 
 /*카카오맵*/
 .wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
@@ -578,9 +551,7 @@ div#ms4 {
 */
 
 @media screen and (max-width: 764px){
-/*
-        이벤트
-*/
+/* 이벤트 */
 .event{
     display: block;
     justify-content: none;
@@ -589,7 +560,6 @@ div#ms4 {
 .event.card{
     width: 100%;
     display: flex;
-
 }
 .event div img{
     width: 55%;
@@ -604,9 +574,7 @@ div#ms4 {
     margin: 35% 0 0 65%;
 }
 
-/*
-        보드
-*/
+/* 보드 */
 #board{
     display: block;
 }
@@ -616,4 +584,3 @@ div#ms4 {
 #ms5{
     height: 150vh;
 }
-

@@ -16,12 +16,15 @@
         $(document).ready(function(){
 
                 $(".slider").bxSlider({
+                    mode : 'fade',
                     auto: true,
                     autoControls: true,
                     stopAutoOnClick: true,
                     pager: false,
                     controls: false,  // 좌우 화살표 숨김
-                    speed: 1000
+                    speed: 1500,
+                    pause: 5000,
+                    adaptiveHeight : true
                 });
 
                 var subSlider = $(".subSlider").bxSlider({
@@ -73,31 +76,42 @@
 
 
     <div id="ms1" class="container bg-holder" data-width="1200" data-height="700">
+
+        <div class="name">
+            <div class="letter">M</div>
+            <div class="letter">a</div>
+            <div class="letter">n</div>
+            <div class="letter">H</div>
+            <div class="letter">w</div>
+            <div class="letter">a</div>
+            <div class="letter">B</div>
+            <div class="letter">a</div>
+            <div class="letter">n</div>
+            <div class="letter">g</div>
+            <div class="letter">C</div>
+            <div class="letter">h</div>
+            <div class="letter">o</div>
+        </div>
+        <div class="subtitle">
+            <span class="phrase">꽃과 </span>
+            <span class="phrase">향기가 </span>
+            <span class="phrase">머무는 </span>
+            <span class="phrase">정원</span>
+        </div>
+
         <!--메인 이미지 캐러셀-->
         <div class="slider">
             <div class="slide slide1">
-                <img src="./image/1.jfif">
-            </div>
-            <div class="slide slide2">
-                <img src="./image/1-1.jpg">
+                <img src="./image/7.jfif">
             </div>
             <div class="slide slide3">
-                <img src="./image/2.jfif">
+                <img src="./image/wedding3.jpg">
             </div>
-            <div class="slide slide4">
-                <img src="./image/3.jfif">
+            <div class="slide slide3">
+                <img src="./image/wedding13.jpg">
             </div>
-            <div class="slide slide5">
-                <img src="./image/4.jfif">
-            </div>
-            <div class="slide slide6">
-                <img src="./image/5.jfif">
-            </div>
-            <div class="slide slide7">
-                <img src="./image/6.jfif">
-            </div>
-            <div class="slide slide8">
-                <img src="./image/7.jfif">
+            <div class="slide slide3">
+                <img src="./image/wedding14.jpg">
             </div>
         </div>
     </div>
@@ -253,8 +267,11 @@
             </div>
         </article>
     </div>
-    <a href="#" class="scroll-top"><button class="btn xi-arrow-up"></button></a>
 
+    <th:block layout:fragment="js">
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/animejs/1.0.0/anime.min.js'></script>
+        <script src="/js/main.js"></script>
+    </th:block>
 </section>
 </body>
 </html><!--E contents-->
