@@ -21,11 +21,11 @@
       <div class="form_group">
         <label>차단 타임</label>
         <div>
-          <label><input type="radio" name="timeSlot" value="10시" th:checked="${schedule.timeSlot == '10시'}">10시</label>
-          <label><input type="radio" name="timeSlot" value="12시" th:checked="${schedule.timeSlot == '12시'}">12시</label>
-          <label><input type="radio" name="timeSlot" value="14시" th:checked="${schedule.timeSlot == '14시'}">14시</label>
-          <label><input type="radio" name="timeSlot" value="16시" th:checked="${schedule.timeSlot == '16시'}">16시</label>
-          <label><input type="radio" name="timeSlot" value="ALL" th:checked="${schedule.timeSlot == 'ALL'}">전체</label>
+          <label><input type="checkbox" name="timeSlots" value="10시" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, '10시')}">10시</label>
+          <label><input type="checkbox" name="timeSlots" value="12시" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, '12시')}">12시</label>
+          <label><input type="checkbox" name="timeSlots" value="14시" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, '14시')}">14시</label>
+          <label><input type="checkbox" name="timeSlots" value="16시" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, '16시')}">16시</label>
+          <label><input type="checkbox" name="timeSlots" value="ALL" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, 'ALL')}">전체</label>
         </div>
       </div>
 
