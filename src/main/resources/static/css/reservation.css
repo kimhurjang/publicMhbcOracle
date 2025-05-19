@@ -1,3 +1,5 @@
+.form_group select, .form_group input[type="text"], .form_group input[type="date"] {max-width:none;}
+
 /* 섹션 제목 */
 .section_title{font-size:1.2em;font-weight:bold;margin-bottom:5px;}
 .section_title_sub{font-size:0.75em;font-weight:bold;margin-bottom:10px;color:red;}
@@ -35,7 +37,8 @@ input[type="radio"],input[type="checkbox"]{margin-right:3px;vertical-align:middl
 
 /* 금액 산출 */
 .price_box{display:flex;align-items:center;gap:12px;margin-top:25px;}
-#price_result{width:200px;padding:8px 10px;font-size:1em;border:1px solid #ccc;border-radius:6px;text-align:right;background-color:#f5f5f5;}
+
+.price_display {min-width:200px;height:43px;line-height:43px;padding:0 10px;font-size:1em;border:1px solid #ccc;border-radius:6px;text-align:right;background-color:#f5f5f5;}
 
 /* 문의사항 */
 textarea{width:100%;padding:12px;font-size:0.95em;resize:vertical;border-radius:6px;min-height:150px;}
@@ -69,9 +72,14 @@ textarea{width:100%;padding:12px;font-size:0.95em;resize:vertical;border-radius:
 .process_guide dd {margin-bottom:15px;padding-left:10px;color:#555;}
 .process_guide div {margin-bottom:20px;}
 
-@media (max-width: 767px) {
-
+@media (max-width: 764px) {
+    #user #content {padding:30px 20px;}
     .process_steps {justify-content:start;}
     .step {width:calc(25% - 10px);}
 
+    .hall {gap:0;}
+    .price_box button {padding:7px 15px;}
+}
+@media (max-width: 480px) {
+    .price_display {min-width:120px;}
 }

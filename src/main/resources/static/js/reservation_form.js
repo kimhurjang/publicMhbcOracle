@@ -53,7 +53,7 @@ function bindCalcPrice() {
 
     const total = (hallPrice + mealPrice + flowerPrice) * guestCnt;
 
-    displayInput.value = total.toLocaleString(); // 사용자용 (콤마 포함)
+    displayInput.textContent = total.toLocaleString() + "원"; // 사용자용 (콤마 포함)
     hiddenInput.value = total;                   // 서버용 (콤마 제거)
   });
 }
@@ -64,6 +64,7 @@ function bindReset() {
     ["hallIdx", "guestCnt", "mealType", "flower"].forEach(name => {
       document.querySelectorAll(`input[name="${name}"]`).forEach(radio => radio.checked = false);
     });
+    document.getElementById("price_result_display").textContent = "";
     document.getElementById("price_result").value = "";
     document.getElementById("guestCntContainer").innerHTML = '';
   });
