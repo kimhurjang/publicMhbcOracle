@@ -26,6 +26,8 @@ public class BoardDTO {
     private Integer request;
     private String requestTitle;
     private String requestContent;
+    private String answerTitle;
+    private String answerContent;
 
     private Long groupIdx;
     private MemberEntity member;
@@ -43,6 +45,8 @@ public class BoardDTO {
                 .request(request)
                 .requestTitle(requestTitle)
                 .requestContent(requestContent)
+                .answerTitle(answerTitle)
+                .answerContent(answerContent)
                 .build();
     }
     public static BoardDTO fromEntity(BoardEntity entity) {
@@ -58,6 +62,8 @@ public class BoardDTO {
         dto.setRequestTitle(entity.getRequestTitle());
         dto.setRequest(entity.getRequest());
         dto.setRequestContent(entity.getRequestContent());
+        dto.setAnswerTitle(entity.getAnswerTitle());
+        dto.setAnswerContent(entity.getAnswerContent());
         return dto;
     }
 }

@@ -15,7 +15,7 @@
         </div>
         <div class="gallery">
 
-            <a th:href="@{/board/gallery_view(idx=${board.idx}, board_type=${boardType}, group_idx=${groupIdx})}" th:if="${groupIdx == 4}" th:each="board : ${boardList}" class="card" >
+            <a th:href="@{/board/gallery_view(idx=${board.idx}, board_type=${boardType}, group_idx=${groupIdx} , member_idx=${member.idx})}" th:if="${groupIdx == 4}" th:each="board : ${boardList}" class="card" >
 
                 <div th:if="${board.attachment != null}">
                     <img th:src="@{|/data/${board.attachment.filePath}|}" alt="첨부 이미지" class="card-img"/>

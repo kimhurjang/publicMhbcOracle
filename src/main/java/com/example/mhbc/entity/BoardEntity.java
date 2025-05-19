@@ -75,6 +75,12 @@ public class BoardEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt; // 수정일
 
+    @Column(name = "answer_title")
+    private String answerTitle;//자주 묻는 질문 답변용
+
+    @Column(name = "answer_content")
+    private String answerContent;//자주 묻는 질문 답변용
+
     @PrePersist
     protected void onCreate() {
         Date now = new Date();
@@ -97,6 +103,8 @@ public class BoardEntity {
                 .createdAt(createdAt)
                 .closedAt(closedAt)
                 .startAt(startAt)
+                .answerTitle(answerTitle)
+                .answerContent(answerContent)
                 .groupIdx(group != null ? group.getGroupIdx() : null)
                 .member(member)
                 .build();
