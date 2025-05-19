@@ -5,6 +5,7 @@ import com.example.mhbc.dto.ScheduleBlockDTO;
 import com.example.mhbc.entity.ScheduleBlockEntity;
 import com.example.mhbc.repository.ScheduleBlockRepository;
 //import com.example.mhbc.service.UserDetailsImpl;
+import com.example.mhbc.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ public class AdminScheduleController {
   // 등록폼 진입
   @GetMapping("/form")
   public String form(Model model) {
-    model.addAttribute("schedule", new ScheduleBlockDTO());
+    model.addAttribute("schedule", new ScheduleBlockDTO()); // 폼 바인딩용 빈 객체
     return "admin/schedule/form";
   }
 
@@ -42,9 +43,9 @@ public class AdminScheduleController {
   @PostMapping("/save")
   public String save(@ModelAttribute ScheduleBlockDTO dto
                      // ✅임시사용자 쓸 동안 주석
-                     // ,@AuthenticationPrincipal UserDetailsImpl user
+                     ,@AuthenticationPrincipal UserDetailsImpl user
                      ) throws Exception {
-    String username = "admin"; // ✅ 임시사용자용
+    //String username = "admin"; // ✅ 임시사용자용
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     Date eventDate = sdf.parse(dto.getEventDate());
@@ -77,8 +78,8 @@ public class AdminScheduleController {
     entity.setTimeSlot(timeSlot);
     entity.setReason(dto.getReason());
     entity.setCreatedAt(new Date());
-    entity.setModifiedBy(username); // ✅임시사용자용 아래 주석 해제
-    //entity.setModifiedBy(user.getUsername());
+    //entity.setModifiedBy(username); // ✅임시사용자용 아래 주석 해제
+    entity.setModifiedBy(user.getUsername());
 
     scheduleBlockRepository.save(entity);
 
@@ -88,9 +89,9 @@ public class AdminScheduleController {
   @PostMapping("/update")
   public String update(@ModelAttribute ScheduleBlockDTO dto
                        // ✅임시사용자 쓸 동안 주석
-                       // ,@AuthenticationPrincipal UserDetailsImpl user
+                       ,@AuthenticationPrincipal UserDetailsImpl user
                       ) throws Exception {
-    String username = "admin"; // ✅ 임시사용자용
+    //String username = "admin"; // ✅ 임시사용자용
 
     Optional<ScheduleBlockEntity> optional = scheduleBlockRepository.findById(dto.getIdx());
     if (optional.isPresent()) {
@@ -98,8 +99,8 @@ public class AdminScheduleController {
       entity.setEventDate(new SimpleDateFormat("yyyy-MM-dd").parse(dto.getEventDate()));
       entity.setTimeSlot(dto.getTimeSlot());
       entity.setReason(dto.getReason());
-      entity.setModifiedBy(username); // ✅임시사용자용 아래 주석 해제
-      //entity.setModifiedBy(user.getUsername()); // 수정자 ID 갱신
+      //entity.setModifiedBy(username); // ✅임시사용자용 아래 주석 해제
+      entity.setModifiedBy(user.getUsername()); // 수정자 ID 갱신
       scheduleBlockRepository.save(entity);
     }
     return "redirect:/admin/schedule/list";

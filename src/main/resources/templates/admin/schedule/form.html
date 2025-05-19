@@ -13,9 +13,9 @@
   <h1>일정 차단 등록</h1>
   <div id="content" class="content">
     <!-- 에러 메시지 영역 -->
-    <th:block th:if="${param.error} == 'duplicate'">
-      <p class="error_msg" style="color:red; font-weight:bold;">이미 등록된 일정입니다.</p>
-    </th:block>
+    <div th:if="${param.error != null and param.error.contains('duplicate')}" class="error_msg" style="color:red; font-weight:bold;">
+      이미 등록된 일정입니다.
+    </div>
     <form th:action="@{/admin/schedule/save}" th:object="${schedule}" method="post" autocomplete="off">
       <div class="form_group">
         <label for="eventDate">차단일자</label>
