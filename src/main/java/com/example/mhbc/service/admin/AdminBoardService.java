@@ -51,4 +51,12 @@ public class AdminBoardService {
         };
 
     }
+
+    public void deleteBoardsByIds(List<Long> ids) {
+        boardRepository.deleteAllByIdInBatch(ids);
+    }
+
+    public void deleteById(Long idx) {
+        boardRepository.deleteById(idx);
+    }
 }

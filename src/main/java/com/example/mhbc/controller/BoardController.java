@@ -101,13 +101,18 @@ public class BoardController {
     public String gallery_iew(@RequestParam("idx") Long idx,
                               @RequestParam("group_idx") Long groupIdx,
                               @RequestParam("board_type") Long boardType,
-                              @RequestParam("member_idx") Long memberIdx,
                               Model model) {
 
         BoardEntity board = boardService.getBoardByIdx(idx);
-        MemberEntity member = memberRepository.findByIdx(memberIdx);
+        Long loginUser = Utility.getLoginUserIdx();
 
-        model.addAttribute("member", member);
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
+
         model.addAttribute("boardType", boardType);
         model.addAttribute("board", board);
         model.addAttribute("groupIdx", groupIdx);
@@ -202,13 +207,20 @@ public class BoardController {
     public String event_view(@RequestParam("idx") Long idx,
                              @RequestParam("group_idx") Long groupIdx,
                              @RequestParam("board_type") Long boardType,
-                             @RequestParam("member_idx") Long memberIdx,
                              Model model) {
 
-        BoardEntity board = boardService.getBoardByIdx(idx);
-        MemberEntity member = memberRepository.findByIdx(memberIdx);
 
-        model.addAttribute("member", member);
+        BoardEntity board = boardService.getBoardByIdx(idx);
+
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
+
         model.addAttribute("board", board);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
@@ -549,14 +561,19 @@ public class BoardController {
     public String notice_view(Model model,
                               @RequestParam("group_idx") Long groupIdx,
                               @RequestParam("board_type") Long boardType,
-                              @RequestParam("member_idx") Long memberIdx,
                               @RequestParam("idx") Long idx){
         System.out.println(">>>>>>>>>>noticeview page<<<<<<<<<<");
 
         BoardEntity board = boardRepository.findByIdx(idx);
-        MemberEntity member = memberRepository.findByIdx(memberIdx);
+        Long loginUser = Utility.getLoginUserIdx();
 
-        model.addAttribute("member", member);
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
+
         model.addAttribute("board", board);
         model.addAttribute("idx", idx);
         model.addAttribute("groupIdx", groupIdx);

@@ -12,7 +12,7 @@
     <table th:if="${groupIdx == 1}">
       <tr th:each="board : ${paging}">
         <td style="width: 80%;">
-          <a th:href="@{/board/notice_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx} , member_idx=${member.idx})}" th:text="${board.title}"></a>
+          <a th:href="@{/board/notice_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}" th:text="${board.title}"></a>
         </td>
         <td th:text="${#dates.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
       </tr>

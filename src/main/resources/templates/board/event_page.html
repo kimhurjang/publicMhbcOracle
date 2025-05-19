@@ -15,7 +15,7 @@
   </div>
 
   <div id="content" class="content event">
-    <a th:if="${groupIdx == 3}" th:each="board : ${boardList}" th:href="@{/board/event_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx} , member_idx=${member.idx})}" class="event board">
+    <a th:if="${groupIdx == 3}" th:each="board : ${boardList}" th:href="@{/board/event_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}" class="event board">
       <div class="event card">
         <div th:if="${board.attachment != null}" class="card-img">
           <img th:src="@{|/data/${board.attachment.filePath}|}" alt="첨부 이미지"/>
