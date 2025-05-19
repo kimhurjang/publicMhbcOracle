@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<footer th:fragment="footer">
+<footer th:fragment="footer" class="bg-holder">
     <a href="#" class="scroll-top"><button class="btn xi-arrow-up"></button></a>
 
     <div class="footerBox copy">
@@ -43,7 +43,6 @@
         document.addEventListener("DOMContentLoaded", function () {
           const header = document.querySelector("header");
           const nav = document.querySelector("nav");
-          const logo = document.querySelector(".logo");
           const mainSlide = document.querySelector("#ms1");
           const gnb = document.getElementById("gnb");
           const toggleBtn = document.querySelector(".toggle.icon");
@@ -51,49 +50,55 @@
           const itemsWithSub = Array.from(gnb.querySelectorAll("li")).filter(li => li.querySelector(".sub_nav_layer"));
           const subMenuLinks = document.querySelectorAll('#gnb > li > strong > a');
 
-          // 0) 초기 active 클래스 제거
+          // 0) 초기 active 제거
           navItems.forEach(item => item.classList.remove('active'));
 
+          // 1) 데스크탑 - 스크롤 시 헤더 투명화
           if (window.innerWidth >= 765) {
-              // 1) 스크롤 시 헤더 투명 제어
-              function checkScroll() {
-                if (!mainSlide) {
-                  header.classList.add("transparentNav");
-                  return;
-                }
-                if (window.scrollY <= mainSlide.offsetHeight - nav.offsetHeight) {
-                  header.classList.remove("transparentNav");
-                } else {
-                  header.classList.add("transparentNav");
-                }
+            function checkScroll() {
+              if (!mainSlide) {
+                header.classList.add("transparentNav");
+                return;
               }
-              checkScroll();
-              window.addEventListener("scroll", checkScroll);
+              if (window.scrollY <= mainSlide.offsetHeight - nav.offsetHeight) {
+                header.classList.remove("transparentNav");
+              } else {
+                header.classList.add("transparentNav");
+              }
+            }
+            checkScroll();
+            window.addEventListener("scroll", checkScroll);
 
-              // 2) GNB hover 효과 (데스크탑)
-              navItems.forEach(item => {
-                    item.addEventListener('mouseenter', () => {
-                      navItems.forEach(i => i.classList.remove('active'));
-                      item.classList.add('active');
-                    });
-                    item.addEventListener('mouseleave', () => {
-                      item.classList.remove('active');
-                    });
+            // 2) GNB hover 효과
+            navItems.forEach(item => {
+              item.addEventListener('mouseenter', () => {
+                navItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
               });
+              item.addEventListener('mouseleave', () => {
+                item.classList.remove('active');
+              });
+            });
           }
 
+          // 3) 모바일 메뉴 제어
           if (window.innerWidth <= 764) {
-          // 3) 외부 클릭 시 메뉴 닫기
-          document.addEventListener("click", function(e) {
-            if (!nav.contains(e.target)) {
-              gnb.classList.remove("active");
-              itemsWithSub.forEach(li => li.classList.remove("active"));
-            }
-          });
+            // 메뉴 외부 클릭 시 오버레이 감지하여 닫기
+            document.addEventListener("click", function (e) {
+              if (document.body.classList.contains('menu_open')) {
+                const isInsideMenu = e.target.closest("#gnb") || e.target.closest(".toggle.icon");
+                if (!isInsideMenu) {
+                  gnb.classList.remove("active");
+                  header.classList.remove("closed");
+                  document.body.classList.remove("menu_open");
+                  itemsWithSub.forEach(li => li.classList.remove("active"));
+                }
+              }
+            });
 
-          // 4) 모바일 메뉴 아코디언
-          subMenuLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
+            // 아코디언 메뉴 동작
+            subMenuLinks.forEach(link => {
+              link.addEventListener('click', (e) => {
                 const li = link.closest('li');
                 const sub = li.querySelector('.sub_group');
                 if (sub) {
@@ -109,48 +114,37 @@
                     sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
                   }
                 }
+              });
             });
-          });
 
-          // 5) 모바일에서 활성된 메뉴 자동 펼침
+            // 활성된 메뉴 자동 펼침
             document.querySelectorAll('#gnb > li.active .sub_group').forEach(sub => {
               sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
             });
 
-          // 6) 헤더 토글
-          if (toggleBtn) {
-            toggleBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              header.classList.toggle('closed');
-            });
+            // 햄버거 토글 버튼
+            if (toggleBtn) {
+              toggleBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                header.classList.toggle('closed');
+                gnb.classList.toggle('active');
+                document.body.classList.toggle('menu_open');
+              });
+            }
           }
-        }
-          // 7) AOS 초기화
-          AOS.init({
-            duration: 600,
-            easing: 'ease-in-out',
-            delay: 0,
-            offset: 10,
-            once: false
-          });
-        });
-        window.addEventListener('load', () => {
-          AOS.refresh();
         });
 
-        //뒤로가기 버튼 -> onclick="goBack()"
-          function goBack() {
-            history.back();
-          }
+        // 뒤로가기 버튼
+        function goBack() {
+          history.back();
+        }
     </script>
 
     <th:block layout:fragment="js">
-
         <!--패럴렉스 스크롤링 라이브러리 임폴트-->
         <script src="/js/jquery.parallax-scroll.min.js"></script>
         <!--휠 효과 임폴트-->
         <script src="/js/wheel.js"></script>
-
     </th:block>
 </footer>
 </html>

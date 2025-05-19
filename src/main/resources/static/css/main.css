@@ -38,13 +38,16 @@ button:hover{
 */
 
 #ms1 {position:relative;background:#333;width:100%;height:100vh;}
-.name, .subtitle {display:flex;position:absolute;left:50%;z-index:99;transform:translate(-50%, -50%);}
+.name, .subtitle {display:flex;position:absolute;left:50%;z-index:9;transform:translate(-50%, -50%);}
 .name {top:45%;}
 .subtitle {top:52%;}
 .name .letter, .subtitle .letter {display:inline-block;opacity:0;transform:scale(0.9);color:#fff;font-family:"Dancing Script";font-size:4rem;}
 .subtitle .letter {font-family:inherit ;font-size:2rem;}
 .subtitle .phrase { display:inline-block; white-space:nowrap; opacity:0; transform:scale(0.9); font-size:2rem; color:#fff; font-family:serif;}
-
+@media screen and (max-width: 764px) {
+    .subtitle {top:50%}
+    .subtitle .letter {font-size:2.5rem;}
+}
 
 .slider {
     width: 100%;
@@ -540,7 +543,8 @@ div#ms4 {
 .desc .jibun {font-size: 11px;color: #888;margin-top: -2px; padding:0;}
 
 .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
-.info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+/*.info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}*/
+
 .info .link {color: #5085BB;}
 
 

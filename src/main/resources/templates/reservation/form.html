@@ -102,12 +102,11 @@
             <label for="flower_real">생화</label>
           </div>
         </div>
-
         <div class="price_box">
-          <button type="button" id="calc_price_btn">금액 산출 버튼</button>
-          <input type="text" readonly id="price_result_display"> <!-- 사용자 표시용(콤마포함) -->
-          <input type="hidden" th:field="*{totalAmount}" id="price_result"> <!-- 서버 전송용 -->
-          <button type="button" id="reset_btn">초기화</button>
+          <p><button type="button" id="calc_price_btn">금액 산출 버튼</button></p>
+          <p id="price_result_display" class="price_display"></p>
+          <input type="hidden" th:field="*{totalAmount}" id="price_result" value="0"> <!-- 서버 전송용 -->
+          <p><button type="button" id="reset_btn">초기화</button></p>
         </div>
 
         <p class="section_title mt20">02. 문의사항을 입력해주세요.</p>

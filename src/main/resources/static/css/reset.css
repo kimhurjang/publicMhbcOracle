@@ -36,9 +36,9 @@ th:first-child, td:first-child {border-left:0;}
 th:last-child, td:last-child {border-right:0;}
 
 /* ----------------- 미디어쿼리 복사해서 사용 ------------------*/
-@media (max-width: 767px) {
+@media (max-width: 764px) {
 }
-@media (max-width: 768px) and (max-width: 1024px) {
+@media (max-width: 765px) and (max-width: 1024px) {
 }
 @media (min-width: 1025px) {
 }
