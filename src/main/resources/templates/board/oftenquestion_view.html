@@ -3,26 +3,52 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
 <body>
+<th:block layout:fragment="css">
+  <style>
+    table tr td{
+      padding: 15px 20px;
+      text-align: left;
+    }
+    td div{
+      margin: 15px 10px;
+    }
+    td div:first-child{
+      padding: 0 20px;
+    }
+    .contents{
+      padding: 30px 20px;
+    }
+  </style>
+</th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <a th:href="@{/board/oftenquestion}"><h1>자주 묻는 질문</h1></a>
+
   <div id="content" class="content">
-
-    <div th:each="board : ${boardList}">
-
-      <div th:if="${board.re == 0}">
-        <div th:text="${board.title}"></div>
-        <div th:text="${board.content}"></div>
+    <input type="file" name="attachment" style="visibility: hidden"/>
+    <table>
+      <tr>
+        <td colspan="2"><h3 th:text="${board.title}"></h3></td>
+      </tr>
+      <tr>
+        <td colspan="2" th:text="${board.content}" class="contents"></td>
+      </tr>
+      <tr>
+        <td style="width: 10%;"><i class="xi-subdirectory-arrow"></i></td>
+        <td style="display:block;">
+          <div th:text="${board.answerTitle}"></div>
+          <div th:text="${board.answerContent}" class="contents"></div>
+        </td>
+      </tr>
+    </table>
+    <div class="btn_group mt20">
+      <div th:if="${member != null and member.grade == 10}">
+        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button>[관리자]삭제</button></a>
+        <a th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, commentsIdx=0)}"><button type="button" class="color2">[관리자]수정</button></a>
       </div>
-
-      <div th:if="${board.re == 1}">
-        <div th:text="${board.title}"></div>
-        <div th:text="${board.content}"></div>
-      </div>
-
+        <button type="button"  onclick="goBack()">뒤로가기</button>
     </div>
 
   </div>
-
 </section><!--E container-->
 </body>
 </html>

@@ -38,7 +38,13 @@
         <td><input type="file" name="attachment" required placeholder="해당 페이지는 첨부파일 필수입니다."></td>
       </tr>
       <tr>
-        <td colspan="2"><button type="submit">작성하기</button></td>
+        <td colspan="2">
+          <div class="btn_group mt20">
+            <button type="button" onclick="goBack()" class="small">뒤로가기</button>
+            <button type="submit" class="color2">작성하기</button>
+            <button type="reset" class="small">초기화</button>
+          </div>
+        </td>
       </tr>
     </table>
       <div th:if="${errors}">
