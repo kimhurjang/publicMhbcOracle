@@ -104,6 +104,15 @@ public class BoardController {
                               Model model) {
 
         BoardEntity board = boardService.getBoardByIdx(idx);
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
+
         model.addAttribute("boardType", boardType);
         model.addAttribute("board", board);
         model.addAttribute("groupIdx", groupIdx);
@@ -200,7 +209,18 @@ public class BoardController {
                              @RequestParam("board_type") Long boardType,
                              Model model) {
 
+
         BoardEntity board = boardService.getBoardByIdx(idx);
+
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
+
         model.addAttribute("board", board);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
@@ -312,9 +332,16 @@ public class BoardController {
                                      @RequestParam("group_idx") Long groupIdx,
                                      Model model) {
 
-        List<BoardEntity> boardList = boardService.getBoardListByTitle(title);
+        BoardEntity board = boardRepository.findByIdx(idx);
+        Long loginUser = Utility.getLoginUserIdx();
 
-        model.addAttribute("boardList", boardList);
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
+        model.addAttribute("board", board);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("idx", idx);
@@ -335,6 +362,29 @@ public class BoardController {
         model.addAttribute("today", today);
 
         return "/board/oftenquestion_write";
+    }
+    @GetMapping("oftenquestion_write_proc")
+    public String oftenquestion_write_proc(@Valid CommonForm form,
+                                           BindingResult result,
+                                           @ModelAttribute BoardEntity board,
+                                           @RequestParam("board_type") Long boardType,
+                                           @RequestParam("group_idx") Long groupIdx,
+                                           Model model) throws IOException {
+        System.out.println(">>>>>>>>>>oftenquestion_write_proc page<<<<<<<<<<");
+
+        /*유효성 검사*/
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "redirect:/board/cmct_write";
+        }
+            board.setCreatedAt(new Date());
+            boardService.saveBoard(board,groupIdx);
+
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+
+        return "redirect:/board/oftenquestion_page?page=1&board_type=" + boardType + "&group_idx=" + groupIdx;
+
     }
 
     /*1대1문의*/
@@ -479,6 +529,14 @@ public class BoardController {
                               @RequestParam(value="page", defaultValue = "1") int page){
         System.out.println(">>>>>>>>>>noticepage page<<<<<<<<<<");
 
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
 
         int itemsPerPage = 4;
         int groupSize = 3;
@@ -507,6 +565,14 @@ public class BoardController {
         System.out.println(">>>>>>>>>>noticeview page<<<<<<<<<<");
 
         BoardEntity board = boardRepository.findByIdx(idx);
+        Long loginUser = Utility.getLoginUserIdx();
+
+        if (loginUser != null) {
+            MemberEntity member = memberRepository.findByIdx(loginUser);
+            model.addAttribute("member", member);
+        } else {
+            model.addAttribute("member", null);  // 로그인되지 않은 경우
+        }
 
         model.addAttribute("board", board);
         model.addAttribute("idx", idx);
@@ -747,7 +813,6 @@ public class BoardController {
     @RequestMapping("/delete")
     public String delete(BoardEntity board,
                          MemberEntity member,
-                         AttachmentEntity attachment,
                          @RequestParam("group_idx") Long groupIdx,
                          @RequestParam("board_type") Long boardType,
                          @RequestParam("memberIdx") Long memberIdx,
@@ -771,15 +836,21 @@ public class BoardController {
         else if(groupIdx == 5 && boardType == 2){
             redirectUrl = "oftenquestion_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
         }
-
-        if(boardIdx >= 1 && commentsIdx == 0) {
-            utility.deleteAttachments(boardIdx);
-            boardService.deleteBoard(boardIdx);
+        // 댓글이 아닌 게시글 삭제
+        if (boardIdx >= 1 && commentsIdx == 0) {
+            List<AttachmentEntity> attachments = attachmentRepository.findBoardsByBoard_Idx(boardIdx);
+            if (attachments == null || attachments.isEmpty()) {
+                boardService.deleteBoard(boardIdx);
+            } else {
+                utility.deleteAttachments(boardIdx);
+                boardService.deleteBoard(boardIdx);
+            }
         }
-        if(commentsIdx >= 1 && boardIdx >= 1){
-            commentsService.deleteComment(commentsIdx);
-            return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx+"&idx="+boardIdx+"&member="+memberIdx;
 
+        // 댓글 삭제
+        if (commentsIdx >= 1 && boardIdx >= 1) {
+            commentsService.deleteComment(commentsIdx);
+            return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx + "&idx=" + boardIdx + "&member=" + memberIdx;
         }
         return "redirect:/board/"+redirectUrl;
     }
@@ -864,16 +935,41 @@ public class BoardController {
             default -> "cmct_page";
         };
 
-        if(boardIdx >= 1 && commentsIdx == 0 && !attachment.isEmpty()) {
-            boardService.modifyBoard(boardIdx,board.getTitle(),board.getContent());
-            boardService.modifyAttachment(attachment,boardIdx);
+        // 자주 묻는 질문 게시판에서 답변을 분리 처리하는 경우
+        if (groupIdx == 5 && boardType == 2 && commentsIdx == 0 && boardIdx >= 1 && attachment.isEmpty()) {
+            boardService.modifyBoard(
+                    boardIdx,
+                    board.getTitle(),
+                    board.getContent(),
+                    board.getAnswerTitle(),
+                    board.getAnswerContent()
+            );
+        // 댓글이 아닌 게시글 수정일 때
+        if (commentsIdx == 0 && boardIdx >= 1) {
+
+            // 공통 게시글 수정 처리
+            boardService.modifyBoard(
+                    boardIdx,
+                    board.getTitle(),
+                    board.getContent(),
+                    board.getAnswerTitle(),
+                    board.getAnswerContent()
+            );
+
+            // 첨부파일이 존재하면 수정
+            if (!attachment.isEmpty()) {
+                boardService.modifyAttachment(attachment, boardIdx);
+            }
         }
-        if(boardIdx >= 1 && commentsIdx == 0 && attachment.isEmpty()) {
-            boardService.modifyBoard(boardIdx,board.getTitle(),board.getContent());
         }
-        if(commentsIdx >= 1 && boardIdx >= 1 && attachment.isEmpty()){
-            commentsService.modifyComment(commentsIdx, commentContent);  // ← 수정 처리
-            return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx + "&idx=" + boardIdx + "&member=" + memberIdx;
+
+        // 댓글 수정 처리
+        if (commentsIdx >= 1 && boardIdx >= 1 && attachment.isEmpty()) {
+            commentsService.modifyComment(commentsIdx, commentContent);
+            return "redirect:/board/cmct_view?board_type=" + boardType +
+                    "&group_idx=" + groupIdx +
+                    "&idx=" + boardIdx +
+                    "&member=" + memberIdx;
         }
 
         return "redirect:/board/" +

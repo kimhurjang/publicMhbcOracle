@@ -10,7 +10,7 @@
     <form name="cmct_write_proc" method="post" action="/board/cmct_write_proc" enctype="multipart/form-data" th:object="${commonForm}">
       <input type="hidden" name="board_type" th:value="${boardType}">
       <input type="hidden" name="group_idx" th:value="${groupIdx}">
-      <input type="hidden" name="idx" th:value="${member.idx}">
+      <input type="hidden" name="memberIdx" th:value="${member.idx}">
 
       <!--유효성 검사 통과용-->
       <input type="hidden" name="email" th:value="${member.email}" />
@@ -47,7 +47,13 @@
           <td><input type="file" name="attachment"></td>
         </tr>
         <tr>
-          <td colspan="2"><button type="submit">작성 하기</button> <button type="reset">다시 쓰기</button></td>
+          <td colspan="2">
+            <div class="btn_group mt20">
+              <button type="button" onclick="goBack()" class="small">뒤로가기</button>
+              <button type="submit" class="color2">작성하기</button>
+              <button type="reset" class="small">초기화</button>
+            </div>
+          </td>
         </tr>
       </table>
       <div th:if="${errors}">

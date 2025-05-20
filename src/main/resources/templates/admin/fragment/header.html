@@ -24,7 +24,7 @@
             <a th:href="@{/admin/reservation/list}">예약현황</a>
           </li>
           <li th:classappend="${currentPath.startsWith('/admin/schedule')} ? 'active'">
-            <a th:href="@{/admin/schedule}">일정관리</a>
+            <a th:href="@{/admin/schedule/list}">일정관리</a>
           </li>
           <li th:classappend="${currentPath.startsWith('/admin/hall')} ? 'active'">
             <a th:href="@{/admin/hall/list}">홀관리</a>

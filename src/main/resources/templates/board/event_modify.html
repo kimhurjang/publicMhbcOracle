@@ -51,10 +51,11 @@
         <div id="eventContent">
           <textarea name="content" cols="70" rows="10" th:text="${board.content}" required placeholder="본문 입력은 필수입니다."></textarea>
         </div>
-        <div class="btn_group mt20">
-          <button type="submit">수정하기</button>
-          <button type="button" onclick="goBack()">뒤로가기</button>
-        </div>
+      <div class="btn_group mt20">
+        <button type="button" onclick="goBack()" class="small">뒤로가기</button>
+        <button type="submit" class="color2">작성하기</button>
+        <button type="reset" class="small">초기화</button>
+      </div>
     </form>
   </div>
   <!--E content-->

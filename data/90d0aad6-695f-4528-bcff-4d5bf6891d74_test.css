@@ -1,0 +1,389 @@
+@charset "utf-8";
+
+/* ========================= */
+/* 1. Reset & Global Styles  */
+/* ========================= */
+*, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+  }
+  ul, ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  /* ========================= */
+/* 2. Color Variables & Utilities */
+/* ========================= */
+:root {
+    --color_primary: #8676A1;
+    --color_secondary: #D6CAE8;
+    --color_tertiary: #779CB8;
+    --color_quaternary: #AECEE6;
+    --color_light: #F7F4ED;
+    --color_white: #fff;
+    --color_gray_light: #DDDDDD;
+    --color_gray: #F0F0F0;
+    --color_dark: #333;
+    --color_red: red;
+    --color_orange: orange;
+  
+    /* Border 색상: 각 기본 색상보다 약간 더 진하게 */
+    --border_primary: #67548F;
+    --border_secondary: #BFA5C8;
+    --border_tertiary: #557895;
+    --border_quaternary: #8AB3C6;
+  }
+  
+  /* 유틸리티 클래스 */
+  .text_center { text-align: center; }
+  .m_0 { margin: 0; }
+  .p_0 { padding: 0; }
+  
+  /* ========================= */
+/* 3. Buttons */
+/* ========================= */
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* 크기 조절 */
+  .btn_small {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  .btn_large {
+    font-size: 16px;
+    padding: 14px 20px;
+  }
+  
+  /* 컬러 및 테마 */
+  .btn_color1 {
+    background-color: var(--color_primary);
+    border: 1px solid var(--border_primary);
+    color: var(--color_white);
+  }
+  .btn_color2 {
+    background-color: var(--color_secondary);
+    border: 1px solid var(--border_secondary);
+    color: var(--color_dark);
+  }
+  .btn_color3 {
+    background-color: var(--color_tertiary);
+    border: 1px solid var(--border_tertiary);
+    color: var(--color_white);
+  }
+  .btn_color4 {
+    background-color: var(--color_quaternary);
+    border: 1px solid var(--border_quaternary);
+    color: var(--color_dark);
+  }
+  
+  /* 공통 상태 (hover, focus) */
+  .btn:hover,
+  .btn:focus {
+    filter: brightness(90%);
+  }
+  
+  /* ========================= */
+/* 4. Tables */
+/* ========================= */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px;
+    border: 1px solid var(--border_secondary);
+  }
+  
+  /* 테마 변형: 기본 primary 테이블 */
+  .table_primary th {
+    background-color: var(--color_primary);
+    color: var(--color_white);
+    border-color: var(--border_primary);
+  }
+  
+  /* 추가 테마 (예시) */
+  .table_secondary th {
+    background-color: var(--color_secondary);
+    color: var(--color_dark);
+    border-color: var(--border_secondary);
+  }
+/* ========================= */
+/* 5. Messages / Alerts */
+/* ========================= */
+.msg {
+    text-align: center;
+    padding: 50px 0;
+    font-size: 14px;
+  }
+  
+  .msg_error {
+    background-color: var(--color_red);
+    color: var(--color_white);
+  }
+  
+  .msg_info {
+    background-color: var(--color_quaternary);
+    color: var(--color_dark);
+  }
+  
+  .msg_success {
+    background-color: var(--color_tertiary);
+    color: var(--color_white);
+  }
+/* ========================= */
+/* 6. Folding & Flow Lists */
+/* ========================= */
+
+/* 폴딩 스타일 */
+.folding_wrap {
+    border-top: 2px solid var(--color_gray_light);
+    border-bottom: 1px solid var(--color_gray_light);
+    margin-bottom: 20px;
+  }
+  .folding_item {
+    border-top: 1px solid var(--color_gray_light);
+    overflow: hidden;
+  }
+  .folding_item:first-child {
+    border-top: none;
+  }
+  .folding_header {
+    display: block;
+    padding: 30px 60px 29px 110px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+  }
+  .folding_header:hover {
+    background-color: var(--color_primary);
+    color: var(--color_white);
+  }
+  .folding_content {
+    display: none;
+    overflow: hidden;
+    background-color: var(--color_gray);
+    padding: 30px 35px;
+  }
+  .folding_item.active .folding_content {
+    display: block;
+  }
+  
+  /* 플로우 리스트 (가로형) */
+  .flow_list {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+  }
+  .flow_list > li {
+    display: inline-block;
+    max-width: 15%;
+    margin: 0 4%;
+  }
+  
+  /* 플로우 리스트 (세로형 변형) */
+  .flow_list_full {
+    text-align: left;
+  }
+
+/* ========================= */
+/* 7. Pagination */
+/* ========================= */
+.pagination {
+    text-align: center;
+    padding: 10px 0;
+  }
+  .pagination a,
+  .pagination strong {
+    display: inline-block;
+    height: 30px;
+    min-width: 30px;
+    border: 1px solid var(--color_gray_light);
+    text-align: center;
+    line-height: 30px;
+    margin: 0 2px;
+    text-decoration: none;
+  }
+  .pagination strong {
+    background-color: var(--color_primary);
+    border-color: var(--border_primary);
+    color: var(--color_white);
+  }
+/* ========================= */
+/* 8. Forms & Terms */
+/* ========================= */
+.form_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  .form_table th,
+  .form_table td {
+    padding: 12px;
+    border: 1px solid var(--color_gray_light);
+    text-align: left;
+  }
+  .form_table th {
+    background-color: var(--color_light);
+    color: var(--color_dark);
+  }
+  
+  /* 약관동의 영역 */
+  .agree_wrap {
+    border: 1px solid var(--color_dark);
+    background-color: var(--color_light);
+    padding: 20px;
+    margin-top: 20px;
+  }
+/* ========================= */
+/* 9. Responsive Styles */
+/* ========================= */
+@media (max-width: 768px) {
+    .btn_small {
+      font-size: 10px;
+      padding: 6px 10px;
+    }
+    
+    .table th,
+    .table td {
+      font-size: 12px;
+    }
+    
+    .folding_header {
+      padding: 20px 40px 19px 80px;
+      font-size: 16px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .msg {
+      font-size: 12px;
+      padding: 30px 0;
+    }
+    
+    .form_table th,
+    .form_table td {
+      padding: 8px;
+      font-size: 12px;
+    }
+  }
+/* ========================= */
+/* 10. Print Media */
+/* ========================= */
+@media print {
+    .form_table,
+    .complete_header {
+      border: 0;
+      width: auto;
+    }
+  }
+
+
+  
+  /* 리스트 스타일 */
+  .c_list_01 {
+    padding-left: 20px;
+    list-style: disc;
+  }
+  
+  .c_list_01 li {
+    position: relative;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  
+  .c_list_01 li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    background-color: var(--color_primary);
+  }
+  
+  .list_type_kr li {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  /* 탭 메뉴 */
+.c_tab01, .c_tab02 {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 2px solid var(--color_gray_light);
+  }
+  
+  .c_tab01 ul li, .c_tab02 ul li {
+    flex: 1;
+    text-align: center;
+    padding: 10px 20px;
+    border: 1px solid var(--color_gray_light);
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .c_tab01 ul li.over, .c_tab02 ul li.over {
+    background-color: var(--color_primary);
+    color: var(--color_white);
+  }
+  
+  .c_tab01 ul li:hover, .c_tab02 ul li:hover {
+    background-color: var(--color_secondary);
+    color: var(--color_dark);
+  }
+  /* 안내문 스타일 */
+.info_box {
+    position: relative;
+    padding: 20px 30px;
+    border: 1px solid var(--border_primary);
+    background-color: var(--color_light);
+  }
+  
+  .info_box .info_tit {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--color_primary);
+  }
+  
+  .info_box.st01 {
+    background-color: var(--color_dark);
+    color: var(--color_white);
+    border-color: var(--color_dark);
+  }
+  
+  .info_ex {
+    margin: 10px 0;
+    padding-left: 10px;
+    border-left: 4px solid var(--color_primary);
+  }
+  
+  .info_ex02 {
+    border-left: 4px solid var(--color_red);
+    color: var(--color_red);
+  }
+  
+  .info_ex03 {
+    border-left: 4px solid var(--color_orange);
+    color: var(--color_orange);
+  }
+  

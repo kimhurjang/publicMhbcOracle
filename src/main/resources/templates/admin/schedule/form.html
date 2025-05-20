@@ -13,9 +13,13 @@
   <h1>일정 차단 등록</h1>
   <div id="content" class="content">
     <!-- 에러 메시지 영역 -->
-    <th:block th:if="${param.error} == 'duplicate'">
-      <p class="error_msg" style="color:red; font-weight:bold;">이미 등록된 일정입니다.</p>
-    </th:block>
+    <div th:if="${param.error != null and param.error.contains('duplicate')}" class="error_msg" style="color:red; font-weight:bold;">
+    이미 등록된 일정입니다.
+  </div>
+    <div th:if="${param.error != null and param.error.contains('noslot')}" class="error_msg" style="color:red; font-weight:bold;">
+      최소 한 개의 시간대를 선택해주세요.
+    </div>
+
     <form th:action="@{/admin/schedule/save}" th:object="${schedule}" method="post" autocomplete="off">
       <div class="form_group">
         <label for="eventDate">차단일자</label>
@@ -25,11 +29,11 @@
       <div class="form_group">
         <label>차단 타임</label>
         <div>
-          <label><input type="radio" name="timeSlot" value="10시" th:checked="${schedule.timeSlot == '10시'}">10시</label>
-          <label><input type="radio" name="timeSlot" value="12시" th:checked="${schedule.timeSlot == '12시'}">12시</label>
-          <label><input type="radio" name="timeSlot" value="14시" th:checked="${schedule.timeSlot == '14시'}">14시</label>
-          <label><input type="radio" name="timeSlot" value="16시" th:checked="${schedule.timeSlot == '16시'}">16시</label>
-          <label><input type="radio" name="timeSlot" value="ALL" th:checked="${schedule.timeSlot == 'ALL'}">전체</label>
+          <label><input type="checkbox" name="timeSlots" value="10시" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, '10시')}">10시</label>
+          <label><input type="checkbox" name="timeSlots" value="12시" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, '12시')}">12시</label>
+          <label><input type="checkbox" name="timeSlots" value="14시" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, '14시')}">14시</label>
+          <label><input type="checkbox" name="timeSlots" value="16시" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, '16시')}">16시</label>
+          <label><input type="checkbox" name="timeSlots" value="ALL" th:checked="${schedule.timeSlots != null and #lists.contains(schedule.timeSlots, 'ALL')}">전체</label>
         </div>
       </div>
 

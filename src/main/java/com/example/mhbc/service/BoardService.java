@@ -141,7 +141,7 @@ public class BoardService {
      * */
     /*파일 재업로드*/
     @Transactional
-    public void modifyBoard(Long boardIdx , String title, String content){
+    public void modifyBoard(Long boardIdx , String title, String content , String answerTitle , String answerContent){
 
      BoardEntity board = boardRepository.findByIdx(boardIdx);
 
@@ -149,6 +149,11 @@ public class BoardService {
         board.setTitle(title);
         board.setContent(content);
 
+        // FAQ인 경우, 답변 필드도 수정
+        if (answerTitle != null && answerContent != null) {
+            board.setAnswerTitle(answerTitle);
+            board.setAnswerContent(answerContent);
+        }
 
     }
     @Transactional

@@ -1,8 +1,10 @@
 /* 인텔리제이에서 줄바꿈 Alt + Z*/
 body { position:relative; }
+body::after {content:"";position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.4);z-index:998;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+body.menu_open::after {opacity:1;pointer-events:auto;}
 
 /* ----------------- user------------------*/
-#user header {position:fixed; z-index:99;}
+#user header {position:fixed; z-index:999;}
 #user .logo a span{ width:100px; height:80px; display:block; background:#f3ede3 url("/image/logo_1-1_mo.png") no-repeat 50%  / 70px auto; border-bottom-left-radius:10px; border-bottom-right-radius:10px;;}
 #user header .logo {position:relative; z-index:9999;}
 #user header.transparentNav .logo a span {background:#f3ede3 url("/image/logo_1-2_mo.png") no-repeat 50%  / 70px auto !important}
@@ -213,10 +215,10 @@ body { position:relative; }
 /* 반응형 테이블 스크롤 */
 .is_wlong_box, .is_wauto_box {overflow-x:auto;}
 .is_wauto_box > table { width:100%;}
-.is_wlong_box > table { min-width:768px; }
+.is_wlong_box > table { min-width:765px; }
 
-@media only screen and (max-width:767px){
-    .is_wauto_box > table {width:767px;}
+@media only screen and (max-width:764px){
+    .is_wauto_box > table {width:764px;}
 }
 
 /* ----------------- 버튼 ------------------*/
@@ -254,6 +256,9 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 /* 4글짜 넓이 고정 버튼 */
 .status_btn {width:64px;}
 
+@media screen and (max-width: 764px) {
+
+}
 /* ----------------- form class ------------------*/
 .form_group{display:flex;align-items:center;gap:10px;margin-bottom:15px;
   /*&::before,

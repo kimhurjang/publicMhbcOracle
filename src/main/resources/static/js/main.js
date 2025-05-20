@@ -1,3 +1,5 @@
+
+
 /*-------------- main visual text animation  --------------*/
 const elementsManhwa = document.querySelectorAll('.name .letter');
 const subtitlePhrases = document.querySelectorAll('.subtitle .phrase');

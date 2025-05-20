@@ -7,88 +7,96 @@
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
     <h1>게시판 그룹별 관리</h1>
     <div id="content" class="content">
-        <select id="categorySelect">
-            <option  value="" disabled selected>카테고리</option>
-            <option value="notice">공지</option>
-            <option value="gallery">갤러리</option>
-            <option value="event">이벤트</option>
-            <option value="cmct">커뮤니티</option>
-            <option value="oftenquestion">자주 묻는 질문</option>
-            <option value="personalquestion">1 대 1 질문</option>
-        </select>
+        <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
+            <input type="hidden" name="page" value="1">
+            <input type="hidden" name="delCheck" id="delCheckHidden" />
+            <div class="btn_group mt20 mb20">
+                <select id="categorySelect" name="group_idx" style="width: 50%;">
+                    <option  value="" disabled th:selected="${group_idx == null}">카테고리</option>
+                    <option value="1" th:selected="${group_idx == 1}">공지</option>
+                    <option value="2" th:selected="${group_idx == 2}">커뮤니티</option>
+                    <option value="3" th:selected="${group_idx == 3}">이벤트</option>
+                    <option value="4" th:selected="${group_idx == 4}">갤러리</option>
+                    <option value="5" th:selected="${group_idx == 5}">자주 묻는 질문</option>
+                    <option value="6" th:selected="${group_idx == 6}">1 대 1 질문</option>
+                </select>
+                <input type="hidden" name="group_idx_hidden" id="groupIdxHidden" />
+                <button type="submit" name="action" value="search" class="small">조회하기</button>
+                <button type="submit" name="action" value="delete" class="small" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">선택 삭제</button>
+            </div>
+
         <table>
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="allCheck"></th>
+                    <th><input type="checkbox" id="allCheck" name="delCheck" th:value="${delCheck}"></th>
+                    <th>카테고리</th>
                     <th style="width: 40%;">제목</th>
                     <th>등록 일자</th>
                     <th colspan="3" style="width:30%;">설정</th>
                 </tr>
             </thead>
             <tbody id="adminBoardList">
+                <tr th:if="${paging == null}">
+                    <td colspan="7" style="color: #999;">카테고리 선택 후 조회하기</td>
+                </tr>
+                <tr th:if="${paging?.isEmpty()}">
+                <td colspan="7">조회된 게시글이 없습니다.</td>
+                </tr>
+                <tr th:each="board : ${paging}">
+                    <td><input type="checkbox" name="delCheck" th:value="${board.idx}"></td>
+                    <td th:text="${category}"></td>
+                    <td><a href="#"><span th:text="${board.title}"></span></a></td>
+                    <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"></td>
+                    <td>
+                        <a th:href="@{/admin/board/delete(id=${board.idx},groupIdx=${groupIdx},page=${page})}" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
+                            <button type="button" class="small">삭제</button>
+                        </a>
+                    </td>
+                    <td><a href="#"><button type="button" class="small">수정</button></a></td>
+                    <td><a th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx})}"><button type="button" class="small">상세보기</button></a></td>
+                </tr>
             </tbody>
         </table>
-        <div id="paging"></div>
+        </form>
+        <div th:if="${paging != null and !paging.isEmpty()}">
+            <div th:replace="~{fragment/paging_admin_board :: paging_admin_board(
+                    page=${page},
+                    pagination=${pagination},
+                    link=${link},
+                    groupIdx=${groupIdx},
+                    boardType=${boardType}
+                )}">
+            </div>
+        </div>
     </div><!--E content-->
 </section><!--E container-->
 </body>
 </html>
 <script>
-    document.getElementById('categorySelect').addEventListener('change', function () {
-        loadCategoryData(this.value, 1); // 첫 페이지
-    });
 
-    function loadCategoryData(category, page) {
-        if (!category) return;
+      document.getElementById('allCheck').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[name="delCheck"]');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+      });
 
-        fetch(`/admin/board/api/list?category=${category}&page=${page - 1}`) // 0부터 시작
-            .then(response => response.json())
-            .then(data => {
-                const tbody = document.getElementById('adminBoardList');
-                tbody.innerHTML = '';
+      const form = document.forms['selectAdminBoard'];
+      const select = document.getElementById('categorySelect');
+      const hiddenInput = document.getElementById('groupIdxHidden');
 
-                if (data.content.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7">해당 카테고리의 데이터가 없습니다.</td></tr>';
-                    return;
-                }
-
-                data.content.forEach(item => {
-                    const row = `
-                        <tr>
-                            <td><input type="checkbox" value="${item.id}"/></td>
-                            <td>${item.title}</td>
-                            <td>${item.createdAt}</td>
-                            <td>삭제</td>
-                            <td>수정</td>
-                            <td>상세보기</td>
-                        </tr>
-                    `;
-                    tbody.insertAdjacentHTML('beforeend', row);
-                });
-
-                renderPaging(data.totalPages, data.number + 1, category);
-            })
-            .catch(error => {
-                console.error("데이터 요청 실패:", error);
-            });
-    }
-
-    function renderPaging(totalPages, currentPage, category) {
-        const pagingContainer = document.getElementById('paging');
-        pagingContainer.innerHTML = '';
-
-        if (totalPages <= 1) return;
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageBtn = document.createElement('button');
-            pageBtn.innerText = i;
-            if (i === currentPage) {
-                pageBtn.disabled = true;
-            }
-            pageBtn.addEventListener('click', () => loadCategoryData(category, i));
-            pagingContainer.appendChild(pageBtn);
+      form.addEventListener('submit', function(event) {
+        // 선택된 카테고리 값을 hidden에 넣기
+        hiddenInput.value = select.value;
+      });
+      document.querySelector('button[name="action"][value="search"]').addEventListener('click', function(event) {
+        const select = document.getElementById('categorySelect');
+        if (!select.value) {
+          event.preventDefault(); // 폼 제출 막기
+          alert('카테고리를 선택해 주세요.');
+          select.focus();
+          return false;
         }
-    }
+      });
+
 </script>
 
 
