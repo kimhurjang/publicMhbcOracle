@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.lang.reflect.Member;
@@ -84,6 +85,26 @@ public class MemberController {
     return "index";
   }
 
+  @GetMapping("/logout")
+  public String logout(HttpSession session) {
+    String kakaoAccessToken = (String) session.getAttribute("kakaoAccessToken");
+    System.out.println("세션 토큰: " + kakaoAccessToken);
+
+    if (kakaoAccessToken != null) {
+      String response = WebClient.create()
+              .post()
+              .uri("https://kapi.kakao.com/v1/user/logout")
+              .header("Authorization", "Bearer " + kakaoAccessToken)
+              .retrieve()
+              .bodyToMono(String.class)
+              .block();
+      System.out.println("카카오 로그아웃 응답: " + response);
+    }
+
+    session.invalidate();
+    return "redirect:/";
+  }
+
   @GetMapping("/mobile")
   public String phoneNumberPage(HttpSession session) {
     MemberEntity member = (MemberEntity) session.getAttribute("loginMember");
@@ -104,6 +125,16 @@ public class MemberController {
     if (snsSession != null) {
       snsSession.setSnsMobile(mobile);
       snsRepository.save(snsSession);
+
+      // sns에 연동된 member 엔티티도 업데이트
+      MemberEntity linkedMember = snsSession.getMember();
+      if (linkedMember != null) {
+        linkedMember.setMobile(mobile);
+        memberRepository.save(linkedMember);
+        // 세션에 member 정보도 같이 업데이트
+        session.setAttribute("loginMember", linkedMember);
+      }
+
       session.setAttribute("loginSnsUser", snsSession);
       return "redirect:/";
     }
@@ -118,43 +149,65 @@ public class MemberController {
     return "redirect:/api/member/login";
   }
 
+
   @GetMapping("/kakao")
-  public String sociallogin(@RequestParam("code") String code, HttpSession session) {
+  public String socialLogin(@RequestParam("code") String code, HttpSession session) {
     String accessToken = kakaoService.getKakaoAccessToken(code);
+    session.setAttribute("kakaoAccessToken", accessToken);
     SocialUserInfoDTO userInfo = kakaoService.getUserInfoFromKakao(accessToken);
 
     if (userInfo == null || userInfo.getSnsEmail() == null) {
-      return "redirect:/api/member/login";
+      return "redirect:/api/member/login"; // 사용자 정보 불러오기 실패 시 로그인 페이지로
     }
 
-    Optional<SnsEntity> existingSnsUserOpt = snsRepository.findBySnsId(userInfo.getUserid());
-    SnsEntity snsUser;
+    // SNS 사용자 정보 가져오기
+    SnsEntity snsUser = snsRepository.findBySnsId(userInfo.getUserid()).orElseGet(() -> {
+      // 회원 테이블에서 이메일 기준으로 기존 회원 조회
+      MemberEntity member = memberRepository.findByEmail(userInfo.getSnsEmail()).orElseGet(() -> {
+        // 없으면 신규 회원 생성
+        MemberEntity newMember = new MemberEntity();
+        newMember.setUserid(userInfo.getUserid());
+        newMember.setName(userInfo.getSnsName());
+        newMember.setEmail(userInfo.getSnsEmail());
+        newMember.setStatus("정상");
+        newMember.setGrade(1);
+        // 기본값 외에 필요한 필드는 여기에서 설정
+        return memberRepository.save(newMember);
+      });
 
-    if (existingSnsUserOpt.isEmpty()) {
-      snsUser = new SnsEntity();
-      snsUser.setSnsType("KAKAO");
-      snsUser.setSnsId(userInfo.getUserid());
-      snsUser.setSnsEmail(userInfo.getSnsEmail());
-      snsUser.setSnsName(userInfo.getSnsName());
-      snsUser.setConnectedAt(LocalDateTime.now());
+      // SNS 테이블에 신규 추가
+      SnsEntity newSnsUser = new SnsEntity();
+      newSnsUser.setSnsType("KAKAO");
+      newSnsUser.setSnsId(userInfo.getUserid());
+      newSnsUser.setSnsEmail(userInfo.getSnsEmail());
+      newSnsUser.setSnsName(userInfo.getSnsName());
+      newSnsUser.setConnectedAt(LocalDateTime.now());
+      newSnsUser.setMember(member);
 
-      // 회원이 이미 존재하면 연결하기 (회원 이메일 기준 조회)
-      Optional<MemberEntity> memberOpt = memberRepository.findByEmail(userInfo.getSnsEmail());
-      memberOpt.ifPresent(snsUser::setMember);
+      return snsRepository.save(newSnsUser);
+    });
 
-      snsRepository.save(snsUser);
-    } else {
-      snsUser = existingSnsUserOpt.get();
-    }
-
+    // 세션 설정
     session.setAttribute("loginSnsUser", snsUser);
 
-    if (snsUser.getSnsMobile() == null || snsUser.getSnsMobile().isEmpty()) {
+    // UI 처리를 위해 반드시 loginMember도 세팅
+    MemberEntity member = snsUser.getMember();
+    if (member == null) {
+      member = memberRepository.findByEmail(userInfo.getSnsEmail()).orElse(null);
+    }
+    session.setAttribute("loginMember", member);
+
+    // **accessToken 세션 저장 추가**
+    session.setAttribute("kakaoAccessToken", accessToken);
+
+    // 전화번호 없으면 입력 페이지로 리다이렉트
+    if (snsUser.getSnsMobile() == null || snsUser.getSnsMobile().isBlank()) {
       return "redirect:/api/member/mobile";
     }
 
-    return "redirect:/";
+    return "redirect:/"; // 메인 페이지로
   }
+
 
 
   @RequestMapping("/join")

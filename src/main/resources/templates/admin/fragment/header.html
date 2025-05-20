@@ -8,7 +8,7 @@
     <ul id="gnb">
       <li><strong><a href="/" target="_blank">사이트 메인</a></strong></li>
       <li th:classappend="${currentPath.startsWith('/admin/member')} ? 'active'">
-        <strong><a th:href="@{/admin/member/list}">회원관리</a></strong>
+        <strong><a th:href="@{/api/member/adminuser}">회원관리</a></strong>
       </li>
       <li th:classappend="${currentPath.startsWith('/admin/board')} ? 'active'">
         <strong><a th:href="@{/admin/board/list}">게시물관리</a></strong>
