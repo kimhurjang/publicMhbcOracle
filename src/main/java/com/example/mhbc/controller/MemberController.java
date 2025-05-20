@@ -1,6 +1,7 @@
 package com.example.mhbc.controller;
 
 import com.example.mhbc.dto.MemberDTO;
+import com.example.mhbc.dto.MemberSnsDto;
 import com.example.mhbc.dto.SocialUserInfoDTO;
 import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.entity.SnsEntity;
@@ -11,11 +12,15 @@ import com.example.mhbc.service.LoginService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.lang.reflect.Member;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -132,6 +137,11 @@ public class MemberController {
       snsUser.setSnsEmail(userInfo.getSnsEmail());
       snsUser.setSnsName(userInfo.getSnsName());
       snsUser.setConnectedAt(LocalDateTime.now());
+
+      // 회원이 이미 존재하면 연결하기 (회원 이메일 기준 조회)
+      Optional<MemberEntity> memberOpt = memberRepository.findByEmail(userInfo.getSnsEmail());
+      memberOpt.ifPresent(snsUser::setMember);
+
       snsRepository.save(snsUser);
     } else {
       snsUser = existingSnsUserOpt.get();
@@ -145,6 +155,7 @@ public class MemberController {
 
     return "redirect:/";
   }
+
 
   @RequestMapping("/join")
   public String join() {
@@ -270,20 +281,61 @@ public class MemberController {
     model.addAttribute("message", message);
     return "member/popup"; // popup.html로 렌더링 (파일명에 맞게 수정)
   }
-
   @GetMapping("/adminuser")
-  public String adminuser(Model model) {
-    // member 테이블에서 모든 데이터를 조회
-    List<MemberEntity> memberList = memberRepository.findAll();
+  public String adminuser(Model model,
+                          @RequestParam(defaultValue = "0") int page,
+                          @RequestParam(required = false) String status,
+                          @RequestParam(required = false) String keyword) {
 
-    // 데이터를 모델에 추가하여 뷰로 전달
-    model.addAttribute("memberList", memberList);
+    int pageSize = 10;
+    Pageable pageable = PageRequest.of(page, pageSize);
+    Page<MemberSnsDto> memberPage;
 
-    return "member/adminuser"; // adminuser.html 페이지로 이동
+    // 조건 분기
+    if ((status == null || status.equals("전체")) && (keyword == null || keyword.isEmpty())) {
+      // 전체 조회 시에도 DTO 반환 메서드 사용
+      memberPage = memberRepository.findAllWithSnsByStatusAndKeyword(null, null, pageable);
+    } else {
+      memberPage = memberRepository.findAllWithSnsByStatusAndKeyword(
+              (status == null || status.equals("전체")) ? null : status,
+              (keyword == null || keyword.isEmpty()) ? null : keyword,
+              pageable
+      );
+    }
+
+    model.addAttribute("memberPage", memberPage);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", memberPage.getTotalPages());
+    model.addAttribute("status", status);
+    model.addAttribute("keyword", keyword);
+
+    return "member/adminuser";
   }
 
-  @RequestMapping("/adminuserinfo")
-  public String adminuserinfo() {
-    return "member/adminuserinfo"; // 필요한 경우 다른 페이지로 이동
+
+
+  @GetMapping("/adminuserinfo")
+  public String getUserInfo(@RequestParam Long idx, Model model) {
+    MemberEntity member = memberRepository.findByIdx(idx);
+    model.addAttribute("member", member);
+    return "member/adminuserinfo";
   }
+
+  @PostMapping("/adminuserinfo")
+  public String updateUserInfo(@ModelAttribute MemberEntity updatedMember) {
+    MemberEntity member = memberRepository.findByIdx(updatedMember.getIdx());
+
+    if (member != null) {
+      member.setName(updatedMember.getName());
+      member.setEmail(updatedMember.getEmail());
+      member.setMobile(updatedMember.getMobile());
+      member.setTelecom(updatedMember.getTelecom());
+      member.setStatus(updatedMember.getStatus());
+      member.setGrade(updatedMember.getGrade());
+      memberRepository.save(member);
+    }
+
+    return "redirect:/api/member/adminuserinfo?idx=" + updatedMember.getIdx();
+  }
+
 }

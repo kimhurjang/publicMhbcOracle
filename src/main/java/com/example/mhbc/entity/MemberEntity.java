@@ -4,6 +4,7 @@ import com.example.mhbc.dto.MemberDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "MEMBER")
@@ -25,7 +26,7 @@ public class MemberEntity {
   private String telecom; // 통신사
   private String mobile; // 휴대폰번호
   private String email; // 이메일
-  private String nickname; //닉네임
+  private String nickname; // 닉네임
 
   @Builder.Default
   @Column(name = "GRADE")
@@ -42,6 +43,12 @@ public class MemberEntity {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "UPDATE_AT")
   private Date updatedAt; // 수정일
+
+  // Member 와 SnsEntity 간 1:N 연관관계 매핑
+  @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
+  private List<SnsEntity> snsList;
 
   @PrePersist
   protected void onCreate() {
@@ -65,5 +72,4 @@ public class MemberEntity {
             .status(status)
             .build();
   }
-
 }

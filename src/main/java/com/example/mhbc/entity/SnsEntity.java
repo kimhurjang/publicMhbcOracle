@@ -3,7 +3,6 @@ package com.example.mhbc.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "sns")
 @Data
@@ -31,5 +30,12 @@ public class SnsEntity {
     private String snsMobile;
 
     @Column(name = "connected_at")
-    private LocalDateTime connectedAt;  // LocalDateTime을 사용하면 JPA가 자동으로 처리
+    private LocalDateTime connectedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_idx")
+    private MemberEntity member;
 }
+
+
+
