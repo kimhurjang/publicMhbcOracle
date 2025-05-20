@@ -4,6 +4,7 @@ package com.example.mhbc.controller.admin;
 import com.example.mhbc.dto.BoardDTO;
 import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.entity.BoardGroupEntity;
+import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.repository.BoardGroupRepository;
 import com.example.mhbc.repository.BoardRepository;
 import com.example.mhbc.service.BoardService;
@@ -130,9 +131,32 @@ public class AdminBoardController {
 
 
     @RequestMapping("/group_view")
-    public String group_view(){
+    public String group_view(@RequestParam("groupIdx") Long groupIdx,
+                             @RequestParam("idx") Long boardIdx,
+                             Model model){
 
-        return "";
+        BoardEntity board = boardRepository.findByIdx(boardIdx);
+        BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
+        Long BoardType = group.getBoardType();
+        MemberEntity member = board.getMember();
+
+        String category = switch (groupIdx.intValue()) {
+            case 1 -> "공지사항";
+            case 2 -> "커뮤니티";
+            case 3 -> "이벤트";
+            case 4 -> "갤러리";
+            case 5 -> "자주 질문";
+            case 6 -> "1 대 1";
+            default -> "기타";
+        };
+
+        model.addAttribute("member" , member);
+        model.addAttribute("category" , category);
+        model.addAttribute("boardType" , BoardType);
+        model.addAttribute("board" , board);
+        model.addAttribute("groupIdx" , groupIdx);
+        model.addAttribute("idx" , boardIdx);
+        return "/admin/board/group_view";
     }
 
 
