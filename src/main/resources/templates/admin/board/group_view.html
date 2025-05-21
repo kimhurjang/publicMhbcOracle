@@ -51,11 +51,11 @@
                         </tr>
                         <tr>
                             <th>답변 제목</th>
-                            <td><input type="text" name="requestTitle" th:value="${board.requestTitle} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></td>
+                            <td><input type="text" name="answerTitle" th:value="${board.answerTitle} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></td>
                         </tr>
                         <tr>
                             <th>답변 내용</th>
-                            <td><textarea name="requestContent" th:text="${board.requestContent} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></textarea></td>
+                            <td><textarea name="answerContent" th:text="${board.answerContent} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></textarea></td>
                         </tr>
                     </table>
                 </td>
@@ -64,7 +64,34 @@
 
         <!--자주 묻는 질문 전용 테이블-->
         <table th:if="${board.request != null && groupIdx == 5}">
-
+            <tr>
+                <th>카테고리</th>
+                <td th:text="${category}"></td>
+                <th>작성 일자</th>
+                <td th:text="${#dates.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <table>
+                        <tr>
+                            <td>질문 제목</td>
+                            <td><input type="text" th:value="${board.title}" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>질문 내용</td>
+                            <td><textarea th:text="${board.content}" readonly></textarea></td>
+                        </tr>
+                        <tr>
+                            <td>답변 제목</td>
+                            <td><input type="text" name="requestTitle" th:value="${board.requestTitle} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>답변 내용</td>
+                            <td><textarea name="requestContent" th:text="${board.requestContent} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></textarea></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
         </table>
 
         <div class="btn_group mt20">
