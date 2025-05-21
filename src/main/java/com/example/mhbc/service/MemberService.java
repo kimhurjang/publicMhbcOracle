@@ -4,6 +4,9 @@ import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class MemberService {
@@ -19,5 +22,11 @@ public class MemberService {
     // 이름과 아이디로 비밀번호 찾기
     public MemberEntity findMemberByNameAndUserid(String name, String userid) {
         return memberRepository.findByNameAndUserid(name, userid);
+    }
+
+    // 회원 여러 명 삭제 메서드
+    @Transactional
+    public void deleteMembersByIds(List<Long> memberIds) {
+        memberRepository.deleteAllByIdInBatch(memberIds);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.lang.reflect.Member;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -39,34 +41,42 @@ public class MemberController {
   private LoginService loginService;
 
   @GetMapping("/login")
-  public String loginForm(HttpSession session) {
+  public String loginForm(@RequestParam(value = "errorCode", required = false) String errorCode,
+                          Model model,
+                          HttpSession session) {
     if (session.getAttribute("loginMember") != null || session.getAttribute("loginSnsUser") != null) {
       return "redirect:/";
     }
-    return "member/login";
+    model.addAttribute("errorCode", errorCode);
+    return "member/login";  // 로그인 뷰 이름
   }
+
 
   @PostMapping("/loginProc")
   public String loginPost(@RequestParam("userid") String userid,
                           @RequestParam("pwd") String pwd,
-                          RedirectAttributes redirectAttributes,
                           HttpSession session) {
 
     MemberEntity member = loginService.login(userid, pwd);
 
-    if (member != null) {
-      session.setAttribute("loginMember", member);
-      session.removeAttribute("loginSnsUser");
+    if (member == null) {
+      return "redirect:/api/member/login?errorCode=BAD_CREDENTIALS";
+    }
 
-      if (member.getMobile() == null || member.getMobile().trim().isEmpty()) {
-        return "redirect:/api/member/mobile";
-      }
+    String status = member.getStatus() == null ? "" : member.getStatus().trim();
+
+    if ("정상".equalsIgnoreCase(status)) {
+      session.setAttribute("loginMember", member);
       return "redirect:/";
+    } else if ("탈퇴".equalsIgnoreCase(status)) {
+      return "redirect:/api/member/login?errorCode=WITHDRAW";
+    } else if ("정지".equalsIgnoreCase(status)) {
+      return "redirect:/api/member/login?errorCode=STOP";
     } else {
-      redirectAttributes.addFlashAttribute("error", "아이디나 비밀번호가 틀립니다.");
-      return "redirect:/api/member/login";
+      return "redirect:/api/member/login?errorCode=UNKNOWN";
     }
   }
+
 
   @GetMapping("/")
   public String homePage(HttpSession session) {
@@ -364,7 +374,11 @@ public class MemberController {
 
     return "member/adminuser";
   }
-
+  @PostMapping("/adminuser/delete-multiple")
+  public String deleteMultipleMembers(@RequestParam("idxList") List<Long> idxList) {
+    idxList.forEach(memberRepository::deleteById);
+    return "redirect:/api/member/adminuser";
+  }
 
 
   @GetMapping("/adminuserinfo")
