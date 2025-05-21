@@ -5,6 +5,8 @@
 <body>
 <th:block layout:fragment="css">
     <link rel="stylesheet" href="/css/login.css">
+    <!-- SweetAlert2 CSS (선택 사항) -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 </th:block>
 
 <section layout:fragment="content" id="container" class="sub login-page">
@@ -39,5 +41,38 @@
         </div>
     </div>
 </section>
+
+<!-- SweetAlert2 JS -->
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script th:if="${errorCode == 'STOP'}">
+    Swal.fire({
+        icon: 'error',
+        title: '접근 제한',
+        text: '정지된 회원입니다. 관리자에게 문의하세요.'
+    });
+</script>
+
+<script th:if="${errorCode == 'WITHDRAW'}">
+    Swal.fire({
+        icon: 'info',
+        title: '회원 탈퇴',
+        text: '탈퇴된 회원입니다. 회원가입 페이지로 이동합니다.'
+    }).then(() => {
+        window.location.href = '/api/member/join';
+    });
+</script>
+
+<script th:if="${errorCode == 'BAD_CREDENTIALS'}">
+    Swal.fire({
+        icon: 'error',
+        title: '로그인 실패',
+        text: '아이디 또는 비밀번호가 올바르지 않습니다.'
+    });
+</script>
+
+
+
 </body>
 </html>

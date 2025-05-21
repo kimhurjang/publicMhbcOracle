@@ -11,8 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-@Data /*어노테이션을 통해 기본적인 getter, setter, equals, hashCode, toString 자동 생성*/
-public class UserDetailsImpl implements UserDetails {  // Spring Security의 UserDetails 인터페이스 구현
+@Data
+public class UserDetailsImpl implements UserDetails {
 
     private Optional<MemberEntity> member;
 
@@ -22,11 +22,7 @@ public class UserDetailsImpl implements UserDetails {  // Spring Security의 Use
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // 사용자의 권한을 반환하는 메서드
-        // 여기서는 "ROLE_USER" 권한을 가진 SimpleGrantedAuthority 객체를 리스트로 반환
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-
-        //유저 권한
         member.ifPresent(m -> {
             if (m.getGrade() == 1) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
@@ -35,13 +31,11 @@ public class UserDetailsImpl implements UserDetails {  // Spring Security의 Use
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             }
         });
-
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        // 사용자의 비밀번호를 반환하는 메서드
         System.out.println("----getPassword----");
         return member.map(MemberEntity::getPwd)
                 .orElseThrow(() -> new IllegalStateException("비밀번호가 없습니다"));
@@ -49,22 +43,65 @@ public class UserDetailsImpl implements UserDetails {  // Spring Security의 Use
 
     @Override
     public String getUsername() {
-        // 사용자의 아이디(Username)를 반환하는 메서드
         System.out.println("----getUsername----");
         return member.map(MemberEntity::getUserid)
                 .orElseThrow(() -> new IllegalStateException("아이디가 없습니다"));
     }
 
     public Long getIdx() {
-        // 사용자의 아이디(Username)를 반환하는 메서드
-        System.out.println("----getUsername----");
+        System.out.println("----getIdx----");
         return member.map(MemberEntity::getIdx)
                 .orElseThrow(() -> new IllegalStateException("유저(idx)가 없습니다"));
     }
+
     public Integer getGrade() {
         return member.map(MemberEntity::getGrade)
                 .orElseThrow(() -> new IllegalStateException("등급(grade)이 없습니다"));
     }
 
+    /**
+     * 계정 만료 여부 반환
+     * true: 만료 안됨 (계정 사용 가능)
+     * false: 만료됨 (로그인 불가)
+     */
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // 필요에 따라 구현
+    }
 
+    /**
+     * 계정 잠김 여부 반환
+     * true: 잠기지 않음
+     * false: 잠김 (로그인 불가)
+     */
+    @Override
+    public boolean isAccountNonLocked() {
+        return isEnabled();  // 계정 활성화 여부 기준으로 잠김 상태 판단 (필요에 따라 변경 가능)
+    }
+
+    /**
+     * 비밀번호 만료 여부 반환
+     * true: 만료 안됨
+     * false: 만료됨 (로그인 불가)
+     */
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // 필요에 따라 구현
+    }
+
+    /**
+     * 계정 활성화 여부 반환
+     * true: 활성화됨
+     * false: 비활성화됨 (로그인 불가)
+     *
+     * 여기서 회원 상태가 "탈퇴" 또는 "정지"이면 false를 반환하도록 설정
+     */
+    @Override
+    public boolean isEnabled() {
+        return member.map(m -> {
+            String status = m.getStatus();
+            if (status == null) return true;
+            return !(status.equalsIgnoreCase("탈퇴") || status.equalsIgnoreCase("정지"));
+        }).orElse(false);
+    }
 }
