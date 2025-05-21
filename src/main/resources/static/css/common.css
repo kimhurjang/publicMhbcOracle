@@ -140,7 +140,8 @@ body.menu_open::after {opacity:1;pointer-events:auto;}
 /* container */
 #user #wrapper { width:100%; padding:0; background:#f8f8f8; }
 #user #container { max-width:768px; margin:0 auto; padding: 100px 0;}
-#user #container > h1 {text-align:center; margin-bottom:15px; font-size:2.8em;}
+#user #container > h1,#user #container > a > h1 {text-align:center; margin-bottom:15px; font-size:2.8em;}
+#user #container > a { display:block;}
 #user #container.sub { max-width:1000px;}
 #user #content {  margin:0 auto; padding:30px 40px; border-radius:12px; background:#fff; box-shadow:0 4px 15px rgba(0, 0, 0, 0.1); }
 #user .sub #content {box-shadow:revert;}
