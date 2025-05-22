@@ -389,7 +389,7 @@ div#ms4 {
 .gallerySlider .ga-prev,
 .gallerySlider .ga-next {
   position: absolute;
-  top: 35%; transform: translateY(-50%);
+  top: 55%; transform: translateY(-50%);
   width: 40px; height: 40px; z-index: 10;
   display: flex; align-items: center; justify-content: center;
 }
