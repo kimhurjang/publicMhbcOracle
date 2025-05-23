@@ -3,13 +3,143 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/kakaoMap.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <h1>오시는 길</h1>
   <div id="content" class="content">
-    준비 중
+    <div class="mapBox">
+      <div id="map"></div><!--맵스-->
+      <!-- 지도타입 컨트롤 div 입니다 -->
+      <div class="custom_typecontrol radius_border">
+        <span id="btnRoadmap" class="kakaoSelectedBtn" onclick="setMapType('roadmap')">지도</span>
+        <span id="btnSkyview" class="kakaoSkyBtn" onclick="setMapType('skyview')">스카이뷰</span>
+      </div>
+      <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+      <div class="custom_zoomcontrol radius_border">
+        <span onclick="zoomIn()"><i class="xi-plus" alt="확대"></i></span>
+        <span onclick="zoomOut()"><i class="xi-minus" alt="축소"></i></span>
+      </div>
+    </div>
+    <table class="mapInfoTbl">
+      <tr>
+        <th>주소지</th>
+        <td>경남 고성군 거류면 은황길 81-91<br>(지번)거류면 은월리 17-8</td>
+      </tr>
+      <tr>
+        <th colspan="2">이용 안내</th>
+      </tr>
+      <tr>
+        <th>주차장</th>
+        <td>장애인, 노약자, 유모차, 임산부를 우선 배려해 입구에서 가장 가까운 제일 위쪽에 위치한 주차장 입니다.(27대 주차가능)<br>
+        일반 방문객분들은 아래 신설 주차장에 주차장에 주차 후 도보로 방문해 주시면 감사하겠습니다. 배려에 감사드립니다.<br>
+        <p>※주차사고 발생시 상대편 차량에 즉시 전화해 불미스러운 일이 발생하지 않도록 해주십시오.(도주시 신고)</p></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          기상악화 · 업무로 인한 부재 · 정원 보수 중 · 산불 방지 기간(늦가을-겨울) · 대형견 2마리의 산책 및 운동<br>
+          위와 같은 상황일 경우 방문객의 안전을 위해 <b>출입금지</b> 하오니 양해 부탁드립니다.
+        </td>
+      </tr>
+    </table>
 
   </div><!--E content-->
 </section><!--E container-->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3bf69ce9275feb61004f536b17f363b9&libraries=services"></script>
+<script>
+  //카카오 맵
+  var kakaoMapInstance;
+         (function() {
+         var kakaoMapContainer = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
+         var kakaoMapOptions = { // 지도를 생성할 때 필요한 기본 옵션
+           center: new kakao.maps.LatLng(34.960922, 128.385499), // 지도의 중심좌표.
+           level: 3 // 지도의 레벨(확대, 축소 정도)
+
+         };
+
+         kakaoMapInstance = new kakao.maps.Map(kakaoMapContainer, kakaoMapOptions);
+
+         // 마커 이미지 설정
+         var kakaoImageSrc = '/image/marker.png'; // 마커이미지의 주소입니다
+         var kakaoImageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+         var kakaoImageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지 옵션
+
+         var kakaoMarkerImage = new kakao.maps.MarkerImage(kakaoImageSrc, kakaoImageSize, kakaoImageOption);
+         var kakaoMarkerPosition = new kakao.maps.LatLng(34.960378, 128.385466); // 마커가 표시될 위치입니다
+
+         var kakaoMarker = new kakao.maps.Marker({
+           position: kakaoMarkerPosition,
+           image: kakaoMarkerImage
+         });
+         kakaoMarker.setMap(kakaoMapInstance);
+
+         // 커스텀 오버레이 내용
+         var kakaoOverlayContent = `
+           <div class="customOverlayWrap">
+             <div class="customOverlayInfo">
+               <div class="customOverlayTitle">
+                 만화방초
+                 <div class="customOverlayClose" onclick="kakaoOverlayClose()" title="닫기"></div>
+               </div>
+               <div class="customOverlayBody">
+                 <div class="customOverlayImg">
+                   <img src="/image/logo_1-2_mo.png" width="73" height="70">
+                 </div>
+                 <div class="customOverlayDesc">
+                   <div class="ellipsis">경남 고성군 거류면 은황길 82-91</div>
+                   <div class="jibun linkBox">
+                     <div class="jibun ellipsis">(지번)거류면 은월리 17-5</div>
+                     <a href="https://kko.kakao.com/-eU_FnkAY7" target="_blank" class="link"><i class="xi-search"></i></a>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         `;
+
+<!--        var mapTypeControl = new kakao.maps.MapTypeControl();-->
+<!--        kakaoMapInstance.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);-->
+
+         var kakaoOverlayPosition = new kakao.maps.LatLng(34.960394, 128.385516);
+         var kakaoCustomOverlay = new kakao.maps.CustomOverlay({
+           map: kakaoMapInstance,
+           position: kakaoOverlayPosition,
+           content: kakaoOverlayContent,
+           yAnchor: 1
+         });
+
+         // 지도 타입 변경 함수
+         window.setMapType = function(maptype) {
+           var roadmapControl = document.getElementById('btnRoadmap');
+           var skyviewControl = document.getElementById('btnSkyview');
+           if (maptype === 'roadmap') {
+             kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+             roadmapControl.className = 'kakaoSelectedBtn';
+             skyviewControl.className = 'kakaoSkyBtn';
+           } else {
+             kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+             skyviewControl.className = 'kakaoSelectedBtn';
+             roadmapControl.className = 'kakaoSkyBtn';
+           }
+         };
+
+
+         // 확대, 축소 함수
+         window.zoomIn = function() {
+           kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() - 1);
+         };
+         window.zoomOut = function() {
+           kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() + 1);
+         };
+
+         window.kakaoOverlayClose = function() {
+           kakaoCustomOverlay.setMap(null);
+         };
+
+         kakao.maps.event.addListener(kakaoMarker, 'click', function() {
+           kakaoCustomOverlay.setMap(kakaoMapInstance);
+         });
+       })();
+</script>
 </body>
 </html>
+
