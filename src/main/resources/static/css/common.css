@@ -70,7 +70,7 @@ body.menu_open::after {opacity:1;pointer-events:auto;}
 
   #user #gnb { display:block; width:100%; max-width:400px; background-color:#D6CAE8; border-radius:0 0 0 30px; }
 
-  .toggle.icon { display:block; position:fixed; top:0; right:0; font-size:2rem; color:#8676A1; text-shadow:1px 1px 1px #111; cursor:pointer; background:#D6CAE8; text-align:center; padding:10px; border-radius:10px 0 0 10px;}
+  .toggle.icon { display:flex; position:fixed; top:0; right:0; font-size:2rem; color:#8676A1; text-shadow:1px 1px 1px #111; cursor:pointer; background:#D6CAE8; text-align:center; padding:10px; border-radius:10px 0 0 10px;}
 
   #user nav {position:fixed;top:0;right:0;height:100vh;background:#d6cae8;}
   #user #gnb {margin-top:52px;}

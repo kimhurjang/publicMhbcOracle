@@ -87,7 +87,7 @@
             // 메뉴 외부 클릭 시 오버레이 감지하여 닫기
             document.addEventListener("click", function (e) {
               if (document.body.classList.contains('menu_open')) {
-                const isInsideMenu = e.target.closest("#gnb") || e.target.closest(".toggle.icon");
+                const isInsideMenu = e.target.closest("#gnb") || e.target.closest(".toggle.icon")|| e.target.closest("#map");
                 if (!isInsideMenu) {
                   gnb.classList.remove("active");
                   header.classList.remove("closed");
@@ -133,6 +133,95 @@
               });
             }
           }
+
+          //카카오 맵
+          (function() {
+          var kakaoMapContainer = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
+          var kakaoMapOptions = { // 지도를 생성할 때 필요한 기본 옵션
+            center: new kakao.maps.LatLng(34.960922, 128.385499), // 지도의 중심좌표.
+            level: 3 // 지도의 레벨(확대, 축소 정도)
+          };
+
+          var kakaoMapInstance = new kakao.maps.Map(kakaoMapContainer, kakaoMapOptions);
+
+          // 마커 이미지 설정
+          var kakaoImageSrc = '/image/marker.png'; // 마커이미지의 주소입니다
+          var kakaoImageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+          var kakaoImageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지 옵션
+
+          var kakaoMarkerImage = new kakao.maps.MarkerImage(kakaoImageSrc, kakaoImageSize, kakaoImageOption);
+          var kakaoMarkerPosition = new kakao.maps.LatLng(34.960378, 128.385466); // 마커가 표시될 위치입니다
+
+          var kakaoMarker = new kakao.maps.Marker({
+            position: kakaoMarkerPosition,
+            image: kakaoMarkerImage
+          });
+          kakaoMarker.setMap(kakaoMapInstance);
+
+          // 커스텀 오버레이 내용
+          var kakaoOverlayContent = `
+            <div class="customOverlayWrap">
+              <div class="customOverlayInfo">
+                <div class="customOverlayTitle">
+                  만화방초
+                  <div class="customOverlayClose" onclick="kakaoOverlayClose()" title="닫기"></div>
+                </div>
+                <div class="customOverlayBody">
+                  <div class="customOverlayImg">
+                    <img src="/image/logo_1-2_mo.png" width="73" height="70">
+                  </div>
+                  <div class="customOverlayDesc">
+                    <div class="ellipsis">경상남도 고성군 거류면 은월리 17-5</div>
+                    <div class="jibun linkBox">
+                      <div class="jibun ellipsis">거류면 은월리</div>
+                      <a href="https://kko.kakao.com/-eU_FnkAY7" target="_blank" class="link"><i class="xi-search"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+
+          var kakaoOverlayPosition = new kakao.maps.LatLng(34.960394, 128.385516);
+          var kakaoCustomOverlay = new kakao.maps.CustomOverlay({
+            map: kakaoMapInstance,
+            position: kakaoOverlayPosition,
+            content: kakaoOverlayContent,
+            yAnchor: 1
+          });
+
+          // 지도 타입 변경 함수
+          window.setMapType = function(maptype) {
+            var roadmapControl = document.getElementById('btnRoadmap');
+            var skyviewControl = document.getElementById('btnSkyview');
+            if (maptype === 'roadmap') {
+              kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+              roadmapControl.className = 'selected_btn';
+              skyviewControl.className = 'btn';
+            } else {
+              kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+              skyviewControl.className = 'selected_btn';
+              roadmapControl.className = 'btn';
+            }
+          };
+
+          // 확대, 축소 함수
+          window.zoomIn = function() {
+            kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() - 1);
+          };
+          window.zoomOut = function() {
+            kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() + 1);
+          };
+
+          window.kakaoOverlayClose = function() {
+            kakaoCustomOverlay.setMap(null);
+          };
+
+          kakao.maps.event.addListener(kakaoMarker, 'click', function() {
+            kakaoCustomOverlay.setMap(kakaoMapInstance);
+          });
+        })();
+
         });
 
         // 뒤로가기 버튼
@@ -143,84 +232,12 @@
 
     </script>
 
-    <!-- 맵스 스크립트-->
-    <script>
-        //카카오 맵스
-        var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-        var options = { //지도를 생성할 때 필요한 기본 옵션
-            center: new kakao.maps.LatLng(34.960784, 128.385700), //지도의 중심좌표.
-            level: 3 //지도의 레벨(확대, 축소 정도)
-        };
+<!--    &lt;!&ndash; 맵스 스크립트 &ndash;&gt;-->
+<!--    <script>-->
+<!--        // 카카오 맵스-->
 
-        var map = new kakao.maps.Map(container, options);
-        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-        mapOption = {
-            center: new kakao.maps.LatLng(34.960784, 128.385700), // 지도의 중심좌표
-            level: 3 // 지도의 확대 레벨
-        };
+<!--    </script>-->
 
-        var map = new kakao.maps.Map(mapContainer, mapOption);
-
-        var imageSrc = 'C:\Users\YJ\Documents\GitHub\public\src\main\resources\static\image/marker.png', // 마커이미지의 주소입니다
-            imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
-            imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-            markerPosition = new kakao.maps.LatLng(34.960784, 128.385700); // 마커가 표시될 위치입니다
-
-        // 마커를 생성합니다
-        var marker = new kakao.maps.Marker({
-          position: markerPosition,
-          image: markerImage // 마커이미지 설정
-        });
-
-        // 마커가 지도 위에 표시되도록 설정합니다
-        marker.setMap(map);
-
-        // 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        var content = '<div class="customoverlay">' +
-            '  <a href="https://map.kakao.com/link/map/11394059" target="_blank">' +
-            '    <span class="title">만화방초</span>' +
-            '  </a>' +
-            '</div>';
-
-        // 커스텀 오버레이가 표시될 위치입니다
-        var position = new kakao.maps.LatLng(37.54699, 127.09598);
-
-        // 커스텀 오버레이를 생성합니다
-        var customOverlay = new kakao.maps.CustomOverlay({
-            map: map,
-            position: position,
-            content: content,
-            yAnchor: 1
-        });
-
-        // 지도타입 컨트롤의 지도 또는 스카이뷰 버튼을 클릭하면 호출되어 지도타입을 바꾸는 함수입니다
-        function setMapType(maptype) {
-            var roadmapControl = document.getElementById('btnRoadmap');
-            var skyviewControl = document.getElementById('btnSkyview');
-            if (maptype === 'roadmap') {
-                map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-                roadmapControl.className = 'selected_btn';
-                skyviewControl.className = 'btn';
-            } else {
-                map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
-                skyviewControl.className = 'selected_btn';
-                roadmapControl.className = 'btn';
-            }
-        }
-
-        // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-        function zoomIn() {
-            map.setLevel(map.getLevel() - 1);
-        }
-
-        // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-        function zoomOut() {
-            map.setLevel(map.getLevel() + 1);
-        }
-    </script>
 
     <th:block layout:fragment="js">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
