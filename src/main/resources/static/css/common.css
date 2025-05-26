@@ -324,3 +324,12 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
   padding:6px 10px; border:1px solid #ccc; border-radius:4px; font-size:14px; min-width:150px;
 }
 .search_form input[type="checkbox"] {margin-right:5px;}
+
+/* display */
+.dis_inl {display:inline; }
+.dis_blo {display:block; }
+.dis_inb {display:inline-block; }
+.dis_flex {display:flex; }
+.gap5 {gap:5px}
+.gap10 {gap:10px}
+.gap15 {gap:15px}
