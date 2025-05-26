@@ -35,6 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -669,7 +670,7 @@ public class BoardController {
                             Model model){
 
         Long memberIdx = Utility.getLoginUserIdx();
-        if (memberIdx == null) {
+        if (memberIdx == 0) {
             return "redirect:/api/member/login";
         }
 
@@ -919,11 +920,13 @@ public class BoardController {
     @PostMapping("/modify_proc")
     public String modify(@ModelAttribute BoardEntity board,
                          @RequestParam("group_idx") Long groupIdx,
-                         @RequestParam("attachment") MultipartFile attachment,
+                         @RequestParam(value = "attachment", required = false) MultipartFile attachment,
                          @RequestParam("board_type") Long boardType,
                          @RequestParam("memberIdx") Long memberIdx,
                          @RequestParam("boardIdx") Long boardIdx,
                          @RequestParam("comments_idx")Long commentsIdx,
+                         @RequestParam(value = "startAt", required = false) String startAtStr,
+                         @RequestParam(value = "closedAt", required = false) String closedAtStr,
                          @RequestParam(value = "commentContent", required = false) String commentContent) throws IOException {
 
         String base = switch (groupIdx.intValue()) {
@@ -935,15 +938,31 @@ public class BoardController {
             default -> "cmct_page";
         };
 
+        /*이벤트 페이지용 날짜 세팅*/
+        Date startAt = null;
+        Date closedAt = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (startAtStr != null && !startAtStr.isEmpty()) {
+            LocalDate localStartAt = LocalDate.parse(startAtStr, formatter);
+            startAt = Date.from(localStartAt.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        }
+        if (closedAtStr != null && !closedAtStr.isEmpty()) {
+            LocalDate localClosedAt = LocalDate.parse(closedAtStr, formatter);
+            closedAt = Date.from(localClosedAt.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        }
+
         // 자주 묻는 질문 게시판에서 답변을 분리 처리하는 경우
-        if (groupIdx == 5 && boardType == 2 && commentsIdx == 0 && boardIdx >= 1 && attachment.isEmpty()) {
+        if (groupIdx == 5 && boardType == 2 && commentsIdx == 0 && boardIdx >= 1 &&  (attachment == null || attachment.isEmpty())) {
             boardService.modifyBoard(
                     boardIdx,
                     board.getTitle(),
                     board.getContent(),
                     board.getAnswerTitle(),
-                    board.getAnswerContent()
+                    board.getAnswerContent(),
+                    startAt,
+                    closedAt
             );
+        }
         // 댓글이 아닌 게시글 수정일 때
         if (commentsIdx == 0 && boardIdx >= 1) {
 
@@ -953,18 +972,20 @@ public class BoardController {
                     board.getTitle(),
                     board.getContent(),
                     board.getAnswerTitle(),
-                    board.getAnswerContent()
+                    board.getAnswerContent(),
+                    startAt,
+                    closedAt
             );
 
             // 첨부파일이 존재하면 수정
-            if (!attachment.isEmpty()) {
+            if (attachment != null && !attachment.isEmpty()) {
                 boardService.modifyAttachment(attachment, boardIdx);
             }
         }
-        }
+
 
         // 댓글 수정 처리
-        if (commentsIdx >= 1 && boardIdx >= 1 && attachment.isEmpty()) {
+        if (commentsIdx >= 1 && boardIdx >= 1 &&  (attachment == null || attachment.isEmpty())) {
             commentsService.modifyComment(commentsIdx, commentContent);
             return "redirect:/board/cmct_view?board_type=" + boardType +
                     "&group_idx=" + groupIdx +

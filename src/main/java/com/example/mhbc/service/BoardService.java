@@ -141,7 +141,8 @@ public class BoardService {
      * */
     /*파일 재업로드*/
     @Transactional
-    public void modifyBoard(Long boardIdx , String title, String content , String answerTitle , String answerContent){
+    public void modifyBoard(Long boardIdx , String title, String content , String answerTitle , String answerContent,Date startAt,
+                            Date closedAt){
 
      BoardEntity board = boardRepository.findByIdx(boardIdx);
 
@@ -153,6 +154,13 @@ public class BoardService {
         if (answerTitle != null && answerContent != null) {
             board.setAnswerTitle(answerTitle);
             board.setAnswerContent(answerContent);
+        }
+
+        if (startAt != null) {
+            board.setStartAt(startAt);
+        }
+        if (closedAt != null) {
+            board.setClosedAt(closedAt);
         }
 
     }
