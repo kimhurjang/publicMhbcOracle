@@ -9,6 +9,7 @@ import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.repository.SnsRepository;
 import com.example.mhbc.service.KakaoService;
 import com.example.mhbc.service.LoginService;
+import com.example.mhbc.service.UserDetailServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.lang.reflect.Member;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,6 +42,7 @@ public class MemberController {
   private final MemberRepository memberRepository;
   private final KakaoService kakaoService;
   private final SnsRepository snsRepository;
+  private final UserDetailServiceImpl userDetailsService;
 
   @Autowired
   private LoginService loginService;
@@ -164,28 +171,26 @@ public class MemberController {
   public String socialLogin(@RequestParam("code") String code, HttpSession session) {
     String accessToken = kakaoService.getKakaoAccessToken(code);
     session.setAttribute("kakaoAccessToken", accessToken);
+
     SocialUserInfoDTO userInfo = kakaoService.getUserInfoFromKakao(accessToken);
 
     if (userInfo == null || userInfo.getSnsEmail() == null) {
-      return "redirect:/api/member/login"; // 사용자 정보 불러오기 실패 시 로그인 페이지로
+      return "redirect:/api/member/login";
     }
 
-    // SNS 사용자 정보 가져오기
     SnsEntity snsUser = snsRepository.findBySnsId(userInfo.getUserid()).orElseGet(() -> {
-      // 회원 테이블에서 이메일 기준으로 기존 회원 조회
       MemberEntity member = memberRepository.findByEmail(userInfo.getSnsEmail()).orElseGet(() -> {
-        // 없으면 신규 회원 생성
         MemberEntity newMember = new MemberEntity();
         newMember.setUserid(userInfo.getUserid());
         newMember.setName(userInfo.getSnsName());
         newMember.setEmail(userInfo.getSnsEmail());
         newMember.setStatus("정상");
         newMember.setGrade(1);
-        // 기본값 외에 필요한 필드는 여기에서 설정
+        newMember.setCreatedAt(new Date());
+        newMember.setUpdatedAt(new Date());
         return memberRepository.save(newMember);
       });
 
-      // SNS 테이블에 신규 추가
       SnsEntity newSnsUser = new SnsEntity();
       newSnsUser.setSnsType("KAKAO");
       newSnsUser.setSnsId(userInfo.getUserid());
@@ -197,26 +202,31 @@ public class MemberController {
       return snsRepository.save(newSnsUser);
     });
 
-    // 세션 설정
     session.setAttribute("loginSnsUser", snsUser);
 
-    // UI 처리를 위해 반드시 loginMember도 세팅
     MemberEntity member = snsUser.getMember();
     if (member == null) {
       member = memberRepository.findByEmail(userInfo.getSnsEmail()).orElse(null);
     }
     session.setAttribute("loginMember", member);
 
-    // **accessToken 세션 저장 추가**
-    session.setAttribute("kakaoAccessToken", accessToken);
+    // 여기서 UserDetailsServiceImpl를 주입받아 사용하세요
+    UserDetails userDetails = userDetailsService.loadUserByUsername(member.getUserid());
 
-    // 전화번호 없으면 입력 페이지로 리다이렉트
+    UsernamePasswordAuthenticationToken authentication =
+            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
     if (snsUser.getSnsMobile() == null || snsUser.getSnsMobile().isBlank()) {
       return "redirect:/api/member/mobile";
     }
 
-    return "redirect:/"; // 메인 페이지로
+    return "redirect:/";
   }
+
+
 
 
 
@@ -350,7 +360,7 @@ public class MemberController {
                           @RequestParam(required = false) String status,
                           @RequestParam(required = false) String keyword) {
 
-    int pageSize = 10;
+    int pageSize = 8;
     Pageable pageable = PageRequest.of(page, pageSize);
     Page<MemberSnsDto> memberPage;
 
