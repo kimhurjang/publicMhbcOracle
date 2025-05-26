@@ -26,4 +26,10 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
           "ORDER BY r.idx DESC")
   List<ReservationEntity> findAllWithMemberAndHall();
 
+  @Query("SELECT r FROM ReservationEntity r " +
+          "LEFT JOIN FETCH r.member " +
+          "LEFT JOIN FETCH r.hall " +
+          "WHERE r.idx = :idx")
+  ReservationEntity findByIdxWithMemberAndHall(@org.springframework.data.repository.query.Param("idx") Long idx);
+
 }

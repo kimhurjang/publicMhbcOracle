@@ -7,7 +7,7 @@
   <nav>
     <ul id="gnb">
       <li><strong><a href="/" target="_blank">사이트 메인</a></strong></li>
-      <li th:classappend="${currentPath.startsWith('/admin/member')} ? 'active'">
+      <li th:classappend="${currentPath.startsWith('/api/member')} ? 'active'">
         <strong><a th:href="@{/api/member/adminuser}">회원관리</a></strong>
       </li>
       <li th:classappend="${currentPath.startsWith('/admin/board')} ? 'active'">

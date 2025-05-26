@@ -107,9 +107,9 @@ public class ReservationServiceImpl implements ReservationService {
   @Override
   public ReservationDTO findById(Long idx) {
     if (idx == null) return null; // null 체크 추가
-    return reservationRepository.findById(idx)
-            .map(ReservationEntity::toDTO) // Entity → DTO 변환
-            .orElse(null); // 없으면 null 반환
+
+    ReservationEntity entity = reservationRepository.findByIdxWithMemberAndHall(idx);
+    return entity != null ? entity.toDTO() : null;
   }
 
   /**

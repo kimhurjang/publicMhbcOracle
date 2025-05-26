@@ -35,7 +35,7 @@
                     <table class="member_table">
                         <thead>
                         <tr>
-                            <th><input type="checkbox" id="selectAll" /></th>
+                            <th><input type="checkbox" id="selectAll"/></th>
                             <th>회원번호</th>
                             <th>회원 이름</th>
                             <th>아이디</th>
@@ -110,31 +110,29 @@
     </div><!--E content-->
 </section><!--E container-->
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const selectAllCheckbox = document.getElementById('selectAll');
+<th:block layout:fragment="script">
+    <script>
+        console.log("스크립트 블록이 로드되었습니다."); // 이 줄을 추가
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("DOMContentLoaded 이벤트 발생."); // 이 줄을 추가
 
-        function getRowCheckboxes() {
-            return document.querySelectorAll('.rowCheckbox');
-        }
+            const selectAll = document.getElementById('selectAll');
 
-        // 상단 체크박스 클릭 시 모든 하위 체크박스 체크/해제
-        selectAllCheckbox.addEventListener('change', () => {
-            const isChecked = selectAllCheckbox.checked;
-            getRowCheckboxes().forEach(chk => {
-                chk.checked = isChecked;
+            if (!selectAll) {
+                console.error('selectAll 체크박스를 찾을 수 없습니다.');
+                return;
+            } else {
+                console.log("selectAll 체크박스 찾음:", selectAll); // 이 줄을 추가
+            }
+
+            selectAll.addEventListener('change', function () {
+                console.log("selectAll 체크박스 상태 변경됨."); // 이 줄을 추가
+                const checkboxes = document.querySelectorAll('.rowCheckbox');
+                checkboxes.forEach(cb => cb.checked = this.checked);
             });
         });
-
-        // 개별 체크박스 변경 시, 상단 체크박스 상태 업데이트
-        document.addEventListener('change', e => {
-            if (e.target.classList.contains('rowCheckbox')) {
-                const allChecked = Array.from(getRowCheckboxes()).every(chk => chk.checked);
-                selectAllCheckbox.checked = allChecked;
-            }
-        });
-    });
-</script>
+    </script>
+</th:block>
 
 </body>
 </html>

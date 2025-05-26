@@ -7,6 +7,10 @@ import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.repository.SnsRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -117,7 +121,7 @@ public class KakaoService {
                         .snsEmail(userInfo.getSnsEmail())
                         .snsName(userInfo.getSnsName())
                         .connectedAt(userInfo.getConnectedAt())
-                        .member(member)  // 여기 연관관계 설정
+                        .member(member)
                         .build();
 
                 snsRepository.save(snsEntity);
@@ -125,6 +129,19 @@ public class KakaoService {
             } else {
                 System.out.println("이미 SNS 정보가 존재합니다: " + userInfo.getSnsName());
             }
+
+            // ✅ 여기서 인증 객체를 직접 등록 (로그인 처리)
+            UserDetails userDetails = User.withUsername(member.getUserid())
+                    .password("") // 비밀번호는 필요 없음
+                    .authorities("ROLE_USER")
+                    .build();
+
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            System.out.println("✅ Spring Security 로그인 처리 완료");
+
         } else {
             System.out.println("❌ SNS 테이블 저장 실패");
         }
