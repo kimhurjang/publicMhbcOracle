@@ -17,7 +17,7 @@ h1, h2, h3, h4, h5, h6, blockquote, pre, code, b, strong, i, em, mark, small, th
 mark {background-color: #e1e1e1; color:#000; font-size:13px; font-weight:400; letter-spacing:-0.4px; padding:2px 5px;}
 mark.color1 {background-color: #d7c6ff; color:#37009f; }
 small {font-size:13px; font-weight:400; letter-spacing:-0.4px; display:inline-block;}
-
+pre {white-space: pre-wrap}
 /* ----------------- form ------------------*/
 input[type="radio"],input[type="checkbox"]{margin-right:3px;vertical-align:middle;}
 input[type="text"], input[type="date"], input[type="date"], input[type="file"], select {height:43px;}
