@@ -22,7 +22,6 @@ html, body {
 
 /* 로고는 상단 고정 */
 .logo {
-    margin-top: 150px;
     margin-left: 80px;
     width: 200px;
     height: 200px;
