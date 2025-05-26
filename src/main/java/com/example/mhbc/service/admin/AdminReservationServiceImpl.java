@@ -71,9 +71,9 @@ public class AdminReservationServiceImpl implements AdminReservationService {
   @Override
   public ReservationDTO findById(Long idx) {
     if (idx == null) return null;
-    return reservationRepository.findById(idx)
-      .map(ReservationEntity::toDTO)
-      .orElse(null);
+
+    ReservationEntity entity = reservationRepository.findByIdxWithMemberAndHall(idx);
+    return entity != null ? entity.toDTO() : null;
   }
 
   // 관리자 메모 수정

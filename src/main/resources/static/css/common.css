@@ -175,7 +175,6 @@ body.menu_open::after {opacity:1;pointer-events:auto;}
 
 /* wrapper */
 #admin > #wrapper {min-width:1080px; padding:26px 20px; flex-grow:1; height:100vh; overflow-y:auto; background:#fafafa; }
-#admin > #wrapper #content {padding:30px; }
 #admin h2 {margin-bottom:15px; color:#000; }
 
 /* ----------------- header slide toggle ------------------ */
