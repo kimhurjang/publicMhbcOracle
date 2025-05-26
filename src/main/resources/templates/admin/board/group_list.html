@@ -52,8 +52,35 @@
                             <button type="button" class="small">삭제</button>
                         </a>
                     </td>
-                    <td><a href="#"><button type="button" class="small">수정</button></a></td>
-                    <td><a th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx})}"><button type="button" class="small">상세보기</button></a></td>
+                    <td>
+                        <a th:if="${groupIdx >= 1 and groupIdx <= 4}"
+                           th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, commentsIdx=0)}">
+                            <button type="button" class="small">수정</button>
+                        </a>
+                        <a th:if="${groupIdx == 5 or groupIdx == 6}"
+                           th:href="@{/admin/board/modify(id=${board.idx}, groupIdx=${groupIdx}, page=${page})}">
+                            <button type="button" class="small">수정</button>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:if="${groupIdx == 1}"
+                           th:href="@{/board/notice_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                            <button type="button" class="small">상세보기</button>
+                        </a>
+                        <a th:if="${groupIdx == 2}"
+                           th:href="@{/board/cmct_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                            <button type="button" class="small">상세보기</button>
+                        </a>
+                        <a th:if="${groupIdx == 3}"
+                           th:href="@{/board/event_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                            <button type="button" class="small">상세보기</button>
+                        </a>
+                        <a th:if="${groupIdx == 4}"
+                           th:href="@{/board/gallery_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                            <button type="button" class="small">상세보기</button>
+                        </a>
+                        <a th:if="${groupIdx == 5 or groupIdx == 6}" th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx},page=${page})}"><button type="button" class="small">상세보기</button></a>
+                    </td>
                 </tr>
             </tbody>
         </table>

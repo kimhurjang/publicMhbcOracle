@@ -20,7 +20,9 @@
     <div class="event at">
       <b>진행 기간</b> <div th:text="${#dates.format(board.startAt, 'yyyy년 MM월 dd일')}+' ~ '+${#dates.format(board.closedAt, 'yyyy년 MM월 dd일')}"></div>
     </div>
-    <div th:text="${board.content}" id="eventContent"></div>
+    <div id="eventContent">
+      <pre th:text="${board.content}"></pre>
+    </div>
     <div class="event view">
       <span th:text="'작성일 ' + ${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></span>
       <span th:text="'조회수 '+${board.viewCnt}"></span>

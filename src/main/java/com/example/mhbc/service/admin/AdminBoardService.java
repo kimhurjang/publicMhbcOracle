@@ -9,10 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,4 +58,28 @@ public class AdminBoardService {
     public void deleteById(Long idx) {
         boardRepository.deleteById(idx);
     }
+
+    @Transactional
+    public BoardEntity modifyBoard(Long boardIdx , BoardEntity board) {
+
+        BoardEntity boardEn = boardRepository.findByIdx(boardIdx);
+        if (boardEn == null) {
+            throw new IllegalArgumentException("해당 게시물이 존재하지 않습니다.");
+        }
+        boardEn.setTitle(board.getTitle());
+        boardEn.setContent(board.getContent());
+        boardEn.setRequest(1);
+
+        // FAQ인 경우, 답변 필드도 수정
+        if (board.getAnswerTitle() != null && board.getAnswerContent() != null) {
+            boardEn.setAnswerTitle(board.getAnswerTitle());
+            boardEn.setAnswerContent(board.getAnswerContent());
+        }
+        if (board.getRequestTitle() != null && board.getRequestContent() != null) {
+            boardEn.setAnswerTitle(board.getAnswerTitle());
+            boardEn.setAnswerContent(board.getAnswerContent());
+        }
+        return boardEn;
+    }
 }
+

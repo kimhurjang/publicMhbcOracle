@@ -40,7 +40,7 @@
                         </tr>
                         <tr>
                             <th>질문 제목</th>
-                            <td><input type="text" th:value="${board.title}" readonly>"</td>
+                            <td><input type="text" th:value="${board.title}" readonly></td>
                         </tr>
                         <tr>
                             <th>질문 내용</th>
@@ -95,7 +95,9 @@
         </table>
 
         <div class="btn_group mt20">
-            <button type="button" class="small">수정</button>
+            <a th:href="@{/admin/board/modify(id=${board.idx},groupIdx=${groupIdx},page=${page})}">
+                <button type="button" class="small">수정</button>
+            </a>
             <button type="button" onclick="goBack()">뒤로가기</button>
             <a th:href="@{/admin/board/delete(id=${board.idx},groupIdx=${groupIdx},page=${page})}" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
                 <button type="button" class="small">삭제</button>

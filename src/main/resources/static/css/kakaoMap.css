@@ -113,3 +113,9 @@
 .custom_zoomcontrol span {display:block;width:36px;height:40px;text-align:center;cursor:pointer;}
 .custom_zoomcontrol span i {width:15px;height:15px;padding:12px 19px 0 0;border:none;}
 .custom_zoomcontrol span:first-child{border-bottom:1px solid #bfbfbf;}
+
+/*가이드맵 이미지*/
+.mapImg{text-align: center;}
+.mapImg img{ width: 80%; height: auto;}
+.openTime{display: block;}
+.openTime.span{text-align: left; margin: 0 auto; width: 35%;}

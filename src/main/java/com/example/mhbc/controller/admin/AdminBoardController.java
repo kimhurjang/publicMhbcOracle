@@ -49,15 +49,52 @@ public class AdminBoardController {
     }
 
     @PostMapping("/group_list_select")
-    public String group_list_selelct(@RequestParam(value="group_idx" , required=false) Long groupIdx,
-                                     @RequestParam("page") int page,
-                                     @RequestParam(required=false , name="delCheck") List<Long> delCheck,
-                                     @RequestParam(value = "group_idx_hidden", required = false) Long groupIdxHidden,
-                                     @RequestParam("action") String action,
-                                     RedirectAttributes redirectAttributes,
-                                     Model model){
+    public String group_list_select(
+            @RequestParam(value = "group_idx", required = false) Long groupIdx,
+            @RequestParam("page") int page,
+            @RequestParam(required = false, name = "delCheck") List<Long> delCheck,
+            @RequestParam(value = "group_idx_hidden", required = false) Long groupIdxHidden,
+            @RequestParam("action") String action,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
-        String category = switch (groupIdx.intValue()) {
+        if (groupIdx == null && groupIdxHidden != null) {
+            groupIdx = groupIdxHidden;
+        }
+
+        if ("delete".equals(action)) {
+            if (delCheck != null && !delCheck.isEmpty()) {
+                adminBoardService.deleteBoardsByIds(delCheck);
+                redirectAttributes.addFlashAttribute("msg", "선택한 게시글이 삭제되었습니다.");
+            } else {
+                redirectAttributes.addFlashAttribute("msg", "삭제할 게시글을 선택해주세요.");
+            }
+            // 리다이렉트 시 group_idx와 page 유지
+            redirectAttributes.addAttribute("group_idx", groupIdx);
+            redirectAttributes.addAttribute("page", page);
+            return "redirect:/admin/board/group_list_select"; // GET으로 리다이렉트
+        }
+
+        if ("search".equals(action)) {
+            // 검색 요청도 리다이렉트 처리
+            redirectAttributes.addAttribute("group_idx", groupIdx);
+            redirectAttributes.addAttribute("page", page);
+            return "redirect:/admin/board/group_list_select"; // GET으로 리다이렉트
+        }
+
+        // 예외 처리나 기본 동작
+        redirectAttributes.addAttribute("group_idx", groupIdx);
+        redirectAttributes.addAttribute("page", page);
+        return "redirect:/admin/board/group_list_select";
+    }
+
+    @GetMapping("/group_list_select")
+    public String group_list_select_get(
+            @RequestParam(value = "group_idx", required = false) Long groupIdx,
+            @RequestParam("page") int page,
+            Model model) {
+
+        String category = switch (groupIdx != null ? groupIdx.intValue() : 0) {
             case 1 -> "공지사항";
             case 2 -> "커뮤니티";
             case 3 -> "이벤트";
@@ -66,51 +103,33 @@ public class AdminBoardController {
             case 6 -> "1 대 1";
             default -> "기타";
         };
-        if (groupIdx == null && groupIdxHidden != null) {
-            groupIdx = groupIdxHidden;
-        }
-        if ("delete".equals(action)) {
-            if (delCheck != null && !delCheck.isEmpty()) {
-                adminBoardService.deleteBoardsByIds(delCheck);
-                redirectAttributes.addFlashAttribute("msg", "선택한 게시글이 삭제되었습니다.");
-            } else {
-                redirectAttributes.addFlashAttribute("msg", "삭제할 게시글을 선택해주세요.");
-            }
-            redirectAttributes.addAttribute("group_idx", groupIdx);
-            redirectAttributes.addAttribute("page", page);
-            return "redirect:/admin/board/group_list_select"; // 삭제 후 리다이렉트
-        }
-        if("search".equals(action)) {
-            int itemsPerPage = 10;
-            int groupSize = 5;
 
-            Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.ASC, "createdAt");
+        int itemsPerPage = 10;
+        int groupSize = 5;
 
-            Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx, pageable);
-            BoardGroupEntity board = boardGroupRepository.findByGroupIdx(groupIdx);
-            Long BoardType = board.getBoardType();
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.ASC, "createdAt");
 
-            int totalCount = (int) paging.getTotalElements();
-            Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, "link");
+        Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx, pageable);
+        BoardGroupEntity board = boardGroupRepository.findByGroupIdx(groupIdx);
+        Long boardType = board != null ? board.getBoardType() : null;
 
+        int totalCount = (int) paging.getTotalElements();
+        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, "link");
 
-            // 기존 snake_case
-            model.addAttribute("group_idx", groupIdx);
-            model.addAttribute("board_type", BoardType);
+        model.addAttribute("group_idx", groupIdx);
+        model.addAttribute("board_type", boardType);
 
-            // fragment 가 기대하는 camelCase
-            model.addAttribute("groupIdx", groupIdx);
-            model.addAttribute("boardType", BoardType);
-            model.addAttribute("page", page);         // 현재 페이지 번호
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("page", page);
+        model.addAttribute("link", "/admin/board/group_list_select");
+        model.addAttribute("pagination", pagination);
+        model.addAttribute("paging", paging);
+        model.addAttribute("category", category);
 
-            model.addAttribute("link", "/admin/board/group_list_select");
-            model.addAttribute("pagination", pagination);
-            model.addAttribute("paging", paging);
-            model.addAttribute("category", category);
-        }
         return "/admin/board/group_list";
-
     }
+
     @RequestMapping("/delete")
     public String deleteBoard(@RequestParam("id") Long id,
                               @RequestParam("groupIdx") Long groupIdx,
@@ -133,7 +152,38 @@ public class AdminBoardController {
     @RequestMapping("/group_view")
     public String group_view(@RequestParam("groupIdx") Long groupIdx,
                              @RequestParam("idx") Long boardIdx,
+                             @RequestParam("page") int page,
                              Model model){
+
+        BoardEntity board = boardRepository.findByIdx(boardIdx);
+        BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
+        Long BoardType = group.getBoardType();
+        MemberEntity member = board.getMember();
+
+        String category = switch (groupIdx.intValue()) {
+            case 1 -> "공지사항";
+            case 2 -> "커뮤니티";
+            case 3 -> "이벤트";
+            case 4 -> "갤러리";
+            case 5 -> "자주 질문";
+            case 6 -> "1 대 1";
+            default -> "기타";
+        };
+
+        model.addAttribute("page" , page);
+        model.addAttribute("member" , member);
+        model.addAttribute("category" , category);
+        model.addAttribute("boardType" , BoardType);
+        model.addAttribute("board" , board);
+        model.addAttribute("groupIdx" , groupIdx);
+        model.addAttribute("idx" , boardIdx);
+        return "/admin/board/group_view";
+    }
+
+    @RequestMapping("/modify")
+    public String modify(@RequestParam("id") Long boardIdx,
+                         @RequestParam("groupIdx") Long groupIdx,
+                         Model model){
 
         BoardEntity board = boardRepository.findByIdx(boardIdx);
         BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
@@ -156,9 +206,40 @@ public class AdminBoardController {
         model.addAttribute("board" , board);
         model.addAttribute("groupIdx" , groupIdx);
         model.addAttribute("idx" , boardIdx);
-        return "/admin/board/group_view";
+        return"/admin/board/modify";
     }
 
+    @PostMapping("/modify_proc")
+    public String modify_proc(@RequestParam("idx") Long boardIdx,
+                              @RequestParam("groupIdx") Long groupIdx,
+                              @RequestParam(value = "page", defaultValue = "1") int page,
+                              @ModelAttribute BoardEntity board,
+                              Model model){
+
+        BoardEntity ModifyBoard = adminBoardService.modifyBoard(boardIdx,board);
+        BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
+        Long BoardType = group.getBoardType();
+        MemberEntity member = board.getMember();
+
+        String category = switch (groupIdx.intValue()) {
+            case 1 -> "공지사항";
+            case 2 -> "커뮤니티";
+            case 3 -> "이벤트";
+            case 4 -> "갤러리";
+            case 5 -> "자주 질문";
+            case 6 -> "1 대 1";
+            default -> "기타";
+        };
+
+        model.addAttribute("page" , page);
+        model.addAttribute("member",member);
+        model.addAttribute("category" , category);
+        model.addAttribute("boardType" , BoardType);
+        model.addAttribute("board" , ModifyBoard);
+        model.addAttribute("groupIdx" , groupIdx);
+        model.addAttribute("idx" , boardIdx);
+        return "redirect:/admin/board/group_view?idx=" + boardIdx + "&groupIdx=" + groupIdx + "&page=" + page;
+    }
 
 
 

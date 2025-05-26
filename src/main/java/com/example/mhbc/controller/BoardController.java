@@ -379,6 +379,7 @@ public class BoardController {
             return "redirect:/board/cmct_write";
         }
             board.setCreatedAt(new Date());
+            board.setRequest(0);
             boardService.saveBoard(board,groupIdx);
 
         model.addAttribute("groupIdx", groupIdx);

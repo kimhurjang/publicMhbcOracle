@@ -31,11 +31,11 @@
       </table>
       <table>
         <th>답변 제목</th>
-        <td><input type="text" name="answerTitle" th:value="${board.answerTitle}" required placeholder="제목을 입력해주세요."></td>
+        <td><input type="text" name="requestTitle" th:value="${board.requestTitle}" required placeholder="제목을 입력해주세요."></td>
         </tr>
         <tr>
           <th>답변 내용</th>
-          <td><textarea type="text" name="answerContent" th:text="${board.answerContent}" th:value="${board.answerContent}" required placeholder="본문을 입력해주세요."></textarea></td>
+          <td><textarea type="text" name="requestContent" th:text="${board.requestContent}" th:value="${board.answerContent}" required placeholder="본문을 입력해주세요."></textarea></td>
         </tr>
         <tr>
           <td colspan="2">
