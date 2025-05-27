@@ -55,9 +55,8 @@ public class MemberController {
       return "redirect:/";
     }
     model.addAttribute("errorCode", errorCode);
-    return "member/login";  // 로그인 뷰 이름
+    return "member/login";  // 로그인 뷰 이름 (resources/templates/member/login.html)
   }
-
 
   @PostMapping("/loginProc")
   public String loginPost(@RequestParam("userid") String userid,
@@ -83,7 +82,6 @@ public class MemberController {
       return "redirect:/api/member/login?errorCode=UNKNOWN";
     }
   }
-
 
   @GetMapping("/")
   public String homePage(HttpSession session) {
@@ -225,11 +223,6 @@ public class MemberController {
 
     return "redirect:/";
   }
-
-
-
-
-
   @RequestMapping("/join")
   public String join() {
     return "member/join";
