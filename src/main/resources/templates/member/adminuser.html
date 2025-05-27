@@ -3,136 +3,90 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragment/layout}">
 <body>
+
 <!-- CSS 연결 -->
 <th:block layout:fragment="css">
     <link rel="stylesheet" href="/css/adminuser.css">
 </th:block>
 
-<section layout:fragment="content" id="container" class="sub pagename pageSubname adminuserinfo view">
+<section layout:fragment="content" id="container">
+    <h1 class="page_title">회원 관리</h1>
+
     <div id="content" class="content">
-        <div class="container">
 
-            <!-- 메인 -->
-            <main class="main">
+        <!-- 검색 영역 -->
+        <form th:action="@{/api/member/adminuser}" method="get" class="search_box">
+            <select name="status">
+                <option value="" th:selected="${status == null or status == ''}">전체</option>
+                <option value="정상" th:selected="${status == '정상'}">정상</option>
+                <option value="정지" th:selected="${status == '정지'}">정지</option>
+                <option value="탈퇴" th:selected="${status == '탈퇴'}">탈퇴</option>
+            </select>
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="회원 검색">
+            <button type="submit">검색</button>
+        </form>
 
-                <!-- 제목 -->
-                <h2 class="page_title">회원 관리</h2>
+        <!-- 회원 목록 테이블 -->
+        <table class="member_table">
+            <thead>
+            <tr>
+                <th>회원번호</th>
+                <th>회원 이름</th>
+                <th>아이디</th>
+                <th>휴대폰 번호</th>
+                <th>이메일</th>
+                <th>회원 상태</th>
+                <th>가입일</th>
+                <th>최종접속</th>
+                <th>권한</th>
+                <th>SNS 타입</th>
+                <th>SNS ID</th>
+                <th>SNS 이름</th>
+                <th>관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${memberPage.content}">
+                <td th:text="${member.idx}">00000000</td>
+                <td th:text="${member.name}">홍길동</td>
+                <td th:text="${member.userid}">아이디</td>
+                <td th:text="${member.mobile != null ? member.mobile : '정보없음'}">정보없음</td>
+                <td th:text="${member.email}">abc@mail.com</td>
+                <td th:classappend="'status-' + ${member.status?.toLowerCase()}" th:text="${member.status}">정상</td>
+                <td th:text="${#dates.format(member.createdAt, 'yyyy.MM.dd')}">2021.07.01</td>
+                <td th:text="${#dates.format(member.updatedAt, 'yyyy.MM.dd')}">2021.07.02</td>
+                <td th:text="${member.grade == 10 ? '관리자' : '유저'}">유저</td>
+                <td th:text="${member.snsType != null ? member.snsType : '없음'}">없음</td>
+                <td th:text="${member.snsId != null ? member.snsId : '없음'}">없음</td>
+                <td th:text="${member.snsName != null ? member.snsName : '없음'}">없음</td>
+                <td>
+                    <a th:href="@{/api/member/adminuserinfo(idx=${member.idx})}">
+                        <button type="button">정보</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-                <!-- 검색 영역 -->
-                <form th:action="@{/api/member/adminuser}" method="get" class="search_box">
-                    <select name="status">
-                        <option value="" th:selected="${status == null or status == ''}">전체</option>
-                        <option value="정상" th:selected="${status == '정상'}">정상</option>
-                        <option value="정지" th:selected="${status == '정지'}">정지</option>
-                        <option value="탈퇴" th:selected="${status == '탈퇴'}">탈퇴</option>
-                    </select>
-                    <input type="text" name="keyword" th:value="${keyword}" placeholder="회원 검색">
-                    <button type="submit">검색</button>
-                </form>
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+            <span th:if="${currentPage > 0}">
+                <a th:href="@{/api/member/adminuser(page=${currentPage - 1}, status=${status}, keyword=${keyword})}">이전</a>
+            </span>
 
-                <!-- 회원 목록 테이블 및 삭제 폼 -->
-                <form id="deleteForm" th:action="@{/api/member/adminuser/delete-multiple}" method="post">
-                    <table class="member_table">
-                        <thead>
-                        <tr>
-                            <th><input type="checkbox" id="selectAll"/></th>
-                            <th>회원번호</th>
-                            <th>회원 이름</th>
-                            <th>아이디</th>
-                            <th>휴대폰 번호</th>
-                            <th>이메일</th>
-                            <th>회원 상태</th>
-                            <th>가입일</th>
-                            <th>최종접속</th>
-                            <th>권한</th>
+            <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:href="@{/api/member/adminuser(page=${i}, status=${status}, keyword=${keyword})}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == currentPage} ? 'active' : ''">1</a>
+            </span>
 
-                            <!-- 새로 추가한 SNS 관련 컬럼 -->
-                            <th>SNS 타입</th>
-                            <th>SNS ID</th>
-                            <th>SNS 이름</th>
-
-                            <th>관리</th>
-                        </tr>
-                        </thead>
-                        <tbody id="memberTableBody">
-                        <tr th:each="member : ${memberPage.content}">
-                            <td><input type="checkbox" name="idxList" th:value="${member.idx}" class="rowCheckbox"></td>
-                            <td th:text="${member.idx}">00000000</td>
-                            <td th:text="${member.name}">홍길동</td>
-                            <td th:text="${member.userid}">아이디</td>
-                            <td th:text="${member.mobile != null ? member.mobile : '정보없음'}">정보없음</td>
-                            <td th:text="${member.email}">abc@mail.com</td>
-                            <td th:classappend="'status-' + ${member.status?.toLowerCase()}" th:text="${member.status}">정상</td>
-                            <td th:text="${#dates.format(member.createdAt, 'yyyy.MM.dd')}">2021.07.01</td>
-                            <td th:text="${#dates.format(member.updatedAt, 'yyyy.MM.dd')}">2021.07.02</td>
-                            <td th:text="${member.grade == 10 ? '관리자' : '유저'}">유저</td>
-
-                            <!-- SNS 데이터 표시 -->
-                            <td th:text="${member.snsType != null ? member.snsType : '없음'}">없음</td>
-                            <td th:text="${member.snsId != null ? member.snsId : '없음'}">없음</td>
-                            <td th:text="${member.snsName != null ? member.snsName : '없음'}">없음</td>
-
-                            <td>
-                                <a th:href="@{/api/member/adminuserinfo(idx=${member.idx})}">
-                                    <button type="button">정보</button>
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- 버튼 그룹 -->
-                    <div class="button_group">
-                        <!-- 전체선택 버튼 삭제 -->
-                        <button id="btnDelete" type="submit">삭제</button>
-                    </div>
-                </form>
-
-                <!-- 페이지네이션 -->
-                <div class="pagination">
-                    <span th:if="${currentPage > 0}">
-                      <a th:href="@{/api/member/adminuser(page=${currentPage - 1}, status=${status}, keyword=${keyword})}">이전</a>
-                    </span>
-
-                    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                      <a th:href="@{/api/member/adminuser(page=${i}, status=${status}, keyword=${keyword})}"
-                         th:text="${i + 1}"
-                         th:classappend="${i == currentPage} ? 'active' : ''">1</a>
-                    </span>
-
-                    <span th:if="${currentPage < totalPages - 1}">
-                      <a th:href="@{/api/member/adminuser(page=${currentPage + 1}, status=${status}, keyword=${keyword})}">다음</a>
-                    </span>
-                </div>
-
-            </main>
+            <span th:if="${currentPage < totalPages - 1}">
+                <a th:href="@{/api/member/adminuser(page=${currentPage + 1}, status=${status}, keyword=${keyword})}">다음</a>
+            </span>
         </div>
-    </div><!--E content-->
-</section><!--E container-->
 
-<th:block layout:fragment="script">
-    <script>
-        console.log("스크립트 블록이 로드되었습니다."); // 이 줄을 추가
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log("DOMContentLoaded 이벤트 발생."); // 이 줄을 추가
-
-            const selectAll = document.getElementById('selectAll');
-
-            if (!selectAll) {
-                console.error('selectAll 체크박스를 찾을 수 없습니다.');
-                return;
-            } else {
-                console.log("selectAll 체크박스 찾음:", selectAll); // 이 줄을 추가
-            }
-
-            selectAll.addEventListener('change', function () {
-                console.log("selectAll 체크박스 상태 변경됨."); // 이 줄을 추가
-                const checkboxes = document.querySelectorAll('.rowCheckbox');
-                checkboxes.forEach(cb => cb.checked = this.checked);
-            });
-        });
-    </script>
-</th:block>
+    </div><!-- E content -->
+</section><!-- E container -->
 
 </body>
 </html>

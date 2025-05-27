@@ -24,9 +24,4 @@ public class MemberService {
         return memberRepository.findByNameAndUserid(name, userid);
     }
 
-    // 회원 여러 명 삭제 메서드
-    @Transactional
-    public void deleteMembersByIds(List<Long> memberIds) {
-        memberRepository.deleteAllByIdInBatch(memberIds);
-    }
 }

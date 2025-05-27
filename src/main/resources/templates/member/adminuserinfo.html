@@ -7,11 +7,12 @@
   <link rel="stylesheet" href="/css/adminuserinfo.css">
 </th:block>
 
-<section layout:fragment="content" id="container" class="sub pagename pageSubname">
+<section layout:fragment="content" id="container">
+  <h1 class="page_title">회원 관리</h1>
   <div id="content" class="content">
 
     <form th:action="@{/api/member/adminuserinfo}" method="post" th:object="${member}" xmlns:th="http://www.w3.org/1999/xhtml">
-      <h2 class="page_title">회원 관리</h2>
+
 
       <section class="info_card">
         <div class="info_row">
@@ -59,6 +60,7 @@
 
       <div class="bottom_btns">
         <button type="submit" class="save_btn">저장</button>
+        <a href="/api/member/adminuser" class="save_btn">목록</a>
       </div>
     </form>
 
