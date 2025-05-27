@@ -1,4 +1,13 @@
 /* 갤러리 기본 스타일 */
+.content div:nth-child(4){
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+.content div:nth-child(3){
+    padding: 30px;
+    border-bottom: 1px solid lightgray;
+}
 .gallery-container {
     text-align: center;
     padding: 40px 20px;

@@ -81,5 +81,23 @@ public class AdminBoardService {
         }
         return boardEn;
     }
+
+    /*
+    *       검색
+    * */
+    public Page<BoardEntity> getBoardsByGroupAndKeyword(Long groupIdx, String keyword, int page) {
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        if (groupIdx == null && (keyword == null || keyword.isBlank())) {
+            return boardRepository.findAll(pageable);
+        } else if (groupIdx != null && (keyword == null || keyword.isBlank())) {
+            return boardRepository.findByGroupIdx(groupIdx, pageable);
+        } else if (groupIdx == null) {
+            return boardRepository.findByTitleContaining(keyword, pageable);
+        } else {
+            return boardRepository.findByGroupGroupIdxAndTitleContaining(groupIdx, keyword, pageable);
+        }
+    }
+
 }
 

@@ -54,37 +54,36 @@ public class AdminBoardController {
             @RequestParam("page") int page,
             @RequestParam(required = false, name = "delCheck") List<Long> delCheck,
             @RequestParam(value = "group_idx_hidden", required = false) Long groupIdxHidden,
+            @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam("action") String action,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
 
         if (groupIdx == null && groupIdxHidden != null) {
             groupIdx = groupIdxHidden;
         }
 
-        if ("delete".equals(action)) {
-            if (delCheck != null && !delCheck.isEmpty()) {
-                adminBoardService.deleteBoardsByIds(delCheck);
-                redirectAttributes.addFlashAttribute("msg", "선택한 게시글이 삭제되었습니다.");
-            } else {
-                redirectAttributes.addFlashAttribute("msg", "삭제할 게시글을 선택해주세요.");
-            }
-            // 리다이렉트 시 group_idx와 page 유지
-            redirectAttributes.addAttribute("group_idx", groupIdx);
-            redirectAttributes.addAttribute("page", page);
-            return "redirect:/admin/board/group_list_select"; // GET으로 리다이렉트
+        switch (action) {
+            case "delete":
+                if (delCheck != null && !delCheck.isEmpty()) {
+                    adminBoardService.deleteBoardsByIds(delCheck);
+                    redirectAttributes.addFlashAttribute("msg", "선택한 게시글이 삭제되었습니다.");
+                } else {
+                    redirectAttributes.addFlashAttribute("msg", "삭제할 게시글을 선택해주세요.");
+                }
+                break;
+            case "search":
+                // 아무 로직 없이 리다이렉트로 검색 실행
+                break;
+            default:
+                // 기타 액션 처리 필요 시
         }
 
-        if ("search".equals(action)) {
-            // 검색 요청도 리다이렉트 처리
-            redirectAttributes.addAttribute("group_idx", groupIdx);
-            redirectAttributes.addAttribute("page", page);
-            return "redirect:/admin/board/group_list_select"; // GET으로 리다이렉트
-        }
-
-        // 예외 처리나 기본 동작
+        // 공통: 쿼리스트링에 groupIdx, page, keyword 유지
         redirectAttributes.addAttribute("group_idx", groupIdx);
         redirectAttributes.addAttribute("page", page);
+        if (keyword != null && !keyword.isBlank()) {
+            redirectAttributes.addAttribute("keyword", keyword);
+        }
         return "redirect:/admin/board/group_list_select";
     }
 
@@ -92,43 +91,46 @@ public class AdminBoardController {
     public String group_list_select_get(
             @RequestParam(value = "group_idx", required = false) Long groupIdx,
             @RequestParam("page") int page,
+            @RequestParam(value = "keyword", required = false) String keyword,
             Model model) {
 
+        // 3️⃣ 커버: category 네이밍
         String category = switch (groupIdx != null ? groupIdx.intValue() : 0) {
             case 1 -> "공지사항";
             case 2 -> "커뮤니티";
             case 3 -> "이벤트";
             case 4 -> "갤러리";
             case 5 -> "자주 질문";
-            case 6 -> "1 대 1";
+            case 6 -> "1 대 1 질문";
             default -> "기타";
         };
 
         int itemsPerPage = 10;
         int groupSize = 5;
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "createdAt");
 
-        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.ASC, "createdAt");
+        Page<BoardEntity> paging =
+                adminBoardService.getBoardsByGroupAndKeyword(groupIdx, keyword, page);
 
-        Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx, pageable);
-        BoardGroupEntity board = boardGroupRepository.findByGroupIdx(groupIdx);
-        Long boardType = board != null ? board.getBoardType() : null;
+        BoardGroupEntity boardGroup = boardGroupRepository.findByGroupIdx(groupIdx);
+        Long boardType = (boardGroup != null ? boardGroup.getBoardType() : null);
 
         int totalCount = (int) paging.getTotalElements();
-        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, "link");
+        Utility.Pagination pagination =
+                new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, "link");
 
         model.addAttribute("group_idx", groupIdx);
-        model.addAttribute("board_type", boardType);
-
-        model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
         model.addAttribute("page", page);
         model.addAttribute("link", "/admin/board/group_list_select");
         model.addAttribute("pagination", pagination);
         model.addAttribute("paging", paging);
         model.addAttribute("category", category);
+        model.addAttribute("keyword", keyword);
 
         return "/admin/board/group_list";
     }
+
 
     @RequestMapping("/delete")
     public String deleteBoard(@RequestParam("id") Long id,

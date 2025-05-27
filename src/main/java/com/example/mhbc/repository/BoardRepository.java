@@ -41,4 +41,17 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     List<BoardEntity> findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(String title, long groupIdx, Long boardType);
 
 
+    // 1️⃣ 전체 게시글 (페이지네이션)
+    Page<BoardEntity> findAll(Pageable pageable);
+
+    // 2️⃣ 특정 그룹 (카테고리) 게시글
+    //상단에 findByGroupIdx
+
+    // 3️⃣ 키워드 포함 (예: 제목에 키워드 포함)
+    Page<BoardEntity> findByTitleContaining(String keyword, Pageable pageable);
+
+    // 4️⃣ 특정 그룹 + 키워드 포함
+    Page<BoardEntity> findByGroupGroupIdxAndTitleContaining(Long groupIdx, String keyword, Pageable pageable);
+
 }
+

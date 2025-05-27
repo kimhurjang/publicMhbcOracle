@@ -2,6 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragment/layout}">
+<th:block layout:fragment="css">
+    <style>
+        table {display : table;}
+        #detailBtn div {display: flex; justify-content: space-around;box-shadow: 1px lightgray;}
+        #detailBtn a, #detailBtn span {width: 40%; display : table-cell;}
+        #detailBtn span {border-left: 1px solid lightgray;}
+        .form_group input[type="text"]{ width: 260px; flex: 0;}
+        #categorySelect {width: 150px; flex: 0;}
+    </style>
+</th:block>
 <body>
 <!--<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block>넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
@@ -10,7 +20,7 @@
         <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
             <input type="hidden" name="page" value="1">
             <input type="hidden" name="delCheck" id="delCheckHidden" />
-            <div class="btn_group mt20 mb20">
+            <div class="form_group mb20">
                 <select id="categorySelect" name="group_idx" style="width: 50%;">
                     <option  value="" disabled th:selected="${group_idx == null}">카테고리</option>
                     <option value="1" th:selected="${group_idx == 1}">공지</option>
@@ -23,6 +33,9 @@
                 <input type="hidden" name="group_idx_hidden" id="groupIdxHidden" />
                 <button type="submit" name="action" value="search" class="small">조회하기</button>
                 <button type="submit" name="action" value="delete" class="small" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">선택 삭제</button>
+            </div>
+            <div class="form_group mb20">
+                <input type="text" name="keyword" placeholder="제목을 입력해주세요." th:value="${keyword}"> <button type="submit" name="action" value="search" class="small">검색</button>
             </div>
 
         <table>
@@ -40,7 +53,7 @@
                     <td colspan="7" style="color: #999;">카테고리 선택 후 조회하기</td>
                 </tr>
                 <tr th:if="${paging?.isEmpty()}">
-                <td colspan="7">조회된 게시글이 없습니다.</td>
+                    <td colspan="7">조회된 게시글이 없습니다.</td>
                 </tr>
                 <tr th:each="board : ${paging}">
                     <td><input type="checkbox" name="delCheck" th:value="${board.idx}"></td>
@@ -62,24 +75,28 @@
                             <button type="button" class="small">수정</button>
                         </a>
                     </td>
-                    <td>
-                        <a th:if="${groupIdx == 1}"
-                           th:href="@{/board/notice_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                            <button type="button" class="small">상세보기</button>
-                        </a>
-                        <a th:if="${groupIdx == 2}"
-                           th:href="@{/board/cmct_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                            <button type="button" class="small">상세보기</button>
-                        </a>
-                        <a th:if="${groupIdx == 3}"
-                           th:href="@{/board/event_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                            <button type="button" class="small">상세보기</button>
-                        </a>
-                        <a th:if="${groupIdx == 4}"
-                           th:href="@{/board/gallery_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                            <button type="button" class="small">상세보기</button>
-                        </a>
-                        <a th:if="${groupIdx == 5 or groupIdx == 6}" th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx},page=${page})}"><button type="button" class="small">상세보기</button></a>
+                    <td id="detailBtn">
+                        <div>
+                            <a th:if="${groupIdx == 1}"
+                               th:href="@{/board/notice_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                                <button type="button" class="small">상세보기</button>
+                            </a>
+                            <a th:if="${groupIdx == 2}"
+                               th:href="@{/board/cmct_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                                <button type="button" class="small">상세보기</button>
+                            </a>
+                            <a th:if="${groupIdx == 3}"
+                               th:href="@{/board/event_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                                <button type="button" class="small">상세보기</button>
+                            </a>
+                            <a th:if="${groupIdx == 4}"
+                               th:href="@{/board/gallery_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                                <button type="button" class="small">상세보기</button>
+                            </a>
+                            <a th:if="${groupIdx == 5 or groupIdx == 6}" th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx},page=${page})}"><button type="button" class="small">상세보기</button></a>
+                            <span th:if="${board.request == 0 and groupIdx == 6}">대기중</span>
+                            <span th:if="${board.request == 1 and groupIdx == 6}" class="xi-check"></span>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -122,6 +139,7 @@
           select.focus();
           return false;
         }
+
       });
 
 </script>
