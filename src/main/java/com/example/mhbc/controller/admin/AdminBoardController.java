@@ -80,6 +80,7 @@ public class AdminBoardController {
 
         // 공통: 쿼리스트링에 groupIdx, page, keyword 유지
         redirectAttributes.addAttribute("group_idx", groupIdx);
+        redirectAttributes.addAttribute("groupIdx", groupIdx);
         redirectAttributes.addAttribute("page", page);
         if (keyword != null && !keyword.isBlank()) {
             redirectAttributes.addAttribute("keyword", keyword);
@@ -120,6 +121,7 @@ public class AdminBoardController {
                 new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, "link");
 
         model.addAttribute("group_idx", groupIdx);
+        model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
         model.addAttribute("page", page);
         model.addAttribute("link", "/admin/board/group_list_select");

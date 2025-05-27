@@ -3,6 +3,7 @@ package com.example.mhbc.repository;
 import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.entity.MemberEntity;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,9 @@ import java.util.List;
 
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
+
+    @Query("SELECT DISTINCT b FROM BoardEntity b JOIN b.attachment a WHERE b.group.groupIdx = :groupIdx")
+    List<BoardEntity> findBoardsByGroupIdxSort(@Param("groupIdx") long groupIdx , Sort sort);
 
     @Query("SELECT DISTINCT b FROM BoardEntity b JOIN b.attachment a WHERE b.group.groupIdx = :groupIdx")
     List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") long groupIdx);

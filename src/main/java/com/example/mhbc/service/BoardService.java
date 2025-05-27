@@ -9,6 +9,7 @@ import com.example.mhbc.repository.*;
 import com.example.mhbc.util.Utility;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,10 +50,11 @@ public class BoardService {
     }
 
     // 그룹별 게시글 목록 조회
-    public List<BoardEntity> getBoardListByGroupIdx(long groupIdx) {
-
-        return boardRepository.findBoardsByGroupIdx(groupIdx);
+    public List<BoardEntity> getBoardListByGroupIdx(long groupIdx, String sortField, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
+        return boardRepository.findBoardsByGroupIdxSort(groupIdx, sort);
     }
+
 
     //같은 제목의 게시물 조회(자주 묻는 질문)
     public List<BoardEntity> getBoardListByTitle(String title){

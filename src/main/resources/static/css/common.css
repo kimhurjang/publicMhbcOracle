@@ -281,6 +281,7 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 .align_start {align-items: flex-start !important;}
 .jcc {justify-content:center;}
 .jcr {justify-content:flex-end;}
+.jcsb {justify-content:space-between;}
 
 .tl {text-align:left}
 .tc {text-align:center}
@@ -300,6 +301,8 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 
 .ml5 {margin-left:5px;}
 .mr5 {margin-right:5px;}
+
+.pd10 {padding: 10px;}
 
 .red {color:red;}
 

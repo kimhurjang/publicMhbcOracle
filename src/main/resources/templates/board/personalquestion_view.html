@@ -44,7 +44,7 @@
       <tr>
         <td>답변 상태</td>
         <td th:if="${board.request == 0}">
-          <span>미확인</span>
+          <span>대기중</span>
         </td>
         <td th:if="${board.request == 1}">
           <span>답변 완료</span>
@@ -55,11 +55,11 @@
         <td>
           <textarea name="requestContent"
                     readonly
-                    th:text="'질문 제목 : ' + ${board.title} + '\n\n질문 답변 : ' + ${board.requestContent}"></textarea>
+                    th:text="'질문 제목 : ' + ${board.title} + '    질문 답변 : ' + ${board.requestContent}"></textarea>
         </td>
       </tr>
       <tr>
-        <td colspan="2"><button type="button" onclick="goBack()">뒤로가기</button></td>
+        <td colspan="2"><button type="button" onclick="goBack()" class="small">뒤로가기</button></td>
       </tr>
     </table>
   </div><!--E content-->
