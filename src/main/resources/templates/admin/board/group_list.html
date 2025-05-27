@@ -20,7 +20,7 @@
         <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
             <input type="hidden" name="page" value="1">
             <input type="hidden" name="delCheck" id="delCheckHidden" />
-            <div class="search_box">
+            <div>
                 <div class="form_group mb20">
                     <select id="categorySelect" name="group_idx" style="width: 50%;">
                         <option  value="" disabled th:selected="${group_idx == null}">카테고리</option>

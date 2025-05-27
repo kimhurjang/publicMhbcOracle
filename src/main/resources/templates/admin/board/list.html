@@ -9,9 +9,37 @@
   <div id="content" class="content">
     <table>
       <tr>
-        <td></td>
+        <th colspan="2">게시판 목록</th>
       </tr>
-
+      <tr>
+        <td>공지사항</td>
+        <td>
+          <a th:href="@{/board/notice}"><button type="button" class="small">바로가기</button></a>
+          <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
+            <input type="hidden" name="page" value="1">
+            <input type="hidden" name="delCheck" id="delCheckHidden" />
+            <input type="hidden" name="group_idx" th:value="${group_idx == 1}">
+            <input type="hidden" name="group_idx_hidden" id="groupIdxHidden" />
+            <button type="submit" value="search" name="action" class="small">게시물 조회</button>
+          </form>
+        </td>
+      </tr>
+      <tr>
+        <td>커뮤니티</td>
+        <td><a th:href="@{/board/cmct}"><button type="button" class="small">바로가기</button></a></td>
+      </tr>
+      <tr>
+        <td>이벤트</td>
+        <td><a th:href="@{/board/event}"><button type="button" class="small">바로가기</button></a></td>
+      </tr>
+      <tr>
+        <td>갤러리</td>
+        <td><a th:href="@{/board/gallery}"><button type="button" class="small">바로가기</button></a></td>
+      </tr>
+      <tr>
+        <td>자주 묻는 질문(1대1 문의)</td>
+        <td><a th:href="@{/board/oftenquestion}"><button type="button" class="small">바로가기</button></a></td>
+      </tr>
     </table>
   </div><!--E content-->
 </section><!--E container-->
