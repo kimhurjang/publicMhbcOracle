@@ -2,27 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
-<body>
+
+<!-- 👇 여기서 errorCode를 data-error-code로 safely 전달 -->
+<body th:attr="data-error-code=${errorCode}">
+
 <th:block layout:fragment="css">
-    <link rel="stylesheet" href="/css/login.css">
-    <!-- SweetAlert2 CSS (선택 사항) -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/login.css" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
 </th:block>
 
 <section layout:fragment="content" id="container" class="sub login-page">
     <div class="login-container">
         <div class="login_box">
             <h1>회원 로그인</h1>
-
-            <!-- 로그인 폼 시작 -->
             <form th:action="@{/api/member/loginProc}" method="POST">
                 <div class="input_group">
                     <label for="userid">아이디</label>
-                    <input type="text" id="userid" name="userid" placeholder="아이디" required>
+                    <input type="text" id="userid" name="userid" placeholder="아이디" required />
                 </div>
                 <div class="input_group">
                     <label for="pwd">비밀번호</label>
-                    <input type="password" id="pwd" name="pwd" placeholder="비밀번호" required>
+                    <input type="password" id="pwd" name="pwd" placeholder="비밀번호" required />
                 </div>
                 <button type="submit" class="login_button">로그인</button>
             </form>
@@ -42,6 +42,30 @@
     </div>
 </section>
 
+<th:block layout:fragment="js">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const errorCode = document.body.dataset.errorCode;
+            console.log("errorCode from body dataset:", errorCode);
+
+            const messages = {
+                BAD_CREDENTIALS: "아이디 또는 비밀번호가 잘못되었습니다.",
+                WITHDRAW: "탈퇴한 회원입니다.",
+                STOP: "휴먼 계정입니다."
+            };
+
+            if (errorCode === 'WITHDRAW' || errorCode === 'STOP') {
+                Swal.fire({
+                    icon: 'error',
+                    title: "로그인 실패",
+                    text: messages[errorCode] || "로그인할 수 없습니다. 관리자에게 문의하세요.",
+                });
+            }
+        });
+    </script>
+</th:block>
 
 </body>
 </html>

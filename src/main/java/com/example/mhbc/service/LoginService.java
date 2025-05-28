@@ -12,6 +12,7 @@ public class LoginService {
 
     @Autowired
     private MemberRepository memberRepository;
+
     public MemberEntity login(String userid, String pwd) {
         Optional<MemberEntity> memberOpt = memberRepository.findByUserid(userid);
 
@@ -28,16 +29,8 @@ public class LoginService {
             return null;
         }
 
-        String status = member.getStatus() == null ? "" : member.getStatus().trim();
-        System.out.println("password match, status: [" + status + "]");
-
-        if ("탈퇴".equalsIgnoreCase(status) || "정지".equalsIgnoreCase(status)) {
-            System.out.println("login blocked due to status: " + status);
-            return null;
-        }
-
-        System.out.println("login success");
+        // 상태 체크는 컨트롤러에서 함
+        System.out.println("password match, status: [" + member.getStatus() + "]");
         return member;
     }
-
 }

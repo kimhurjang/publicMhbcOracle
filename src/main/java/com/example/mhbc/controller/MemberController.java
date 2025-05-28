@@ -29,10 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.lang.reflect.Member;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Controller
@@ -54,9 +51,10 @@ public class MemberController {
     if (session.getAttribute("loginMember") != null || session.getAttribute("loginSnsUser") != null) {
       return "redirect:/";
     }
-    model.addAttribute("errorCode", errorCode);
-    return "member/login";  // 로그인 뷰 이름 (resources/templates/member/login.html)
+    model.addAttribute("errorCode", errorCode);  // ✅ 반드시 필요!
+    return "member/login";
   }
+
 
   @PostMapping("/loginProc")
   public String loginPost(@RequestParam("userid") String userid,
@@ -65,23 +63,60 @@ public class MemberController {
 
     MemberEntity member = loginService.login(userid, pwd);
 
+    // 로그인 실패: 아이디/비번 불일치
     if (member == null) {
       return "redirect:/api/member/login?errorCode=BAD_CREDENTIALS";
     }
 
-    String status = member.getStatus() == null ? "" : member.getStatus().trim();
+    // 회원 상태 확인
+    String statusRaw = member.getStatus();
+    String status = (statusRaw != null) ? statusRaw.trim() : "";
 
-    if ("정상".equalsIgnoreCase(status)) {
-      session.setAttribute("loginMember", member);
-      return "redirect:/";
-    } else if ("탈퇴".equalsIgnoreCase(status)) {
-      return "redirect:/api/member/login?errorCode=WITHDRAW";
-    } else if ("정지".equalsIgnoreCase(status)) {
-      return "redirect:/api/member/login?errorCode=STOP";
-    } else {
-      return "redirect:/api/member/login?errorCode=UNKNOWN";
+    // 디버그 로그 출력
+    System.out.println("==== 회원 상태 디버깅 ====");
+    System.out.println("원본 상태: [" + statusRaw + "]");
+    System.out.println("Trimmed 상태: [" + status + "]");
+    System.out.println("문자 코드: " + status.chars()
+            .mapToObj(c -> String.valueOf((char) c) + "(" + c + ")")
+            .reduce((a, b) -> a + ", " + b).orElse("없음"));
+    System.out.println("========================");
+
+    switch (status) {
+      case "정상":
+        session.setAttribute("loginMember", member);
+        return "redirect:/";
+      case "탈퇴":
+        return "redirect:/api/member/login?errorCode=WITHDRAW";
+      case "정지":
+        return "redirect:/api/member/login?errorCode=STOP";
+      default:
+        System.out.println("⚠️ 알 수 없는 회원 상태: [" + status + "]");
+        return "redirect:/api/member/login?errorCode=UNKNOWN";
     }
   }
+
+  @PostMapping("/api/member/reactivate")
+  @ResponseBody
+  public Map<String, Object> reactivate(@RequestBody Map<String, String> request) {
+    String userid = request.get("userid");
+    Map<String, Object> result = new HashMap<>();
+
+    Optional<MemberEntity> memberOpt = memberRepository.findByUserid(userid);
+    if (memberOpt.isPresent()) {
+      MemberEntity member = memberOpt.get();
+      if ("정지".equalsIgnoreCase(member.getStatus())) {
+        member.setStatus("정상");
+        memberRepository.save(member);
+        result.put("success", true);
+      } else {
+        result.put("success", false);
+      }
+    } else {
+      result.put("success", false);
+    }
+    return result;
+  }
+
 
   @GetMapping("/")
   public String homePage(HttpSession session) {
@@ -100,25 +135,6 @@ public class MemberController {
     return "index";
   }
 
-  @GetMapping("/logout")
-  public String logout(HttpSession session) {
-    String kakaoAccessToken = (String) session.getAttribute("kakaoAccessToken");
-    System.out.println("세션 토큰: " + kakaoAccessToken);
-
-    if (kakaoAccessToken != null) {
-      String response = WebClient.create()
-              .post()
-              .uri("https://kapi.kakao.com/v1/user/logout")
-              .header("Authorization", "Bearer " + kakaoAccessToken)
-              .retrieve()
-              .bodyToMono(String.class)
-              .block();
-      System.out.println("카카오 로그아웃 응답: " + response);
-    }
-
-    session.invalidate();
-    return "redirect:/";
-  }
 
   @GetMapping("/mobile")
   public String phoneNumberPage(HttpSession session) {

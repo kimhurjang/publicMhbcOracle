@@ -22,12 +22,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
         System.out.println("----UserDetailService----");
         System.out.println("----username : " + username);
 
-        Optional<MemberEntity> member = memberRepository.findByUserid(username);/*DB에서 username과 일치하는 userid찾기*/
-
+        MemberEntity member = memberRepository.findByUserid(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
 
         System.out.println(member.toString());
 
-        return new UserDetailsImpl(member);
-
+        return new UserDetailsImpl(Optional.of(member));
     }
+
 }
