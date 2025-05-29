@@ -14,31 +14,91 @@
       <tr>
         <td>공지사항</td>
         <td>
-          <a th:href="@{/board/notice}"><button type="button" class="small">바로가기</button></a>
-          <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
-            <input type="hidden" name="page" value="1">
-            <input type="hidden" name="delCheck" id="delCheckHidden" />
-            <input type="hidden" name="group_idx" th:value="${group_idx == 1}">
-            <input type="hidden" name="group_idx_hidden" id="groupIdxHidden" />
-            <button type="submit" value="search" name="action" class="small">게시물 조회(미완 테스트)</button>
-          </form>
+          <div class="btn_group">
+            <a th:href="@{/board/notice}"><button type="button" class="small">바로가기</button></a>
+            <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
+              <input type="hidden" name="page" value="1">
+              <input type="hidden" name="delCheck" />
+              <input type="hidden" name="group_idx" value="1">
+              <input type="hidden" name="group_idx_hidden" />
+              <button type="submit" value="search" name="action" class="small">게시물 조회</button>
+            </form>
+          </div>
         </td>
       </tr>
       <tr>
         <td>커뮤니티</td>
-        <td><a th:href="@{/board/cmct}"><button type="button" class="small">바로가기</button></a></td>
+        <td>
+          <div class="btn_group">
+            <a th:href="@{/board/cmct}"><button type="button" class="small">바로가기</button></a>
+            <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
+              <input type="hidden" name="page" value="1">
+              <input type="hidden" name="delCheck" />
+              <input type="hidden" name="group_idx" value="2">
+              <input type="hidden" name="group_idx_hidden" />
+              <button type="submit" value="search" name="action" class="small">게시물 조회</button>
+            </form>
+          </div>
+        </td>
       </tr>
       <tr>
         <td>이벤트</td>
-        <td><a th:href="@{/board/event}"><button type="button" class="small">바로가기</button></a></td>
+        <td>
+          <div class="btn_group">
+            <a th:href="@{/board/event}"><button type="button" class="small">바로가기</button></a>
+            <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
+              <input type="hidden" name="page" value="1">
+              <input type="hidden" name="delCheck" />
+              <input type="hidden" name="group_idx" value="3">
+              <input type="hidden" name="group_idx_hidden"/>
+              <button type="submit" value="search" name="action" class="small">게시물 조회</button>
+            </form>
+          </div>
+        </td>
       </tr>
       <tr>
         <td>갤러리</td>
-        <td><a th:href="@{/board/gallery}"><button type="button" class="small">바로가기</button></a></td>
+        <td>
+          <div class="btn_group">
+            <a th:href="@{/board/gallery}"><button type="button" class="small">바로가기</button></a>
+            <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
+              <input type="hidden" name="page" value="1">
+              <input type="hidden" name="delCheck" />
+              <input type="hidden" name="group_idx" value="4">
+              <input type="hidden" name="group_idx_hidden"/>
+              <button type="submit" value="search" name="action" class="small">게시물 조회</button>
+            </form>
+          </div>
+        </td>
       </tr>
       <tr>
-        <td>자주 묻는 질문(1대1 문의)</td>
-        <td><a th:href="@{/board/oftenquestion}"><button type="button" class="small">바로가기</button></a></td>
+        <td>자주 묻는 질문</td>
+        <td>
+          <div class="btn_group">
+            <a th:href="@{/board/oftenquestion}"><button type="button" class="small">바로가기</button></a>
+            <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
+              <input type="hidden" name="page" value="1">
+              <input type="hidden" name="delCheck" />
+              <input type="hidden" name="group_idx" value="5">
+              <input type="hidden" name="group_idx_hidden"/>
+              <button type="submit" value="search" name="action" class="small">게시물 조회</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td> 1대1 문의<br><sub>※ 1대1 문의 게시판은 특성상 [바로가기]가 존재하지 않습니다.</sub></td>
+        <td>
+          <div class="btn_group">
+            <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
+              <input type="hidden" name="page" value="1">
+              <input type="hidden" name="delCheck" />
+              <input type="hidden" name="group_idx" value="6">
+              <input type="hidden" name="group_idx_hidden"/>
+              <button type="submit" value="search" name="action" class="small">게시물 조회</button>
+            </form>
+          </div>
+        </td>
       </tr>
     </table>
   </div><!--E content-->

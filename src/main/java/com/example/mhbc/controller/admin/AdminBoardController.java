@@ -51,7 +51,7 @@ public class AdminBoardController {
     @PostMapping("/group_list_select")
     public String group_list_select(
             @RequestParam(value = "group_idx", required = false) Long groupIdx,
-            @RequestParam("page") int page,
+            @RequestParam(value="page", defaultValue = "1") int page,
             @RequestParam(required = false, name = "delCheck") List<Long> delCheck,
             @RequestParam(value = "group_idx_hidden", required = false) Long groupIdxHidden,
             @RequestParam(value = "keyword", required = false) String keyword,
@@ -91,7 +91,7 @@ public class AdminBoardController {
     @GetMapping("/group_list_select")
     public String group_list_select_get(
             @RequestParam(value = "group_idx", required = false) Long groupIdx,
-            @RequestParam("page") int page,
+            @RequestParam(value="page", defaultValue = "1") int page,
             @RequestParam(value = "keyword", required = false) String keyword,
             Model model) {
 

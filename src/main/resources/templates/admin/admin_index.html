@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+<body>
+<!--
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/common.js">
+</th:block>
+-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <h1>ADMIN MAIN</h1>
+  <div id="content" class="content">
+    현재 이 페이지는 <b>관리자 페이지</b> 입니다. 좌측 메뉴를 통해 사이트 이용 부탁드립니다.
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
+

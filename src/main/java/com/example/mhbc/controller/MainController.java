@@ -48,10 +48,10 @@ public class MainController {
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "content";
     }
-    @RequestMapping("/admin/content")
-    public String adminContentLayout() {
-        System.out.println(">>>>>>>>>>admin content page<<<<<<<<<<");
-        return "/admin/content";
+    @RequestMapping("/admin/admin_index")
+    public String admin_index() {
+        System.out.println(">>>>>>>>>>admin admin_index page<<<<<<<<<<");
+        return "/admin/admin_index";
     }
 
     @RequestMapping("/page/about")

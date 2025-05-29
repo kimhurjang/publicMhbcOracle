@@ -18,7 +18,7 @@
     <div class="footerBox info">
         <div class="footerBox myAccount">
             <div th:if="${loginMember != null and loginMember.grade == 10}">
-                <a href="/admin/content" target="_blank">관리자 페이지</a>
+                <a href="/admin/admin_index" target="_blank">관리자 페이지</a>
             </div>
             <div th:if="${loginMember != null and loginMember.grade == 1}">
                 <p><b>내 정보</b></p>
