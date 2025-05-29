@@ -46,7 +46,7 @@
             <option value="다과파티">다과파티</option>
           </select>
         </div>
-
+        <!--
         <div class="form_group">
           <div class="event_date">
             <label for="event_date_input">행사 예정일</label>
@@ -58,8 +58,19 @@
               <option value="16">16시</option>
             </select>
           </div>
-          <input type="checkbox" name="date_choice" id="event_date_undecided">
-          <label for="event_date_undecided">미정</label>
+        -->
+        <div class="form_group">
+          <div class="event_date">
+            <label for="event_date_input">행사 예정일</label>
+            <input type="date" id="event_date_input" th:field="*{eventDate}" readonly>
+            <select id="event_time_select" th:field="*{eventTimeSelect}" disabled>
+              <option value="10">10시</option>
+              <option value="12">12시</option>
+              <option value="14">14시</option>
+              <option value="16">16시</option>
+            </select>
+            <input type="hidden" th:field="*{eventTimeSelect}">
+          </div>
         </div>
 
         <div class="form_group">
