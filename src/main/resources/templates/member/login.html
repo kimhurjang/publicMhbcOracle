@@ -3,26 +3,28 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
 
-<!-- 👇 여기서 errorCode를 data-error-code로 safely 전달 -->
-<body th:attr="data-error-code=${errorCode}">
+<body>
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" href="/css/login.css" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
 </th:block>
 
-<section layout:fragment="content" id="container" class="sub login-page">
+<section layout:fragment="content" id="container" class="sub login-page"
+         th:attr="data-error-code=${errorCode}"
+         th:attrappend=" data-userid=${userid}">
     <div class="login-container">
         <div class="login_box">
             <h1>회원 로그인</h1>
             <form th:action="@{/api/member/loginProc}" method="POST">
                 <div class="input_group">
                     <label for="userid">아이디</label>
-                    <input type="text" id="userid" name="userid" placeholder="아이디" required />
+                    <input type="text" id="userid" name="userid" placeholder="아이디" required autocomplete="username"
+                           th:value="${userid}" />
                 </div>
                 <div class="input_group">
                     <label for="pwd">비밀번호</label>
-                    <input type="password" id="pwd" name="pwd" placeholder="비밀번호" required />
+                    <input type="password" id="pwd" name="pwd" placeholder="비밀번호" required autocomplete="current-password" />
                 </div>
                 <button type="submit" class="login_button">로그인</button>
             </form>
@@ -47,8 +49,9 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const errorCode = document.body.dataset.errorCode;
-            console.log("errorCode from body dataset:", errorCode);
+            const section = document.querySelector("section[data-error-code]");
+            const errorCode = section?.dataset.errorCode;
+            const userid = section?.dataset.userid;
 
             const messages = {
                 BAD_CREDENTIALS: "아이디 또는 비밀번호가 잘못되었습니다.",
@@ -57,14 +60,73 @@
             };
 
             if (errorCode === 'WITHDRAW' || errorCode === 'STOP') {
+                let htmlContent = messages[errorCode];
+
+                if (errorCode === 'STOP') {
+                    htmlContent += `<br><br><button id="unlock-account" class="swal2-confirm swal2-styled">휴먼 계정 해지</button>`;
+                } else if (errorCode === 'WITHDRAW') {
+                    htmlContent += `<br><br><button id="join-btn" class="swal2-confirm swal2-styled">회원가입 하러 가기</button>`;
+                }
+
                 Swal.fire({
                     icon: 'error',
                     title: "로그인 실패",
-                    text: messages[errorCode] || "로그인할 수 없습니다. 관리자에게 문의하세요.",
+                    html: htmlContent,
+                    showConfirmButton: false,
+                    didRender: () => {
+                        if (errorCode === 'STOP') {
+                            const unlockBtn = document.getElementById("unlock-account");
+                            if (unlockBtn) {
+                                unlockBtn.addEventListener("click", function () {
+                                    fetch('/api/member/reactivate', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ userid }),
+                                        credentials: 'same-origin'
+                                    })
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: '해지되었습니다',
+                                                text: '로그인 페이지로 이동합니다.',
+                                                confirmButtonText: '확인'
+                                            }).then(() => {
+                                                window.location.href = `/api/member/login?userid=${encodeURIComponent(userid)}`;
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: '해지 요청 실패',
+                                                text: '서버 처리 중 오류가 발생했습니다.',
+                                            });
+                                        }
+                                    })
+                                    .catch(() => {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: '네트워크 오류',
+                                            text: '서버와 통신에 실패했습니다.',
+                                        });
+                                    });
+                                });
+                            }
+                        } else if (errorCode === 'WITHDRAW') {
+                            const joinBtn = document.getElementById("join-btn");
+                            if (joinBtn) {
+                                joinBtn.addEventListener("click", function () {
+                                    window.location.href = '/api/member/join';
+                                });
+                            }
+                        }
+                    }
                 });
             }
         });
+
     </script>
+
 </th:block>
 
 </body>

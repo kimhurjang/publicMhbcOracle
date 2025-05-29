@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Optional;
 
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
@@ -49,14 +50,18 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
                 }
             }
         } else if (exception instanceof LockedException) {
-            errorCode = "STOP";  // ✅ "정지" 상태는 LockedException일 가능성 높음
+            errorCode = "STOP";
         } else if (exception instanceof BadCredentialsException) {
             errorCode = "BAD_CREDENTIALS";
         }
 
         System.out.println("🔴 최종 errorCode: " + errorCode);
 
-        response.sendRedirect("/api/member/login?errorCode=" + errorCode);
-    }
+        String redirectUrl = "/api/member/login?errorCode=" + errorCode;
+        if (userid != null) {
+            redirectUrl += "&userid=" + URLEncoder.encode(userid, "UTF-8");
+        }
 
+        response.sendRedirect(redirectUrl);
+    }
 }
