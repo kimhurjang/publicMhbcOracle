@@ -2,7 +2,9 @@ package com.example.mhbc.controller;
 
 import com.example.mhbc.dto.ReservationDTO;
 import com.example.mhbc.entity.ReservationEntity;
+import com.example.mhbc.entity.ScheduleBlockEntity;
 import com.example.mhbc.repository.ReservationRepository;
+import com.example.mhbc.repository.ScheduleBlockRepository;
 import com.example.mhbc.service.HallService;
 import com.example.mhbc.service.ReservationService;
 import com.example.mhbc.util.Utility;
@@ -11,9 +13,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 예약 컨트롤러
@@ -28,20 +34,34 @@ public class ReservationController {
   private final HallService hallService;
 
   private final ReservationRepository reservationRepository;
+  private final ScheduleBlockRepository scheduleBlockRepository;
 
   @GetMapping("/")
-  public String mainPage(){
+  public String mainPage(Model model){
+
+    List<ScheduleBlockEntity> blocks = scheduleBlockRepository.findAll();
+    model.addAttribute("blocks", blocks); // 차단 리스트 넘김
+
     return "reservation/index";
   }
 
   // 예약 등록 폼 화면
   @GetMapping("/form")
-  public String showForm(Model model) {
+  public String showForm(
+          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+          @RequestParam(required = false) String time,
+          Model model) {
     ReservationDTO reservation = new ReservationDTO(); // or 조회한 DTO
 
+    reservation.setEventDate(date);
+    reservation.setEventTimeSelect(time.replace("시", "")); // "14시" → "14"
+
     model.addAttribute("webtitle", "만화방초 | 상담예약");
-    model.addAttribute("reservation", new ReservationDTO());
+    model.addAttribute("reservation", reservation);
     model.addAttribute("halls", reservationService.getHallList());
+
+    //System.out.println("eventDate = " + reservation.getEventDate());
+    //System.out.println("eventTimeSelect = " + reservation.getEventTimeSelect());
 
     return "reservation/form";
   }
@@ -117,5 +137,14 @@ public class ReservationController {
   public String deleteReservation(@RequestParam Long idx) {
     reservationService.delete(idx);
     return "redirect:/reservation/list";
+  }
+
+  //달력
+  @GetMapping("/calendar")
+  public String showReservationCalendar(Model model) {
+    List<ScheduleBlockEntity> blocks = scheduleBlockRepository.findAll();
+    model.addAttribute("blocks", blocks); // 차단 리스트 넘김
+
+    return "reservation/calendar";
   }
 }
