@@ -2,6 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
+<th:block layout:fragment="css">
+    <style>
+        table {display : table;}
+        .jcsb a, .jcsb span {display : table-cell;}
+    </style>
+</th:block>
 <body>
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
@@ -25,15 +31,17 @@
                     <td th:if="${board.updatedAt != board.createdAt}" th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일') + '(수정됨)'}"></td>
                 </tr>
                 <tr>
-                    <td colspan="2" th:text="${board.content}"></td>
+                    <td colspan="2"><pre th:text="${board.content}" class="pd10"></pre></td>
                 </tr>
                 <tr th:if="${board.attachment != null}">
                     <th>첨부 파일</th>
                     <td>
-                        <span th:text="${board.attachment.fileName}"></span>
-                        <a th:href="@{/board/file/download/{idx}(idx=${board.attachment.idx})}">
-                            <button type="button" class="small"><i class="xi-save"></i></button>
-                        </a>
+                        <div class="jcsb" style="display: flex; padding: 0 10px;">
+                            <span th:text="${board.attachment.fileName}"></span>
+                            <a th:href="@{/board/file/download/{idx}(idx=${board.attachment.idx})}">
+                                <button type="button" class="small"><i class="xi-save"></i></button>
+                            </a>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -63,7 +71,7 @@
 
                         <!-- 수정 중이 아니면 일반 텍스트 -->
                         <div th:if="${editingCommentId == null or editingCommentId != comments.idx}">
-                            <span th:text="${comments.content}"></span>
+                            <pre th:text="${comments.content}"></pre>
                         </div>
                     </td>
                     <td>
@@ -90,9 +98,9 @@
                 </tr>
             </table>
             <div class="btn_group mt20">
-                <button type="button" onclick="goBack()">뒤로가기</button>
+                <button type="button" onclick="goBack()" class="small">뒤로가기</button>
                 <div th:if="${member.idx == board.member.idx || member.grade == 10}">
-                    <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${member.idx}, comments_idx=${0})}"><button type="button" class="small">삭제</button></a>
+                    <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${member.idx}, comments_idx=${0})}"><button type="button" class="small color1">삭제</button></a>
                     <a th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx} , commentsIdx=0)}"><button type="button" class="small color2">수정</button></a>
                 </div>
             </div>

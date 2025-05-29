@@ -4,7 +4,9 @@
     <a href="#" class="scroll-top"><button class="btn xi-arrow-up"></button></a>
 
     <div class="footerBox copy">
-        <img src="/image/logo_1-2.png">
+        <a href="/home">
+            <img src="/image/logo_1-2.png">
+        </a>
         <p>©ManHwaBangCho</p>
         <div id="snsIcon">
             <a href="" class="xi-facebook"></a>
@@ -16,7 +18,7 @@
     <div class="footerBox info">
         <div class="footerBox myAccount">
             <div th:if="${loginMember != null and loginMember.grade == 10}">
-                <a href="/admin/content" target="_blank">관리자 페이지</a>
+                <a href="/admin/admin_index" target="_blank">관리자 페이지</a>
             </div>
             <div th:if="${loginMember != null and loginMember.grade == 1}">
                 <p><b>내 정보</b></p>
@@ -26,11 +28,12 @@
         </div>
         <div class="footerBox address">
             <p><b>주소</b></p>
-            <p>경상남도 고성군 거류면 은월리 17-5</p>
+            <p>경상남도 고성군 거류면 은황길 81-91</p>
+            <p>(우)52924 (지번)거류면 은월리 17-8</p>
         </div>
         <div class="footerBox tel">
             <p><b>연락처</b></p>
-            <p>TEL : 00-000-0000</p>
+            <p>TEL : 051-610-1041</p>
             <p>Email : abcd1234@mail.com</p>
         </div>
     </div>

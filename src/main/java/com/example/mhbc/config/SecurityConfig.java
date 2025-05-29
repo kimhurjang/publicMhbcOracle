@@ -10,8 +10,10 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,7 +28,14 @@ public class SecurityConfig {
 
     @Autowired
     private MemberRepository memberRepository;  // MemberRepository 주입
-
+    
+    //static 내용물은 시큐리티 무시
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/image/**", "/css/**", "/js/**", "/fonts/**");
+    }
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable);
@@ -84,8 +93,8 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); // 개발 단계, 배포 전 BCrypt로 변경 권장
-        // return new BCryptPasswordEncoder();
+        //return NoOpPasswordEncoder.getInstance(); // 개발 단계, 배포 전 BCrypt로 변경 권장
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

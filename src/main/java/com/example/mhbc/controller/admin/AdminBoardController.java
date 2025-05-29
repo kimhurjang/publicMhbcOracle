@@ -51,7 +51,7 @@ public class AdminBoardController {
     @PostMapping("/group_list_select")
     public String group_list_select(
             @RequestParam(value = "group_idx", required = false) Long groupIdx,
-            @RequestParam("page") int page,
+            @RequestParam(value="page", defaultValue = "1") int page,
             @RequestParam(required = false, name = "delCheck") List<Long> delCheck,
             @RequestParam(value = "group_idx_hidden", required = false) Long groupIdxHidden,
             @RequestParam(value = "keyword", required = false) String keyword,
@@ -80,6 +80,7 @@ public class AdminBoardController {
 
         // 공통: 쿼리스트링에 groupIdx, page, keyword 유지
         redirectAttributes.addAttribute("group_idx", groupIdx);
+        redirectAttributes.addAttribute("groupIdx", groupIdx);
         redirectAttributes.addAttribute("page", page);
         if (keyword != null && !keyword.isBlank()) {
             redirectAttributes.addAttribute("keyword", keyword);
@@ -90,7 +91,7 @@ public class AdminBoardController {
     @GetMapping("/group_list_select")
     public String group_list_select_get(
             @RequestParam(value = "group_idx", required = false) Long groupIdx,
-            @RequestParam("page") int page,
+            @RequestParam(value="page", defaultValue = "1") int page,
             @RequestParam(value = "keyword", required = false) String keyword,
             Model model) {
 
@@ -120,6 +121,7 @@ public class AdminBoardController {
                 new Utility.Pagination(page, itemsPerPage, totalCount, groupSize, "link");
 
         model.addAttribute("group_idx", groupIdx);
+        model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
         model.addAttribute("page", page);
         model.addAttribute("link", "/admin/board/group_list_select");

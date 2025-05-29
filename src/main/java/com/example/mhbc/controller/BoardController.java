@@ -83,7 +83,7 @@ public class BoardController {
             model.addAttribute("member", null);  // 로그인되지 않은 경우
         }
 
-        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx,"createdAt","DESC");
 
         for (BoardEntity board : boardList) {
             AttachmentEntity attachment = attachmentRepository.findByBoard(board);
@@ -125,7 +125,7 @@ public class BoardController {
                                 @RequestParam("board_type") Long boardType,
                                 Model model){
 
-        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx,"createdAt","DESC");
 
         model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("boardType", boardType);
@@ -186,7 +186,7 @@ public class BoardController {
                              @RequestParam("group_idx") Long groupIdx,
                              Model model) {
 
-        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx,"createdAt","DESC");
 
         Long loginUser = Utility.getLoginUserIdx();
 
@@ -233,7 +233,7 @@ public class BoardController {
                               @RequestParam("board_type") Long boardType,
                               Model model){
 
-        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx,"createdAt","DESC");
 
         model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("boardList",boardList);
@@ -301,7 +301,7 @@ public class BoardController {
         int itemsPerPage = 4;
         int groupSize = 3;
 
-        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "createdAt");
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
         Long loginUser = Utility.getLoginUserIdx();
@@ -411,7 +411,7 @@ public class BoardController {
                                         @RequestParam("idx") Long loginUser,
                                         Model model) {
 
-        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx,"createdAt","DESC");
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         MemberEntity member = memberRepository.findByIdx(loginUser);
@@ -543,7 +543,7 @@ public class BoardController {
         int itemsPerPage = 4;
         int groupSize = 3;
 
-        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "createdAt");
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
         int totalCount = (int) paging.getTotalElements();
@@ -671,7 +671,7 @@ public class BoardController {
                             Model model){
 
         Long memberIdx = Utility.getLoginUserIdx();
-        if (memberIdx == 0) {
+        if (memberIdx == null) {
             return "redirect:/api/member/login";
         }
 

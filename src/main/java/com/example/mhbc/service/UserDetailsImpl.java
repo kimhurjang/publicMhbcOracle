@@ -73,10 +73,16 @@ public class UserDetailsImpl implements UserDetails {
      * 계정 잠김 여부 반환
      * true: 잠기지 않음
      * false: 잠김 (로그인 불가)
+     *
+     * 회원 상태가 "정지"인 경우 잠긴 상태로 처리
      */
     @Override
     public boolean isAccountNonLocked() {
-        return isEnabled();  // 계정 활성화 여부 기준으로 잠김 상태 판단 (필요에 따라 변경 가능)
+        return member.map(m -> {
+            String status = m.getStatus();
+            if (status == null) return true;
+            return !status.equalsIgnoreCase("정지");
+        }).orElse(true);
     }
 
     /**
@@ -94,14 +100,14 @@ public class UserDetailsImpl implements UserDetails {
      * true: 활성화됨
      * false: 비활성화됨 (로그인 불가)
      *
-     * 여기서 회원 상태가 "탈퇴" 또는 "정지"이면 false를 반환하도록 설정
+     * 회원 상태가 "탈퇴"인 경우 비활성화 상태로 처리
      */
     @Override
     public boolean isEnabled() {
         return member.map(m -> {
             String status = m.getStatus();
             if (status == null) return true;
-            return !(status.equalsIgnoreCase("탈퇴") || status.equalsIgnoreCase("정지"));
+            return !status.equalsIgnoreCase("탈퇴");
         }).orElse(false);
     }
 }

@@ -55,8 +55,10 @@
     object-fit: cover;
 }
 
-.card-img.view{
-    height: auto;
+.card-imgView{
+    max-height: 500px;
+    width: 100%;
+    object-fit: cover;
 }
 
 .card-text {

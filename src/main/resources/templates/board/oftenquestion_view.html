@@ -30,22 +30,22 @@
         <td colspan="2"><h3 th:text="${board.title}"></h3></td>
       </tr>
       <tr>
-        <td colspan="2" th:text="${board.content}" class="contents"></td>
+        <td colspan="2"><pre th:text="${board.content}" class="contents pd10"></pre></td>
       </tr>
       <tr>
         <td style="width: 10%;"><i class="xi-subdirectory-arrow"></i></td>
         <td style="display:block;">
           <div th:text="${board.answerTitle}"></div>
-          <div th:text="${board.answerContent}" class="contents"></div>
+          <div><pre th:text="${board.answerContent}" class="contents"></pre></div>
         </td>
       </tr>
     </table>
     <div class="btn_group mt20">
       <div th:if="${member != null and member.grade == 10}">
-        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button>[관리자]삭제</button></a>
-        <a th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, commentsIdx=0)}"><button type="button" class="color2">[관리자]수정</button></a>
+        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button type="button" class="small color1">[관리자]삭제</button></a>
+        <a th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, commentsIdx=0)}"><button type="button" class="small color2">[관리자]수정</button></a>
       </div>
-        <button type="button"  onclick="goBack()">뒤로가기</button>
+        <button type="button"  onclick="goBack()" class="small">뒤로가기</button>
     </div>
 
   </div>

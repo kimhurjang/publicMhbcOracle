@@ -21,16 +21,16 @@
       <b>진행 기간</b> <div th:text="${#dates.format(board.startAt, 'yyyy년 MM월 dd일')}+' ~ '+${#dates.format(board.closedAt, 'yyyy년 MM월 dd일')}"></div>
     </div>
     <div id="eventContent">
-      <pre th:text="${board.content}"></pre>
+      <pre th:text="${board.content}" class="pd10"></pre>
     </div>
     <div class="event view">
       <span th:text="'작성일 ' + ${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></span>
       <span th:text="'조회수 '+${board.viewCnt}"></span>
     </div>
     <div class="btn_group mt20">
-      <button type="button" onclick="goBack()">뒤로가기</button>
+      <button type="button" onclick="goBack()" class="small">뒤로가기</button>
       <div th:if="${member != null and member.grade == 10}">
-        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button class="small">[관리자]삭제</button></a>
+        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button class="small color1">[관리자]삭제</button></a>
         <a th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx},commentsIdx=0)}"><button type="button" class="color2 small">[관리자]수정</button></a>
       </div>
     </div>
