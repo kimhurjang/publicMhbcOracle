@@ -32,9 +32,10 @@ public class MemberEntity {
   @Column(name = "GRADE")
   private Integer grade = 0; // 등급
 
-  @Builder.Default
+
   @Column(name = "STATUS")
-  private String status = "ACTIVE"; // 회원상태
+  private String status; // 기본값은 DB값에 따라 들어옴
+  // 회원상태
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "CREATE_AT")
