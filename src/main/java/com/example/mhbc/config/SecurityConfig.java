@@ -2,6 +2,7 @@ package com.example.mhbc.config;
 
 import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.service.UserDetailServiceImpl;
+import com.example.mhbc.service.UserPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -94,7 +95,7 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         //return NoOpPasswordEncoder.getInstance(); // 개발 단계, 배포 전 BCrypt로 변경 권장
-        return new BCryptPasswordEncoder();
+        return new UserPasswordEncoder();
     }
 
     @Bean
