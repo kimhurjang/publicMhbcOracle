@@ -202,6 +202,7 @@
         })
         .catch(err => {
           alert(err.message || "상태 변경 실패");
+          location.reload();
         });
       });
     </script>

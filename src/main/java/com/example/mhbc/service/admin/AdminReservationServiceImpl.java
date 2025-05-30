@@ -77,7 +77,7 @@ public class AdminReservationServiceImpl implements AdminReservationService {
         LocalDateTime eventDateTime = eventDate.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
-        String timeSlot = String.format("%02d", eventDateTime.getHour()); // "14" 형태로 변환
+        String timeSlot = String.format("%02d", eventDateTime.getHour()) + "시"; // "14" 형태로 변환
 
         // 3. 차단된 일정이 있는지 확인
         if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {

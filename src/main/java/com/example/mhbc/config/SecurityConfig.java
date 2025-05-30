@@ -2,6 +2,7 @@ package com.example.mhbc.config;
 
 import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.service.UserDetailServiceImpl;
+import com.example.mhbc.service.UserPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
