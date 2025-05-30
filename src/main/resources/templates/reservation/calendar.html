@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css">
+  <script src="/js/index.global.6.1.17.min.js"></script>
+  <style>
+    .fc .fc-button-primary {background:#fff;}
+    .fc .fc-button-primary:hover {background:#ccc;}
+    .fc .fc-today-button {background:#2C3E50;}
+    .fc .fc-button-primary:focus {box-shadow: none;}
+    .fc-toolbar-chunk:nth-child(2) {margin-left:-150px;}
+    .fc-h-event {border:none; background:#b1deff; cursor:pointer;}
+    .fc-h-event * {font-size:13px;}
+    .disabled-event {cursor:not-allowed!important; opacity:0.9; background:#ededed; pointer-events:auto;}
+    .fc .fc-daygrid-day-events {display:flex; flex-wrap:wrap;}
+    .fc .fc-daygrid-event-harness {flex:1 1 calc(50% - 5px); max-width:calc(50% - 5px);}
+  </style>
+</th:block>
+
+<section layout:fragment="content" id="container" class="sub calendar">
+  <h1>예약 가능 날짜 선택</h1>
+  <div id="content" class="content">
+    <div id="calendar"></div>
+    <!-- 예약불가 시간대 정보 (JS Map에 저장) -->
+    <script th:inline="javascript">
+      const blockedMap = new Map();
+      /*[# th:each="b : ${blocks}"]*/
+        blockedMap.set(
+          [[${#dates.format(b.eventDate, 'yyyy-MM-dd') + '_' + b.timeSlot}]],
+          [[${b.reason != null ? b.reason : '불가'}]]
+        );
+      /*[/]*/
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          height: 'auto',
+          initialView: 'dayGridMonth',
+          locale: 'ko',
+          selectable: true,
+          events: generateWeekendEvents(), // 이벤트 배열 직접 설정
+          dayCellContent: info => info.date.getDate(),
+          eventDidMount: function(info) {
+            const { tooltip, reason } = info.event.extendedProps;
+
+            if (reason) {
+              info.event.setProp("title", `${reason}`);
+            }
+            if (tooltip) {
+              info.el.setAttribute('title', tooltip);
+            }
+            if (info.event.classNames.includes('disabled-event')) {
+              info.el.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+              });
+            }
+          }
+        });
+
+        calendar.render();
+
+        // 주말(토/일) 예약 가능 시간대 생성
+        function generateWeekendEvents() {
+          const today = new Date();
+          const events = [];
+          const existingEventKeys = new Set();
+          const year = today.getFullYear();
+          const month = today.getMonth();
+          const nextMonth = new Date(year, month + 2, 0);
+          let current = new Date(year, month, 1);
+
+          while (current <= nextMonth) {
+            const ymd = current.toISOString().slice(0, 10);
+            const isPast = current < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const day = current.getDay();
+
+            if (day === 0 || day === 1) {
+              ['10시', '12시', '14시', '16시'].forEach(time => {
+                const key = `${ymd}_${time}`;
+                if (existingEventKeys.has(key)) return;
+
+                const rawReason = blockedMap.get(key);
+                const isBlocked = rawReason != null && rawReason.trim() !== '';
+                const reason = isBlocked ? rawReason : null;
+
+                events.push({
+                  title: isPast ? '불가' : isBlocked ? reason : '가능',
+                  date: ymd,
+                  url: isPast || isBlocked ? null : `/reservation/form?date=${ymd}&time=${time}`,
+                  classNames: isPast || isBlocked ? ['disabled-event'] : ['available-event'],
+                  extendedProps: { tooltip: time, reason: reason }
+                });
+
+                existingEventKeys.add(key);
+              });
+            }
+            current.setDate(current.getDate() + 1);
+          }
+
+          return events;
+        }
+      });
+    </script>
+  </div>
+
+</section>
+
+</body>
+</html>

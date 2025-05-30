@@ -68,8 +68,8 @@ textarea{width:100%;padding:12px;font-size:0.95em;resize:vertical;border-radius:
 
 .arrow {display:flex;align-items:center;justify-content:center;font-size:24px;color:#7768ae;margin:0 10px;}
 
-.process_guide dt {font-weight:bold;color:#7768ae;margin-bottom:5px;}
-.process_guide dd {margin-bottom:15px;padding-left:10px;color:#555;}
+.process_guide dt {font-weight:bold;color:#7768ae;}
+.process_guide dd {margin-bottom:10px;padding-left:7px;color:#555;}
 .process_guide div {margin-bottom:20px;}
 
 @media (max-width: 764px) {

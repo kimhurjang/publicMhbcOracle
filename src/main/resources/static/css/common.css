@@ -249,9 +249,9 @@ body.menu_open::after {opacity:1;pointer-events:auto;}
 .color2:hover { background-color:#557895;}
 
 /* 비활성화 버튼 */
-button:disabled, .disabled { cursor: not-allowed; opacity: 0.6; }
+button:disabled, .disabled { cursor: not-allowed; opacity: 0.6; pointer-events: none;}
 button:disabled:hover, .disabled:hover {opacity: 0.65; }
-.disabled2 {opacity: 0.9; background:#ededed;}
+.disabled2 {opacity: 0.9; background:#ededed; }
 .disabled2:hover {opacity: 1; }
 
 /* 4글짜 넓이 고정 버튼 */
