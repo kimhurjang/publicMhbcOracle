@@ -6,8 +6,7 @@
 <body>
 
 <th:block layout:fragment="css">
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="/js/index.global.6.1.17.min.js"></script>
 
     <style>
         .fc .fc-button-primary {background:#fff;}
@@ -31,7 +30,7 @@
 
             try {
               const scheduleList = JSON.parse(raw);
-              console.log("✅ 일정목록:", scheduleList);
+              console.log("일정목록:", scheduleList);
 
               const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
                 initialView: 'dayGridMonth',
@@ -40,6 +39,7 @@
                 events: scheduleList.map(item => ({
                   title: item.reason + ' (' + item.timeSlot + ')',
                   date: item.eventDate,
+                  classNames: item.reason ? ['disabled-event'] : ['available-event'],
                   extendedProps: {
                     timeSlot: item.timeSlot,
                     idx: item.idx
@@ -48,7 +48,7 @@
                 eventClick: function(info) {
                   location.href = '/admin/schedule/view/' + info.event.extendedProps.idx;
                 },
-                // ✅ 시간 정렬 우선순위 적용
+                // 시간 정렬 우선순위 적용
                 eventOrder: function(a, b) {
                   const order = { "10시": 1, "12시": 2, "14시": 3, "16시": 4, "ALL": 99 };
                   return (order[a.extendedProps.timeSlot] || 999) - (order[b.extendedProps.timeSlot] || 999);

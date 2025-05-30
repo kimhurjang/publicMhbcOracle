@@ -18,6 +18,9 @@ public interface ScheduleBlockRepository extends JpaRepository<ScheduleBlockEnti
   //삭제
   void deleteByEventDateAndTimeSlotIn(Date eventDate, List<String> timeSlots);
 
+  //boolean existsByEventDateAndTimeSlot(Date eventDate, String timeSlot);
+
+
   List<ScheduleBlockEntity> findAll(); // list.html용
 
 }

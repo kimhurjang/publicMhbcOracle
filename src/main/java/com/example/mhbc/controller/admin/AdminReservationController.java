@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -117,9 +119,15 @@ public class AdminReservationController {
   // 예약 상태 변경 저장 처리 (Ajax 방식)
   @PostMapping("/status/ajax")
   @ResponseBody
-  public String updateStatusAjax(@RequestBody List<Map<String, String>> updates) {
-    adminReservationService.updateStatusesByAjax(updates);
-    return "상태가 성공적으로 변경되었습니다.";
+  public ResponseEntity<String> updateStatusAjax(@RequestBody List<Map<String, String>> updates) {
+    try {
+      adminReservationService.updateStatusesByAjax(updates);
+      return ResponseEntity.ok("상태가 성공적으로 변경되었습니다.");
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(e.getMessage()); // ← 오직 메시지만 전달
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("알 수 없는 오류가 발생했습니다.");
+    }
   }
 
   // 예약 상세보기

@@ -3,18 +3,23 @@ package com.example.mhbc.service.admin;
 import com.example.mhbc.dto.ReservationDTO;
 import com.example.mhbc.dto.ReservationSearchCondition;
 import com.example.mhbc.entity.ReservationEntity;
+import com.example.mhbc.entity.ScheduleBlockEntity;
 import com.example.mhbc.repository.ReservationRepository;
+import com.example.mhbc.repository.ScheduleBlockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,6 +32,7 @@ import java.util.stream.Stream;
 public class AdminReservationServiceImpl implements AdminReservationService {
 
   private final ReservationRepository reservationRepository;
+  private final ScheduleBlockRepository scheduleBlockRepository;
 
   // 예약 리스트 페이징 조회
   @Override
@@ -61,11 +67,96 @@ public class AdminReservationServiceImpl implements AdminReservationService {
       String status = update.get("status");
 
       reservationRepository.findById(idx).ifPresent(entity -> {
+        // 1. 예약예정일이 없으면 변경 불가
+        Date eventDate = entity.getEventDate();
+        if (eventDate == null) {
+          throw new IllegalArgumentException("예약 예정일이 없어 변경이 불가능합니다.");
+        }
+
+        // 2. 행사 시간을 추출
+        LocalDateTime eventDateTime = eventDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        String timeSlot = String.format("%02d", eventDateTime.getHour()); // "14" 형태로 변환
+
+        // 3. 차단된 일정이 있는지 확인
+        if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {
+          throw new IllegalArgumentException("등록된 확정 일정이 있어 변경이 불가능합니다.");
+        }
+
+        // 4. 상태 변경 및 저장
         entity.setStatus(status);
         reservationRepository.save(entity);
       });
     }
   }
+
+
+  /*
+  @Override
+  public void updateStatusesByAjax(List<Map<String, String>> updates) {
+    List<String> errors = new ArrayList<>();
+
+    for (Map<String, String> update : updates) {
+      Long idx = Long.parseLong(update.get("idx"));
+      String status = update.get("status");
+
+      reservationRepository.findById(idx).ifPresent(entity -> {
+        entity.setStatus(status);
+
+        if ("예약확정".equals(status)) {
+          Date eventDate = entity.getEventDate();
+
+          if (eventDate == null) {
+            errors.add("예약번호 " + idx + "는 행사 예정일이 없어 확정할 수 없습니다.");
+            //return;
+          }
+
+          String timeSlot = extractTime(eventDate);
+          String key = formatKey(eventDate, timeSlot);
+
+          boolean exists = scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot);
+          if (exists) {
+            errors.add("[" + key + "] 시간대는 이미 차단일정에 등록되어 있어 중복 확정이 불가능합니다.");
+            //return;
+          }
+          // ✅ 하나라도 오류가 발생하면 예외를 던져 확정 중단
+          if (!errors.isEmpty()) {
+            throw new IllegalStateException(String.join("\n", errors));
+          }
+
+          // 문제 없으면 차단 테이블에 등록
+          ScheduleBlockEntity block = new ScheduleBlockEntity();
+          block.setEventDate(eventDate);
+          block.setTimeSlot(timeSlot);
+          block.setReason("예약확정");
+          block.setCreatedAt(new Date());
+          block.setModifiedBy(entity.getLastModifiedBy());
+          scheduleBlockRepository.save(block);
+        }
+
+        reservationRepository.save(entity);
+      });
+    }
+
+    if (!errors.isEmpty()) {
+      throw new IllegalStateException(String.join("\n", errors));
+    }
+  }
+*/
+
+  // 시간 추출 (ex: 2025-06-01 14:00:00 → "14시")
+  private String extractTime(Date date) {
+    LocalDateTime ldt = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    return String.format("%02d시", ldt.getHour());
+  }
+
+  // 키 포맷용 날짜 + 시간 문자열 (확인용 메시지에 사용)
+  private String formatKey(Date date, String timeSlot) {
+    return new java.text.SimpleDateFormat("yyyy-MM-dd").format(date) + " " + timeSlot;
+  }
+
+
 
   // 개별 예약 조회
   @Override
