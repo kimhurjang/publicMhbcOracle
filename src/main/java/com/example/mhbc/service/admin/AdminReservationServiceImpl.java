@@ -72,19 +72,40 @@ public class AdminReservationServiceImpl implements AdminReservationService {
         if (eventDate == null) {
           throw new IllegalArgumentException("예약 예정일이 없어 변경이 불가능합니다.");
         }
-
         // 2. 행사 시간을 추출
         LocalDateTime eventDateTime = eventDate.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
         String timeSlot = String.format("%02d", eventDateTime.getHour()) + "시"; // "14" 형태로 변환
 
-        // 3. 차단된 일정이 있는지 확인
-        if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {
-          throw new IllegalArgumentException("등록된 확정 일정이 있어 변경이 불가능합니다.");
+        //ScheduleBlockEntity block = ;
+        //if("상담대기".equals(status) || "취소".equals(status) || "보류".equals(status) ){
+        //}
+
+        if ("확정".equals(status)) {
+          // 3. 차단된 일정이 있는지 확인
+          System.out.println("확정 ?? " + status);
+          if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {
+            throw new IllegalArgumentException("등록된 확정 일정이 있어 변경이 불가능합니다.");
+          } else {
+            ScheduleBlockEntity block = new ScheduleBlockEntity();
+            // 4. 상태 변경 및 저장
+            block.setEventDate(eventDate);
+            block.setTimeSlot(timeSlot);
+            block.setReason("확정");
+            block.setCreatedAt(new Date());
+            block.setModifiedBy(entity.getLastModifiedBy());
+            scheduleBlockRepository.save(block);
+          }
+        } else if("상담대기".equals(status) || "취소".equals(status) || "보류".equals(status) ){
+          System.out.println("상담대기 ?? " + status);
+          if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {
+            //ScheduleBlockEntity deleteBlcok = scheduleBlockRepository.deleteByEventDateAndTimeSlot(eventDate, timeSlot);
+            System.out.println("상담대기2 ?? " + status);
+            //scheduleBlockRepository.delete(block);
+          }
         }
 
-        // 4. 상태 변경 및 저장
         entity.setStatus(status);
         reservationRepository.save(entity);
       });
