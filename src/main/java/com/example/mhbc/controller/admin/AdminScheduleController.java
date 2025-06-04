@@ -124,12 +124,10 @@ public class AdminScheduleController {
       entity.setTimeSlot(slot);
       entity.setReason(dto.getReason());
       entity.setCreatedAt(new Date());
-
       //entity.setModifiedBy(username); // ✅임시사용자용 아래 주석 해제
       entity.setModifiedBy(user.getUsername()); // 수정자 ID 갱신
 
       scheduleBlockRepository.save(entity);
-
     }
     return "redirect:/admin/schedule/list";
   }
@@ -138,17 +136,10 @@ public class AdminScheduleController {
   public String list(Model model) throws JsonProcessingException {
     List<ScheduleBlockEntity> entities = scheduleBlockRepository.findAll();
 
-    // ✅ 일정 하나당 타임슬롯 1개로 나눠서 리스트 구성
+    // 일정 하나당 타임슬롯 1개로 나눠서 리스트 구성
     List<ScheduleBlockDTO> list = entities.stream()
-            .map(entity -> {
-              ScheduleBlockDTO dto = new ScheduleBlockDTO();
-              dto.setIdx(entity.getIdx());
-              dto.setEventDate(new SimpleDateFormat("yyyy-MM-dd").format(entity.getEventDate()));
-              dto.setTimeSlot(entity.getTimeSlot()); // ✅ 이건 그대로 사용 (한 건당 하나)
-              dto.setReason(entity.getReason());
-              dto.setModifiedBy(entity.getModifiedBy());
-              return dto;
-            }).collect(Collectors.toList());
+            .map(ScheduleBlockDTO::fromEntity)
+            .collect(Collectors.toList());
 
     ObjectMapper objectMapper = new ObjectMapper();
     String jsonList = objectMapper.writeValueAsString(list);
@@ -166,13 +157,9 @@ public class AdminScheduleController {
     if (result.isPresent()) {
       ScheduleBlockEntity base = result.get();
       Date eventDate = base.getEventDate();
-
       List<ScheduleBlockEntity> slots = scheduleBlockRepository.findByEventDate(eventDate);
-      ScheduleBlockDTO dto = new ScheduleBlockDTO();
-      dto.setIdx(base.getIdx());
-      dto.setEventDate(new SimpleDateFormat("yyyy-MM-dd").format(eventDate));
-      dto.setReason(base.getReason());
-      dto.setModifiedBy(base.getModifiedBy());
+
+      ScheduleBlockDTO dto = ScheduleBlockDTO.fromEntity(base);
       dto.setTimeSlots(slots.stream().map(ScheduleBlockEntity::getTimeSlot).collect(Collectors.toList()));
 
       model.addAttribute("schedule", dto);

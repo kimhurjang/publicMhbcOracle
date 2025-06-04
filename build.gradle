@@ -51,6 +51,11 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
+jar {
+	manifest {
+		attributes 'Main-Class': 'com.example.exam.ExamApplication'
+	}
+}
 
 tasks.named('test') {
 	useJUnitPlatform()

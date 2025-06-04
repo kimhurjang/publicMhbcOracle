@@ -2,8 +2,12 @@ package com.example.mhbc.service.admin;
 
 import com.example.mhbc.dto.ReservationDTO;
 import com.example.mhbc.dto.ReservationSearchCondition;
+import com.example.mhbc.entity.HallEntity;
+import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.entity.ReservationEntity;
 import com.example.mhbc.entity.ScheduleBlockEntity;
+import com.example.mhbc.repository.HallRepository;
+import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.repository.ReservationRepository;
 import com.example.mhbc.repository.ScheduleBlockRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +37,8 @@ public class AdminReservationServiceImpl implements AdminReservationService {
 
   private final ReservationRepository reservationRepository;
   private final ScheduleBlockRepository scheduleBlockRepository;
+  private final HallRepository hallRepository;
+  private final MemberRepository memberRepository;
 
   // 예약 리스트 페이징 조회
   @Override
@@ -106,6 +112,34 @@ public class AdminReservationServiceImpl implements AdminReservationService {
       });
     }
   }
+  @Override
+  public void updateReservation(ReservationDTO dto) {
+    ReservationEntity existing = reservationRepository.findById(dto.getIdx())
+            .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
+
+    // 상태가 '예약확정'일 경우 유효성 검증
+    if ("예약확정".equals(dto.getStatus())) {
+      if (dto.getEventDate() == null || dto.getEventTimeSelect() == null || dto.getEventTimeSelect().isEmpty()) {
+        throw new IllegalArgumentException("예약확정은 행사예정일과 시간이 모두 입력되어야 합니다.");
+      }
+
+      String timeSlot = dto.getEventTimeSelect() + "시";
+      if (scheduleBlockRepository.existsByEventDateAndTimeSlot(dto.getEventDate(), timeSlot)) {
+        throw new IllegalArgumentException("해당 날짜 및 시간대는 이미 차단된 일정이 있어 예약확정이 불가능합니다.");
+      }
+    }
+
+    // 관계 주입
+    HallEntity hall = hallRepository.findById(dto.getHallIdx())
+            .orElseThrow(() -> new IllegalArgumentException("해당 홀 정보가 없습니다."));
+    MemberEntity member = existing.getMember();
+
+    // toEntity로 변환
+    ReservationEntity updated = dto.toEntity(member, hall);
+    updated.setCreatedAt(existing.getCreatedAt()); // 생성일 유지
+
+    reservationRepository.save(updated);
+  }
 
   // 시간 추출 (ex: 2025-06-01 14:00:00 → "14시")
   private String extractTime(Date date) {
@@ -117,8 +151,6 @@ public class AdminReservationServiceImpl implements AdminReservationService {
   private String formatKey(Date date, String timeSlot) {
     return new java.text.SimpleDateFormat("yyyy-MM-dd").format(date) + " " + timeSlot;
   }
-
-
 
   // 개별 예약 조회
   @Override

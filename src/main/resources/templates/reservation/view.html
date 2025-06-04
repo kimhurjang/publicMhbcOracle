@@ -78,7 +78,9 @@
         </tr>
         <tr>
           <th>문의사항</th>
-          <td th:text="${reservation.userNote}">요청사항이 있으면 여기에 표시</td>
+          <td>
+            <pre th:text="${reservation.userNote}"></pre>
+          </td>
         </tr>
         </tbody>
       </table>
