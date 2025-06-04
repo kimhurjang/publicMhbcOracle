@@ -91,14 +91,35 @@ public class AdminBoardService {
     public Page<BoardEntity> getBoardsByGroupAndKeyword(Long groupIdx, String keyword, int page) {
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        if (groupIdx == null && (keyword == null || keyword.isBlank())) {
+        if ((groupIdx == null) && (keyword == null || keyword.isBlank())) {
             return boardRepository.findAll(pageable);
+
         } else if (groupIdx != null && (keyword == null || keyword.isBlank())) {
-            return boardRepository.findByGroupIdx(groupIdx, pageable);
+            // 그룹만 있고 키워드는 없는 경우
+            return boardRepository.findByGroupGroupIdx(groupIdx, pageable);
+
         } else if (groupIdx == null) {
-            return boardRepository.findByTitleContaining(keyword, pageable);
+            // 그룹이 없고, 키워드만 있는 경우
+            if (keyword.matches("\\d+")) {
+                Long idx = Long.parseLong(keyword);
+                // 숫자만 입력: 제목에 포함 OR idx 일치
+                return boardRepository.findByTitleContainingIgnoreCaseOrIdx(keyword, idx, pageable);
+            } else {
+                // 숫자 아닌 키워드: 제목 포함
+                return boardRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+            }
+
         } else {
-            return boardRepository.findByGroupGroupIdxAndTitleContaining(groupIdx, keyword, pageable);
+            // 그룹이 있고 키워드도 있는 경우
+            if (keyword.matches("\\d+")) {
+                Long idx = Long.parseLong(keyword);
+                // 숫자만 입력: 그룹 필터 + (제목에 포함 OR idx 일치)
+                return boardRepository.findByGroupGroupIdxAndTitleContainingIgnoreCaseOrGroupGroupIdxAndIdx(
+                        groupIdx, keyword, groupIdx, idx, pageable);
+            } else {
+                // 숫자가 아닌 키워드: 그룹 필터 + 제목 포함
+                return boardRepository.findByGroupGroupIdxAndTitleContainingIgnoreCase(groupIdx, keyword, pageable);
+            }
         }
     }
 

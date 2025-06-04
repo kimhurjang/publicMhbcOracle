@@ -37,8 +37,8 @@
                     <button type="submit" name="action" value="delete" class="red" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">선택 삭제</button>
                 </div>
                 <div class="form_group mb20">
-                    <input type="text" name="keyword" placeholder="게시물의 제목을 입력해주세요." th:value="${keyword}">
-                    <button type="submit" name="action" value="search" class="color2">검색</button>
+                    <input type="text" name="keyword" placeholder="게시물의 제목 혹은 고유번호를 입력해주세요." th:value="${keyword}">
+                    <button type="submit" name="action" value="search" class="color2" >검색</button>
                     <div th:if="${paging != null}">
                         <p>현재 조회중인 게시판 : <span th:text="${category}"></span></p>
                     </div>
@@ -59,74 +59,76 @@
                 <tr th:if="${paging == null}">
                     <td colspan="7" style="color: #999;">카테고리 선택 후 조회하기</td>
                 </tr>
-                <tr th:if="${paging?.isEmpty()}">
+                <tr th:if="${paging != null and paging.content.isEmpty()}">
                     <td colspan="7">조회된 게시글이 없습니다.</td>
                 </tr>
-                <tr th:each="board : ${paging}">
-                    <td><input type="checkbox" name="delCheck" th:value="${board.idx}"></td>
-                    <td th:text="${board.idx}"></td>
-                    <td th:text="${category}"></td>
-                    <td>
-                        <a th:if="${groupIdx == 1}"
-                           th:href="@{/board/notice_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                            <span th:text="${board.title}"></span>
-                        </a>
-                        <a th:if="${groupIdx == 2}"
-                           th:href="@{/board/cmct_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                            <span th:text="${board.title}"></span>
-                        </a>
-                        <a th:if="${groupIdx == 3}"
-                           th:href="@{/board/event_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                            <span th:text="${board.title}"></span>
-                        </a>
-                        <a th:if="${groupIdx == 4}"
-                           th:href="@{/board/gallery_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                            <span th:text="${board.title}"></span>
-                        </a>
-                        <a th:if="${groupIdx == 5 or groupIdx == 6}" th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx},page=${page})}">
-                            <span th:text="${board.title}"></span>
-                        </a>
-                    </td>
-                    <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"></td>
-                    <td>
-                        <a th:href="@{/admin/board/delete(id=${board.idx},groupIdx=${groupIdx},page=${page})}" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
-                            <button type="button" class="small red">삭제</button>
-                        </a>
-                    </td>
-                    <td>
-                        <a th:if="${groupIdx >= 1 and groupIdx <= 4}"
-                           th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, commentsIdx=0)}">
-                            <button type="button" class="small">수정</button>
-                        </a>
-                        <a th:if="${groupIdx == 5 or groupIdx == 6}"
-                           th:href="@{/admin/board/modify(id=${board.idx}, groupIdx=${groupIdx}, page=${page})}">
-                            <button type="button" class="small">수정</button>
-                        </a>
-                    </td>
-                    <td id="detailBtn">
-                        <div>
+                <th:block th:if="${paging != null and !#lists.isEmpty(paging.content)}">
+                    <tr th:each="board : ${paging.content}">
+                        <td><input type="checkbox" name="delCheck" th:value="${board.idx}"></td>
+                        <td th:text="${board.idx}"></td>
+                        <td th:text="${category}"></td>
+                        <td>
                             <a th:if="${groupIdx == 1}"
                                th:href="@{/board/notice_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                                <button type="button" class="small">상세보기</button>
+                                <span th:text="${board.title}"></span>
                             </a>
                             <a th:if="${groupIdx == 2}"
                                th:href="@{/board/cmct_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                                <button type="button" class="small">상세보기</button>
+                                <span th:text="${board.title}"></span>
                             </a>
                             <a th:if="${groupIdx == 3}"
                                th:href="@{/board/event_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                                <button type="button" class="small">상세보기</button>
+                                <span th:text="${board.title}"></span>
                             </a>
                             <a th:if="${groupIdx == 4}"
                                th:href="@{/board/gallery_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
-                                <button type="button" class="small">상세보기</button>
+                                <span th:text="${board.title}"></span>
                             </a>
-                            <a th:if="${groupIdx == 5 or groupIdx == 6}" th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx},page=${page})}"><button type="button" class="small">상세보기</button></a>
-                            <span th:if="${board.request == 0 and groupIdx == 6}">대기중</span>
-                            <span th:if="${board.request == 1 and groupIdx == 6}" class="xi-check"></span>
-                        </div>
-                    </td>
-                </tr>
+                            <a th:if="${groupIdx == 5 or groupIdx == 6}" th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx},page=${page})}">
+                                <span th:text="${board.title}"></span>
+                            </a>
+                        </td>
+                        <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"></td>
+                        <td>
+                            <a th:href="@{/admin/board/delete(id=${board.idx},groupIdx=${groupIdx},page=${page})}" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
+                                <button type="button" class="small red">삭제</button>
+                            </a>
+                        </td>
+                        <td>
+                            <a th:if="${groupIdx >= 1 and groupIdx <= 4}"
+                               th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, commentsIdx=0)}">
+                                <button type="button" class="small">수정</button>
+                            </a>
+                            <a th:if="${groupIdx == 5 or groupIdx == 6}"
+                               th:href="@{/admin/board/modify(id=${board.idx}, groupIdx=${groupIdx}, page=${page})}">
+                                <button type="button" class="small">수정</button>
+                            </a>
+                        </td>
+                        <td id="detailBtn">
+                            <div>
+                                <a th:if="${groupIdx == 1}"
+                                   th:href="@{/board/notice_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                                    <button type="button" class="small">상세보기</button>
+                                </a>
+                                <a th:if="${groupIdx == 2}"
+                                   th:href="@{/board/cmct_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                                    <button type="button" class="small">상세보기</button>
+                                </a>
+                                <a th:if="${groupIdx == 3}"
+                                   th:href="@{/board/event_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                                    <button type="button" class="small">상세보기</button>
+                                </a>
+                                <a th:if="${groupIdx == 4}"
+                                   th:href="@{/board/gallery_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                                    <button type="button" class="small">상세보기</button>
+                                </a>
+                                <a th:if="${groupIdx == 5 or groupIdx == 6}" th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx},page=${page})}"><button type="button" class="small">상세보기</button></a>
+                                <span th:if="${board.request == 0 and groupIdx == 6}">대기중</span>
+                                <span th:if="${board.request == 1 and groupIdx == 6}" class="xi-check"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </th:block>
             </tbody>
         </table>
         </form>
@@ -145,41 +147,63 @@
 </body>
 </html>
 <script>
-    document.getElementById('allCheck').addEventListener('change', function() {
-        const checkboxes = document.querySelectorAll('input[name="delCheck"]');
-        checkboxes.forEach(cb => cb.checked = this.checked);
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1) 전체 선택 체크박스
+      const allCheck = document.getElementById('allCheck');
+      if (allCheck) {
+        allCheck.addEventListener('change', function() {
+          const checkboxes = document.querySelectorAll('input[name="delCheck"]');
+          checkboxes.forEach(cb => cb.checked = this.checked);
+        });
+      }
 
-    const form = document.forms['selectAdminBoard'];
-    const select = document.getElementById('categorySelect');
-    const hiddenInput = document.getElementById('groupIdxHidden');
+      // 2) 폼, 셀렉트, hidden input, search 버튼들
+      const form = document.forms['selectAdminBoard'];
+      const select = document.getElementById('categorySelect');
+      const hiddenInput = document.getElementById('groupIdxHidden');
+      const searchButtons = document.querySelectorAll('button[name="action"][value="search"]');
+      const resetButton = document.querySelector('button[name="action"][value="reset"]');
 
-    form.addEventListener('submit', function(event) {
-        // 선택된 카테고리 값을 hidden에 넣기
-        hiddenInput.value = select.value;
-    });
+      // 3) (선택) 만약 searchButtons가 정상적으로 잡혔는지 확인
+      // console.log('searchButtons length:', searchButtons.length);
 
-    document.querySelector('button[name="action"][value="search"]').addEventListener('click', function(event) {
+      // 4) submit 직전에 hidden input에 카테고리 값을 담기
+      if (form && select && hiddenInput) {
+        form.addEventListener('submit', function(event) {
+          // 폼 제출 시 항상 hidden input에 select.value 복사
+          hiddenInput.value = select.value;
+        });
+      }
+
+      // 5) 카테고리 선택 유효성 검사
+      function validateCategorySelected(event) {
         if (!select.value) {
-            event.preventDefault(); // 폼 제출 막기
-            alert('카테고리를 선택해 주세요.');
-            select.focus();
-            return false;
+          event.preventDefault();
+          alert('카테고리를 선택해 주세요.');
+          select.focus();
+          return false;
         }
-    });
+        // 카테고리가 선택돼 있으면 폼 제출 허용
+      }
 
-    document.querySelector('button[name="action"][value="reset"]').addEventListener('click', function(event) {
-        // 폼 초기화 방지 불필요 (type="button"이므로 기본적으로 submit 아님)
+      // 6) 모든 search 버튼에 클릭 이벤트 리스너 추가
+      if (searchButtons.length > 0) {
+        searchButtons.forEach(btn => {
+          btn.addEventListener('click', validateCategorySelected);
+        });
+      }
 
-        // 카테고리 초기화
-        document.getElementById('categorySelect').value = '';
-
-        // 키워드 초기화
-        document.querySelector('input[name="keyword"]').value = '';
-
-        // hidden input도 초기화 (필요시)
-        document.getElementById('groupIdxHidden').value = '';
+      // 7) 초기화 버튼 로직
+      if (resetButton) {
+        resetButton.addEventListener('click', function(event) {
+          // <button type="button"> 이기 때문에 기본 제출 이벤트는 없음
+          select.value = '';
+          document.querySelector('input[name="keyword"]').value = '';
+          hiddenInput.value = '';
+        });
+      }
     });
 </script>
+
 
 

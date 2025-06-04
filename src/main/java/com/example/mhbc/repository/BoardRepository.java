@@ -45,21 +45,31 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     Page<BoardEntity> findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(String title, long groupIdx, Long boardType , Pageable pageable);
 
 
-    // 1️⃣ 전체 게시글 (페이지네이션)
+    @Override
     Page<BoardEntity> findAll(Pageable pageable);
 
-    // 2️⃣ 특정 그룹 (카테고리) 게시글
-    //상단에 findByGroupIdx
+    // 2) 특정 그룹만 조회 (페이징)
+    Page<BoardEntity> findByGroupGroupIdx(Long groupIdx, Pageable pageable);
 
-    // 3️⃣ 키워드 포함 (예: 제목에 키워드 포함)
-    Page<BoardEntity> findByTitleContaining(String keyword, Pageable pageable);
+    // 3) 그룹 없이 제목만 포함 검색 (페이징)
+    Page<BoardEntity> findByTitleContainingIgnoreCase(String keyword, Pageable pageable);
 
-    // 4️⃣ 특정 그룹 + 키워드 포함
-    Page<BoardEntity> findByGroupGroupIdxAndTitleContaining(Long groupIdx, String keyword, Pageable pageable);
+    // 4) 그룹이 있을 때, 제목에 키워드 포함 검색 (페이징)
+    Page<BoardEntity> findByGroupGroupIdxAndTitleContainingIgnoreCase(
+            Long groupIdx, String keyword, Pageable pageable);
+
+    // 5) 숫자만 입력된 경우: 제목에 포함 OR idx 일치 (그룹 없이) (페이징)
+    Page<BoardEntity> findByTitleContainingIgnoreCaseOrIdx(
+            String keyword, Long idx, Pageable pageable);
+
+    // 6) 숫자만 입력된 경우: 그룹 필터 + (제목에 포함 OR idx 일치) (페이징)
+    Page<BoardEntity> findByGroupGroupIdxAndTitleContainingIgnoreCaseOrGroupGroupIdxAndIdx(
+            Long groupIdx1, String keyword,
+            Long groupIdx2, Long idx,
+            Pageable pageable);
 
     //사용자 idx로 게시물 조회
     List<BoardEntity> findByMemberIdx(Long memberIdx, Sort sort);
-
 
 }
 
