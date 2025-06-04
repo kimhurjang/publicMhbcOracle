@@ -776,7 +776,7 @@ public class BoardController {
         if (attachment.getFilePath() == null || attachment.getFilePath().isEmpty()) {
             throw new RuntimeException("파일 경로가 존재하지 않습니다: " + attachment);
         }
-        String uploadDir = "Z:/public/data/";
+        String uploadDir = "C:/Users/YJ/Documents/GitHub/public/data/";
         Resource resource = new FileSystemResource(uploadDir + attachment.getFilePath());
 
 

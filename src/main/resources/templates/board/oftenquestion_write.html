@@ -33,12 +33,12 @@
       </table>
       <table>
         <th>답변 제목</th>
-          <td><input type="text" name="requestTitle" required placeholder="제목을 입력해주세요."></td>
+          <td><input type="text" name="answerTitle" required placeholder="제목을 입력해주세요."></td>
           <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="display: none;"></div>
         </tr>
         <tr>
           <th>답변 내용</th>
-          <td><textarea type="text" name="requestContent" required placeholder="본문을 입력해주세요."></textarea></td>
+          <td><textarea type="text" name="answerContent" required placeholder="본문을 입력해주세요."></textarea></td>
           <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="display: none;"></div>
         </tr>
         <tr>

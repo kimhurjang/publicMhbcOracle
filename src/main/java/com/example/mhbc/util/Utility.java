@@ -31,7 +31,7 @@ public class Utility {
     private final MemberRepository memberRepository;
     private final AttachmentRepository attachmentRepository;
     private final CommentsRepository commentsRepository;
-    private String uploadDir = "Z:/public/data/";
+    private String uploadDir = "C:/Users/YJ/Documents/GitHub/public/data/";
     /**
     * 파일
     * */
