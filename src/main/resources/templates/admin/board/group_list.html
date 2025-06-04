@@ -32,18 +32,23 @@
                         <option value="6" th:selected="${group_idx == 6}">1 대 1 질문</option>
                     </select>
                     <input type="hidden" name="group_idx_hidden" id="groupIdxHidden" />
-                    <button type="submit" name="action" value="search" class="small">조회하기</button>
-                    <button type="button" name="action" value="reset" class="small">검색조건 초기화</button>
-                    <button type="submit" name="action" value="delete" class="small" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">선택 삭제</button>
+                    <button type="submit" name="action" value="search" class="color2">조회하기</button>
+                    <button type="button" name="action" value="reset" >검색조건 초기화</button>
+                    <button type="submit" name="action" value="delete" class="red" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">선택 삭제</button>
                 </div>
                 <div class="form_group mb20">
-                    <input type="text" name="keyword" placeholder="게시물의 제목을 입력해주세요." th:value="${keyword}"> <button type="submit" name="action" value="search" class="small">검색</button>
+                    <input type="text" name="keyword" placeholder="게시물의 제목을 입력해주세요." th:value="${keyword}">
+                    <button type="submit" name="action" value="search" class="color2">검색</button>
+                    <div th:if="${paging != null}">
+                        <p>현재 조회중인 게시판 : <span th:text="${category}"></span></p>
+                    </div>
                 </div>
             </div>
         <table>
             <thead>
                 <tr>
                     <th><input type="checkbox" id="allCheck" name="delCheck" th:value="${delCheck}"></th>
+                    <th>고유번호</th>
                     <th>카테고리</th>
                     <th style="width: 40%;">제목</th>
                     <th>등록 일자</th>
@@ -59,12 +64,33 @@
                 </tr>
                 <tr th:each="board : ${paging}">
                     <td><input type="checkbox" name="delCheck" th:value="${board.idx}"></td>
+                    <td th:text="${board.idx}"></td>
                     <td th:text="${category}"></td>
-                    <td><a href="#"><span th:text="${board.title}"></span></a></td>
+                    <td>
+                        <a th:if="${groupIdx == 1}"
+                           th:href="@{/board/notice_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                            <span th:text="${board.title}"></span>
+                        </a>
+                        <a th:if="${groupIdx == 2}"
+                           th:href="@{/board/cmct_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                            <span th:text="${board.title}"></span>
+                        </a>
+                        <a th:if="${groupIdx == 3}"
+                           th:href="@{/board/event_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                            <span th:text="${board.title}"></span>
+                        </a>
+                        <a th:if="${groupIdx == 4}"
+                           th:href="@{/board/gallery_view(group_idx=${groupIdx}, idx=${board.idx}, member=${board.member != null ? board.member.idx : 0}, board_type=${boardType})}">
+                            <span th:text="${board.title}"></span>
+                        </a>
+                        <a th:if="${groupIdx == 5 or groupIdx == 6}" th:href="@{/admin/board/group_view(idx=${board.idx},groupIdx=${groupIdx},page=${page})}">
+                            <span th:text="${board.title}"></span>
+                        </a>
+                    </td>
                     <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"></td>
                     <td>
                         <a th:href="@{/admin/board/delete(id=${board.idx},groupIdx=${groupIdx},page=${page})}" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
-                            <button type="button" class="small">삭제</button>
+                            <button type="button" class="small red">삭제</button>
                         </a>
                     </td>
                     <td>

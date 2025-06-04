@@ -11,7 +11,7 @@
   <a th:href="@{/board/event}"><h1>이벤트</h1></a>
 
   <div th:if="${member != null and member.grade == 10}">
-    <a th:href="@{/board/event_write(board_type=${boardType}, group_idx=${groupIdx})}" sec:authorize="hasRole('ADMIN')"><button>[관리자]글쓰기</button></a>
+    <a th:href="@{/board/event_write(board_type=${boardType}, group_idx=${groupIdx})}" sec:authorize="hasRole('ADMIN')"><button class="small mb15">[관리자]글쓰기</button></a>
   </div>
 
   <div id="content" class="content event">
@@ -24,7 +24,8 @@
         <div th:text="${board.title}" class="event title"></div>
 
         <div><sub th:text="${#dates.format(board.startAt, 'yyyy-MM-dd')}+' ~ '+${#dates.format(board.closedAt, 'yyyy-MM-dd')}"></sub></div>
-        <div class="xi-step-forward"></div>
+          <div><sub th:text="'작성일 : ' + ${#dates.format(board.createdAt, 'yy.MM.dd')}"></sub></div>
+          <div class="xi-step-forward"></div>
       </div>
     </a>
 

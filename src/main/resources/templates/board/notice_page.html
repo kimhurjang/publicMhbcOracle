@@ -7,7 +7,7 @@
   <a th:href="@{/board/notice}"><h1>공지 사항</h1></a>
   <div id="content" class="content">
     <div th:if="${member != null and member.grade == 10}">
-       <a th:href="@{/board/notice_write(group_idx=${groupIdx}, board_type=${boardType})}"><button>[관리자]글쓰기</button></a>
+       <a th:href="@{/board/notice_write(group_idx=${groupIdx}, board_type=${boardType})}"><button class="small mb15">[관리자]글쓰기</button></a>
     </div>
     <table th:if="${groupIdx == 1}">
       <tr th:each="board : ${paging}">

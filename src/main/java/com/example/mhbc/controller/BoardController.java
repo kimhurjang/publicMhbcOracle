@@ -647,7 +647,7 @@ public class BoardController {
         int itemsPerPage = 4;
         int groupSize = 3;
 
-        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.ASC, "createdAt");
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "createdAt");
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
         int totalCount = (int) paging.getTotalElements();

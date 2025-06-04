@@ -81,6 +81,9 @@ public class BoardEntity {
     @Column(name = "answer_content")
     private String answerContent;//자주 묻는 질문 답변용
 
+    @Column(name = "category")
+    private String category;
+
     @PrePersist
     protected void onCreate() {
         Date now = new Date();
@@ -107,6 +110,7 @@ public class BoardEntity {
                 .answerContent(answerContent)
                 .groupIdx(group != null ? group.getGroupIdx() : null)
                 .member(member)
+                .category(category)
                 .build();
     }
 

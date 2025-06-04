@@ -7,7 +7,7 @@
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <h1>내가 작성한 글 목록</h1>
   <div id="content" class="content">
-    <table>
+    <table style="teble">
       <tr>
         <th colspan="2"><h3>1 대 1 문의</h3></th>
       </tr>
@@ -15,13 +15,17 @@
         <td colspan="2">작성된 게시물이 없습니다.</td>
       </tr>
       <tr th:each="board : ${personalList}">
-        <td>
+        <td style="width: 70%;">
           <a th:href="@{/board/personalquestion_view(group_idx=${6},board_type=${2},idx=${board.idx})}">
             <span th:text="${board.title}"></span>
           </a>
         </td>
         <td>
-          <span th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"></span>
+          <div  style="display: flex; justify-content: space-between; padding: 0 10px;" >
+            <span th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}" ></span>
+            <span th:if="${board.request == 1} " class="red" ><sub>답변 완료</sub></span>
+            <span th:if="${board.request == 0}"><sub>답변 대기중</sub></span>
+          </div>
         </td>
       </tr>
 
@@ -34,7 +38,7 @@
         <td colspan="2">작성된 게시물이 없습니다.</td>
       </tr>
       <tr th:each="board : ${communityList}">
-        <td>
+        <td style="width: 70%;">
           <a th:href="@{/board/cmct_view(group_idx=${2},board_type=${0},idx=${board.idx},member=${member.idx})}">
             <span th:text="${board.title}"></span>
           </a>

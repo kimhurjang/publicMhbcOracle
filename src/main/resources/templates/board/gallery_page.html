@@ -11,7 +11,7 @@
         <a th:href="@{/board/gallery}"><h1 class="gallery-title">갤러리</h1></a>
         <!--<a href="/admin" sec:authorize="hasRole('ADMIN')"></a>-->
         <div th:if="${member != null and member.grade == 10}">
-            <a th:href="@{/board/gallery_write(board_type=${boardType}, group_idx=${groupIdx})}" sec:authorize="hasRole('ADMIN')"><button>[관리자]글쓰기</button></a>
+            <a th:href="@{/board/gallery_write(board_type=${boardType}, group_idx=${groupIdx})}" sec:authorize="hasRole('ADMIN')"><button class="small mb15">[관리자]글쓰기</button></a>
         </div>
         <div class="gallery">
 
@@ -23,7 +23,7 @@
 
                 <div class="card-text">
                     <h3 th:text="${board.title}"></h3>
-                    <p th:text="${board.content}"></p>
+                    <p  th:text="'작성일 : ' + ${#dates.format(board.createdAt, 'yy.MM.dd')}"></p>
                     <div th:text="'조회수 : ' + ${board.viewCnt}"></div>
                 </div>
 
