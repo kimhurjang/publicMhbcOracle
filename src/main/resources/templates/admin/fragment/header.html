@@ -24,7 +24,7 @@
       <li th:classappend="${#strings.startsWith(currentPath, '/admin/reservation') or #strings.startsWith(currentPath, '/admin/hall') or #strings.startsWith(currentPath, '/admin/schedule')} ? 'active'">
         <strong><a th:href="@{/admin/reservation/list}">예약관리</a></strong>
         <ul class="sub">
-          <li th:classappend="${currentPath.startsWith('/admin/reservation/list')} ? 'active'">
+          <li th:classappend="${currentPath.startsWith('/admin/reservation')} ? 'active'">
             <a th:href="@{/admin/reservation/list}">예약현황</a>
           </li>
           <li th:classappend="${currentPath.startsWith('/admin/schedule')} ? 'active'">

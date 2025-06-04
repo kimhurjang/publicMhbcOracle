@@ -19,4 +19,6 @@ public interface AdminReservationService {
   void updateAdminNote(Long idx, String adminNote, String loginId);
   Page<ReservationDTO> findByCondition(ReservationSearchCondition condition, Pageable pageable);
 
+  void updateReservation(ReservationDTO dto); //수정
+
 }

@@ -155,24 +155,26 @@ function validateForm() {
   return true;
 }
 
+//관리자 수정 입력
+function validateForm_edit() {
+
+}
+
 // DOM 로드 완료 후 이벤트 바인딩
 document.addEventListener("DOMContentLoaded", function () {
   console.log("DOMContentLoaded 실행됨!");
 
-  renderGuestOptions();
-  bindCalcPrice();
-  bindReset();
-  bindUndecidedToggle();
-  bindDateValidations();
+  renderGuestOptions(); // 인원수 기본 렌더링
+  bindCalcPrice(); // 금액 산출
+  bindReset(); // 초기화
+  bindUndecidedToggle(); // 행사일 미정 체크
+  bindDateValidations(); // 날짜 유효성
 
+  // 홀 선택 시 인원수 옵션 다시 생성
   document.querySelectorAll('input[name="hallIdx"]').forEach(radio => {
     radio.addEventListener('change', function () {
       const capacity = parseInt(this.dataset.capacity);
       renderGuestOptions(capacity);
     });
   });
-});
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOMContentLoaded 실행됨!222222");
-    bindDateValidations();
 });
