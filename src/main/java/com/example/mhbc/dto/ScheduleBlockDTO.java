@@ -1,6 +1,8 @@
 // 일정차단 DTO (폼 입력/출력용)
 package com.example.mhbc.dto;
 
+import com.example.mhbc.entity.ReservationEntity;
+import com.example.mhbc.entity.ScheduleBlockEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +19,7 @@ public class ScheduleBlockDTO {
 
   private String timeSlot;           // 단일 시간대 (list에서 사용)
   private List<String> timeSlots;    // 복수 시간대 (form에서 사용)
+
+  private Long reservationIdx; // 예약 ID
+
 }

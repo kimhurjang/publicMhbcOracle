@@ -1,7 +1,9 @@
 // 관리자 일정차단 엔티티
 package com.example.mhbc.entity;
 
+import com.example.mhbc.dto.ScheduleBlockDTO;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,5 +36,11 @@ public class ScheduleBlockEntity {
 
   @Column(name = "modified_by")
   private String modifiedBy; // 마지막 수정자 ID
+
+  // 예약과의 연관관계
+  @ManyToOne
+  @JoinColumn(name = "RESERVATION_IDX") // DB 칼럼명
+  private ReservationEntity reservation;
+
 
 }

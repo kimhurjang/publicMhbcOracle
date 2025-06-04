@@ -135,6 +135,7 @@
                 const ymd = current.toISOString().slice(0, 10);
                 const isPast = current < new Date(today.getFullYear(), today.getMonth(), today.getDate());
                 const day = current.getDay();
+                const isTooSoon = (current - today) / (1000 * 60 * 60 * 24) < 14; //2주여부
 
                 if (day === 0 || day === 1) {
                   ['10시', '12시', '14시', '16시'].forEach(time => {
@@ -145,12 +146,18 @@
                     const isBlocked = rawReason != null && rawReason.trim() !== '';
                     const reason = isBlocked ? rawReason : null;
 
+                    const isDisabled = isPast || isTooSoon || isBlocked;
+
                     events.push({
-                      title: isPast ? '불가' : isBlocked ? reason : '가능',
+                      //title: isPast ? '불가' : isBlocked ? reason : '가능',
+                      title: isDisabled ? '불가' : '가능',
                       date: ymd,
-                      url: isPast || isBlocked ? null : `/reservation/form?date=${ymd}&time=${time}`,
-                      classNames: isPast || isBlocked ? ['disabled-event'] : ['available-event'],
-                      extendedProps: { tooltip: time, reason: reason }
+                      url: isDisabled ? null : `/reservation/form?date=${ymd}&time=${time}`,
+                      classNames: isDisabled ? ['disabled-event'] : ['available-event'],
+                      extendedProps: {
+                          tooltip: time,
+                          reason: reason
+                      }
                     });
 
                     existingEventKeys.add(key);
@@ -164,6 +171,9 @@
           });
         </script>
       </section>
+      <p style="margin-top:10px; color:#c00; font-size:14px;">
+        ※ 행사 예정일은 오늘로부터 최소 2주 이후만 예약 가능합니다.
+      </p>
 
     </div><!--E content-->
 </section><!--E container-->

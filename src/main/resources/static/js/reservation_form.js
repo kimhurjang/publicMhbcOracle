@@ -103,16 +103,36 @@ function bindDateValidations() {
       const today = new Date();
       today.setHours(0, 0, 0, 0); // 오늘도 00시로 고정
 
+      console.log(`선택된 날짜: ${selected}`);
+      console.log(`오늘 날짜: ${today}`);
+
       if (selected <= today) {
         alert(`${label}은 당일 이후만 선택 가능합니다.`);
         this.value = "";
         this.focus();
       }
+
+      // 상담 가능 날짜가 행사 예정일보다 최소 2주 이상 차이 나야 함
+      if (id === "contact_date") {
+        const eventInput = document.getElementById("event_date_input");
+        if (eventInput && eventInput.value) {
+          const eventDate = new Date(eventInput.value);
+          const twoWeeksBeforeEvent = new Date(eventDate);
+          twoWeeksBeforeEvent.setDate(eventDate.getDate() - 14);
+
+          console.log(`행사 예정일: ${eventDate}`);
+          console.log(`상담 가능 최소 날짜: ${twoWeeksBeforeEvent}`);
+
+          if (selected > twoWeeksBeforeEvent) {
+            alert(`상담 가능 날짜는 행사 예정일 최소 2주 이전이어야 합니다.`);
+            this.value = "";
+            this.focus();
+          }
+        }
+      }
     });
   });
 }
-
-
 
 // 유효성 검사 (form submit 전에 호출됨)
 function validateForm() {
@@ -137,6 +157,8 @@ function validateForm() {
 
 // DOM 로드 완료 후 이벤트 바인딩
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOMContentLoaded 실행됨!");
+
   renderGuestOptions();
   bindCalcPrice();
   bindReset();
@@ -149,4 +171,8 @@ document.addEventListener("DOMContentLoaded", function () {
       renderGuestOptions(capacity);
     });
   });
+});
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOMContentLoaded 실행됨!222222");
+    bindDateValidations();
 });

@@ -78,10 +78,6 @@ public class AdminReservationServiceImpl implements AdminReservationService {
                 .toLocalDateTime();
         String timeSlot = String.format("%02d", eventDateTime.getHour()) + "시"; // "14" 형태로 변환
 
-        //ScheduleBlockEntity block = ;
-        //if("상담대기".equals(status) || "취소".equals(status) || "보류".equals(status) ){
-        //}
-
         if ("확정".equals(status)) {
           // 3. 차단된 일정이 있는지 확인
           System.out.println("확정 ?? " + status);
@@ -95,14 +91,13 @@ public class AdminReservationServiceImpl implements AdminReservationService {
             block.setReason("확정");
             block.setCreatedAt(new Date());
             block.setModifiedBy(entity.getLastModifiedBy());
+            block.setReservation(entity); //예약엔티티 연결
             scheduleBlockRepository.save(block);
           }
         } else if("상담대기".equals(status) || "취소".equals(status) || "보류".equals(status) ){
           System.out.println("상담대기 ?? " + status);
           if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {
-            //ScheduleBlockEntity deleteBlcok = scheduleBlockRepository.deleteByEventDateAndTimeSlot(eventDate, timeSlot);
-            System.out.println("상담대기2 ?? " + status);
-            //scheduleBlockRepository.delete(block);
+            scheduleBlockRepository.deleteByEventDateAndTimeSlot(eventDate, timeSlot);
           }
         }
 
@@ -111,60 +106,6 @@ public class AdminReservationServiceImpl implements AdminReservationService {
       });
     }
   }
-
-
-  /*
-  @Override
-  public void updateStatusesByAjax(List<Map<String, String>> updates) {
-    List<String> errors = new ArrayList<>();
-
-    for (Map<String, String> update : updates) {
-      Long idx = Long.parseLong(update.get("idx"));
-      String status = update.get("status");
-
-      reservationRepository.findById(idx).ifPresent(entity -> {
-        entity.setStatus(status);
-
-        if ("예약확정".equals(status)) {
-          Date eventDate = entity.getEventDate();
-
-          if (eventDate == null) {
-            errors.add("예약번호 " + idx + "는 행사 예정일이 없어 확정할 수 없습니다.");
-            //return;
-          }
-
-          String timeSlot = extractTime(eventDate);
-          String key = formatKey(eventDate, timeSlot);
-
-          boolean exists = scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot);
-          if (exists) {
-            errors.add("[" + key + "] 시간대는 이미 차단일정에 등록되어 있어 중복 확정이 불가능합니다.");
-            //return;
-          }
-          // ✅ 하나라도 오류가 발생하면 예외를 던져 확정 중단
-          if (!errors.isEmpty()) {
-            throw new IllegalStateException(String.join("\n", errors));
-          }
-
-          // 문제 없으면 차단 테이블에 등록
-          ScheduleBlockEntity block = new ScheduleBlockEntity();
-          block.setEventDate(eventDate);
-          block.setTimeSlot(timeSlot);
-          block.setReason("예약확정");
-          block.setCreatedAt(new Date());
-          block.setModifiedBy(entity.getLastModifiedBy());
-          scheduleBlockRepository.save(block);
-        }
-
-        reservationRepository.save(entity);
-      });
-    }
-
-    if (!errors.isEmpty()) {
-      throw new IllegalStateException(String.join("\n", errors));
-    }
-  }
-*/
 
   // 시간 추출 (ex: 2025-06-01 14:00:00 → "14시")
   private String extractTime(Date date) {
