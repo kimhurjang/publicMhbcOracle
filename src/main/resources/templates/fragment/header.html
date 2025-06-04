@@ -55,7 +55,7 @@
                     <ul class="sub_group group4">
                         <li th:classappend="${currentPath.startsWith('/board/event')} ? 'active'"><a th:href="@{/board/event}">이벤트</a></li>
                         <li th:classappend="${currentPath.startsWith('/board/gallery')} ? 'active'"><a th:href="@{/board/gallery}">갤러리</a></li>
-                        <li th:classappend="${currentPath.startsWith('/board/oftenquestion')} ? 'active'"><a th:href="@{/board/oftenquestion}">문의 사항</a></li>
+                        <li th:classappend="${currentPath.startsWith('/board/oftenquestion')} ? 'active'"><a th:href="@{/board/oftenquestion}">자주 묻는 질문</a></li>
                     </ul>
                 </li>
 
@@ -67,6 +67,7 @@
                         <li><a th:href="@{/member/mypage}">회원정보수정</a></li>
                         <li><a th:href="@{/reservation/list}">나의 예약 현황</a></li>
                         <li><a th:href="@{/board/myboard}">작성글 확인</a></li>
+                        <li><a th:href="@{/board/personalquestion}">1대1 문의 보내기</a></li>
                     </ul>
                 </li>
 
@@ -80,6 +81,7 @@
                         <li><a th:href="@{/member/mypage}">회원정보수정</a></li>
                         <li><a th:href="@{/reservation/list}">나의 예약 현황</a></li>
                         <li><a th:href="@{/board/myboard}">작성글 확인</a></li>
+                        <li><a th:href="@{/board/personalquestion}">1대1 문의 보내기</a></li>
                     </ul>
                 </li>
 

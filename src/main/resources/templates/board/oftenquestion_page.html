@@ -5,6 +5,9 @@
 <body>
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
     <a th:href="@{/board/oftenquestion}"><h1>자주 묻는 질문</h1></a>
+    <div th:if="${member != null and member.grade == 10}">
+        <a th:href="@{/board/oftenquestion_write(group_idx=${groupIdx}, board_type=${boardType})}"><button type="button" class="small mb15">[관리자] 글쓰기</button></a>
+    </div>
     <div id="content" class="content">
 
         <table>
@@ -19,11 +22,8 @@
         </table>
     </div><!--E content-->
     <div class="btn_group mt20">
-    <a th:href="@{/board/personalquestion}"><button>1 대 1 문의하러 가기</button></a>
-    <a th:href="@{/board/myboard}"><button>내가 쓴 글 보러가기</button></a>
-        <div th:if="${member != null and member.grade == 10}">
-            <a th:href="@{/board/oftenquestion_write(group_idx=${groupIdx}, board_type=${boardType})}"><button type="button">[관리자] 글쓰기</button></a>
-        </div>
+        <a th:href="@{/board/personalquestion}"><button>1 대 1 문의하러 가기</button></a>
+        <a th:href="@{/board/myboard}"><button>내가 쓴 글 보러가기</button></a>
     </div>
 </section><!--E container-->
 </body>

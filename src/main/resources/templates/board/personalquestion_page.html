@@ -31,8 +31,8 @@
         <tr>
           <td>문의 사유</td>
           <td>
-            <select name="category" id="category">
-              <option selected>선택 해주세요</option>
+            <select name="category" id="category" required>
+              <option  value="" disabled selected>선택 해주세요</option>
               <option value="웨딩/예약">웨딩 / 예약</option>
               <option value="시설이용문의">시설 이용 문의</option>
               <option value="버그 신고">버그 신고</option>
@@ -55,7 +55,7 @@
         <tr>
           <td>메시지</td>
           <td>
-            <textarea name="content" cols="70" rows="5"  required placeholder="메시지를 입력해주세요.">문제 발생 날짜 및 시각 :</textarea>
+            <textarea name="content" cols="70" rows="5"  required placeholder="문제 발생 날짜 및 시각 : "></textarea>
             <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="display: none;"></div>
           </td>
         </tr>

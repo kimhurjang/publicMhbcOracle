@@ -486,7 +486,7 @@ public class BoardController {
         try {
             boardService.processBoardForm(groupIdx, boardDTO, memberDTO);
             model.addAttribute("message", "질문을 성공적으로 보냈습니다!");
-            return "redirect:/board/oftenquestion_page?page=1&board_type="+boardType+"&group_idx="+groupIdx; // 템플릿 렌더링
+            return "redirect:/board/myboard";// 템플릿 렌더링
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             return "redirect:/board/oftenquestion_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
@@ -550,6 +550,8 @@ public class BoardController {
 
         Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize,"link");
 
+        int startNum = totalCount - ((page - 1) * itemsPerPage);
+        model.addAttribute("startNum", startNum);
 
         model.addAttribute("pagination", pagination);
         model.addAttribute("link","/board/notice_page");
@@ -647,14 +649,27 @@ public class BoardController {
         int itemsPerPage = 4;
         int groupSize = 3;
 
-        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.ASC, "createdAt");
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "createdAt");
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
         int totalCount = (int) paging.getTotalElements();
 
         Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize,"link");
 
+        int startNum = totalCount - ( (page - 1) * itemsPerPage );
+        model.addAttribute("startNum", startNum);
+
+        List<Object[]> commentCounts = commentsRepository.countCommentsGroupedByBoardId();
+        Map<Long, Integer> commentCountMap = new HashMap<>();
+
+        for (Object[] row : commentCounts) {
+            Long boardId = ((Number) row[0]).longValue();
+            Integer count = ((Number) row[1]).intValue();
+            commentCountMap.put(boardId, count);
+        }
+
         model.addAttribute("pagination", pagination);
+        model.addAttribute("commentCountMap", commentCountMap);
         model.addAttribute("link", "/board/cmct_page");
         model.addAttribute("webtitle", "만화방초 | 커뮤니티");
         model.addAttribute("paging", paging);
@@ -861,15 +876,31 @@ public class BoardController {
     public String search(@RequestParam("group_idx") Long groupIdx,
                          @RequestParam("board_type") Long boardType,
                          @RequestParam("keyword") String keyword,
+                         @RequestParam(value="page", defaultValue="1") int page,
                          Model model){
 
-        List<BoardDTO> result;
-        result = utility.searchByTitle(keyword, groupIdx, boardType);
+
+        int itemsPerPage = 4;
+        // (페이징 처리 위해 PageRequest 객체 생성)
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "createdAt");
+
+        // Page<BoardDTO> 타입으로 결과 받기 (utility.searchByTitle를 수정해야 함)
+        Page<BoardDTO> resultPage = utility.searchByTitle(keyword, groupIdx, boardType, pageable);
+
+        int totalCount = (int) resultPage.getTotalElements();
+        // 기존 페이징 UI 로직 재사용
+        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, 3, "link");
+        model.addAttribute("pagination", pagination);
+
+        // 전체 검색 결과(=totalCount) 기준으로 역순 번호 매기려면
+        int startNum = totalCount - ((page - 1) * itemsPerPage);
+        model.addAttribute("startNum", startNum);
+
 
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
         model.addAttribute("isSearch", true);
-        model.addAttribute("paging", result);
+        model.addAttribute("paging", resultPage);
         model.addAttribute("keyword", keyword); // 검색어 유지
         return "/board/cmct_page";
     }

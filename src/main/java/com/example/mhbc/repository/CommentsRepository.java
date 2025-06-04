@@ -21,4 +21,7 @@ public interface CommentsRepository extends JpaRepository<CommentsEntity, Long> 
     @Modifying
     @Query("DELETE FROM CommentsEntity b WHERE b.idx = :idx")
     void deleteByIdx(@Param("idx") long idx);
+
+    @Query("SELECT c.board.idx, COUNT(c) FROM CommentsEntity c GROUP BY c.board.idx")
+    List<Object[]> countCommentsGroupedByBoardId();
 }

@@ -6,25 +6,30 @@
     <style>
         table {display : table;}
         .jcsb a, .jcsb span {display : table-cell;}
+        table tr th {width: 20%;}
+        .left {text-align: left;}
+        .mh {min-height: 100px; align-content: center;}
     </style>
-</th:block>
+</th:block><!--넣고자 하는 css 이름 변경-->
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
     <a th:href="@{/board/notice}"><h1>공지 사항</h1></a>
     <div id="content" class="content">
         <table th:if="${(groupIdx == 1) and (idx == board.idx)}">
             <tr>
-                <td th:text="${board.title}" colspan="2"></td>
+                <th>제목</th>
+                <td th:text="${board.title}" class="pd10 left"></td>
             </tr>
             <tr>
-                <td th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}" colspan="2"></td>
+                <th>작성일</th>
+                <td th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}" class="pd10 left"></td>
             </tr>
             <tr>
-                <td colspan="2"><pre th:text="${board.content}" class="pd10"></pre></td>
+                <th>본문</th>
+                <td><pre th:text="${board.content}" class="pd10 left mh"></pre></td>
             </tr>
             <tr th:if="${board.attachment != null}">
-                <td>첨부 파일</td>
+                <th>첨부 파일</th>
                 <td>
                     <div class="jcsb" style="display: flex; padding: 0 10px;">
                         <span th:text="${board.attachment.fileName}"></span>

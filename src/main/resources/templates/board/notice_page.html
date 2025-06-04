@@ -5,19 +5,20 @@
 <body>
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <a th:href="@{/board/notice}"><h1>공지 사항</h1></a>
+  <div th:if="${member != null and member.grade == 10}">
+    <a th:href="@{/board/notice_write(group_idx=${groupIdx}, board_type=${boardType})}"><button class="small mb15">[관리자]글쓰기</button></a>
+  </div>
   <div id="content" class="content">
-    <div th:if="${member != null and member.grade == 10}">
-       <a th:href="@{/board/notice_write(group_idx=${groupIdx}, board_type=${boardType})}"><button>[관리자]글쓰기</button></a>
-    </div>
     <table th:if="${groupIdx == 1}">
-      <tr th:each="board : ${paging}">
+      <tr th:each="board, stat : ${paging}">
+        <td th:text="${startNum - stat.index}" style="width: 5%;"></td>
         <td style="width: 80%;">
           <a th:href="@{/board/notice_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}" th:text="${board.title}"></a>
         </td>
         <td th:text="${#dates.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
       </tr>
       <tr>
-        <td colspan="2">
+        <td colspan="3">
           <div th:replace="~{fragment/paging_board :: paging}"></div>
         </td>
       </tr>
