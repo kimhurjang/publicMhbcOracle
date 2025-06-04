@@ -26,30 +26,48 @@
       </div>
 
       <table th:if="${not #lists.isEmpty(paging)}">
-        <tr th:each=" board : ${paging}">
+        <tr>
+          <th>NO</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>작성일</th>
+          <th>댓글</th>
+        </tr>
+        <tr th:each=" board, stat : ${paging}">
+          <td th:text="${startNum - stat.index}" style="width: 5%;"></td>
           <td>
             <a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member != null ? board.member.idx : 0},board_type=${boardType})}"
                th:text="${board.title}"></a>
           </td>
-          <td th:text="${#strings.substring(board.member.name, 0, 1) + '*' + #strings.substring(board.member.name, 2)}"></td>
-          <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"></td>
+          <td th:text="${#strings.substring(board.member.name, 0, 1) + '*' + #strings.substring(board.member.name, 2)}"  style="width: 10%;"></td>
+          <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"  style="width: 15%;"></td>
+          <td th:text="${commentCountMap[board.idx] != null ? commentCountMap[board.idx] : 0}"></td>
         </tr>
         <tr>
-          <td colspan="2">
-            <a th:href="@{/board/cmct}"><button type="button">뒤로 가기</button></a>
+          <td colspan="4">
+            <a th:href="@{/board/cmct}"><button type="button" class="small">뒤로 가기</button></a>
           </td>
         </tr>
       </table>
     </div>
 
     <table th:if="${isSearch == null or not isSearch}">
-      <tr th:each=" board : ${paging}">
-        <td style="width: 80%"><a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member.idx},board_type=${boardType})}" th:text="${board.title}"></a></td>
-        <td th:text="${board.member != null ? #strings.substring(board.member.name, 0, 1) + '*' + #strings.substring(board.member.name, 2) : '알수없음'}"></td>
-        <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"></td>
+      <tr>
+        <th>NO</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+        <th>댓글</th>
+      </tr>
+      <tr th:each=" board,stat : ${paging}">
+        <td th:text="${startNum - stat.index}" style="width: 5%;"></td>
+        <td style="width: 65%"><a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member.idx},board_type=${boardType})}" th:text="${board.title}"></a></td>
+        <td th:text="${board.member != null ? #strings.substring(board.member.name, 0, 1) + '*' + #strings.substring(board.member.name, 2) : '알수없음'}"  style="width: 10%;"></td>
+        <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"  style="width: 15%;"></td>
+        <td th:text="${commentCountMap[board.idx] != null ? commentCountMap[board.idx] : 0}"></td>
       </tr>
       <tr>
-        <td colspan="3">
+        <td colspan="4">
           <div th:replace="~{fragment/paging_board :: paging}"></div>
         </td>
       </tr>

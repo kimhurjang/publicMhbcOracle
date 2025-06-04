@@ -220,7 +220,7 @@ public class AdminBoardController {
                               @ModelAttribute BoardEntity board,
                               Model model){
 
-        BoardEntity ModifyBoard = adminBoardService.modifyBoard(boardIdx,board);
+        BoardEntity ModifyBoard = adminBoardService.modifyBoard(boardIdx,board,groupIdx);
         BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
         Long BoardType = group.getBoardType();
         MemberEntity member = board.getMember();

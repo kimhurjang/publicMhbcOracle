@@ -55,7 +55,11 @@
         <td>
           <textarea name="requestContent"
                     readonly
-                    th:text="'질문 제목 : ' + ${board.title} + '    질문 답변 : ' + ${board.requestContent}"></textarea>
+                    style="white-space: pre-line;"
+                    th:text="|${board.requestTitle}
+
+ 답변 : ${board.requestContent}|">
+          </textarea>
         </td>
       </tr>
       <tr>

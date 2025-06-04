@@ -9,6 +9,8 @@ import com.example.mhbc.service.UserDetailsImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -154,19 +156,23 @@ public class Utility {
     /*
     *   검색
     * */
-    public List<BoardDTO> searchByTitle(String keyword, long groupIdx, Long boardType) {
-
+    public Page<BoardDTO> searchByTitle(
+            String keyword,
+            long groupIdx,
+            Long boardType,
+            Pageable pageable
+    ) {
+        // 1) 검색어 공백 제거
         keyword = keyword.trim();
 
-        System.out.println("검색어: " + keyword + " groupIdx: " + groupIdx + " boardType: " + boardType);
+        // 2) Repository의 페이징 버전을 호출
+        Page<BoardEntity> pageResult = boardRepository
+                .findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(
+                        keyword, groupIdx, boardType, pageable
+                );
 
-        List<BoardEntity> results = boardRepository.findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(keyword, groupIdx, boardType);
-
-        System.out.println("검색 결과: " + results.size());
-
-        return results.stream()
-                .map(BoardDTO::fromEntity)
-                .collect(Collectors.toList());
+        // 3) Entity → DTO 매핑
+        return pageResult.map(BoardDTO::fromEntity);
     }
 
 

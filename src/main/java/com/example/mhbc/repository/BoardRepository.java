@@ -42,7 +42,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     // 작성자 기준으로 전체 게시글 조회
     List<BoardEntity> findByMember(MemberEntity member);
 
-    List<BoardEntity> findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(String title, long groupIdx, Long boardType);
+    Page<BoardEntity> findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(String title, long groupIdx, Long boardType , Pageable pageable);
 
 
     // 1️⃣ 전체 게시글 (페이지네이션)
@@ -59,6 +59,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     //사용자 idx로 게시물 조회
     List<BoardEntity> findByMemberIdx(Long memberIdx, Sort sort);
+
 
 }
 

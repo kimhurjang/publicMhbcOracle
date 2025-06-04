@@ -2,6 +2,7 @@ package com.example.mhbc.service.admin;
 
 import com.example.mhbc.dto.BoardDTO;
 import com.example.mhbc.entity.BoardEntity;
+import com.example.mhbc.entity.BoardGroupEntity;
 import com.example.mhbc.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -60,7 +61,7 @@ public class AdminBoardService {
     }
 
     @Transactional
-    public BoardEntity modifyBoard(Long boardIdx , BoardEntity board) {
+    public BoardEntity modifyBoard(Long boardIdx , BoardEntity board, Long groupIdx) {
 
         BoardEntity boardEn = boardRepository.findByIdx(boardIdx);
         if (boardEn == null) {
@@ -70,16 +71,18 @@ public class AdminBoardService {
         boardEn.setContent(board.getContent());
         boardEn.setRequest(1);
 
-        // FAQ인 경우, 답변 필드도 수정
-        if (board.getAnswerTitle() != null && board.getAnswerContent() != null) {
-            boardEn.setAnswerTitle(board.getAnswerTitle());
-            boardEn.setAnswerContent(board.getAnswerContent());
+
+        if (groupIdx != null) {
+            if (groupIdx == 5) { // FAQ 게시판
+                boardEn.setAnswerTitle(board.getAnswerTitle());
+                boardEn.setAnswerContent(board.getAnswerContent());
+            } else if (groupIdx == 6) { // 1대1 게시판
+                boardEn.setRequestTitle(board.getRequestTitle());
+                boardEn.setRequestContent(board.getRequestContent());
+            }
         }
-        if (board.getRequestTitle() != null && board.getRequestContent() != null) {
-            boardEn.setAnswerTitle(board.getAnswerTitle());
-            boardEn.setAnswerContent(board.getAnswerContent());
-        }
-        return boardEn;
+
+        return boardRepository.save(boardEn);
     }
 
     /*

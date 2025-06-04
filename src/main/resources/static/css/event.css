@@ -16,7 +16,8 @@
     border-bottom: 1px solid lightgray;
 }
 #eventContent{
-    padding: 30px 10px;
+    min-height: 100px;
+    align-content: center;
     line-height: 15px;
     border-bottom: 1px solid lightgray;
 }
