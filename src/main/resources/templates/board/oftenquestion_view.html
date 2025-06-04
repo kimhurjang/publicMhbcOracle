@@ -5,6 +5,7 @@
 <body>
 <th:block layout:fragment="css">
   <style>
+    table {display : table;}
     table tr td{
       padding: 15px 20px;
       text-align: left;
@@ -34,8 +35,8 @@
       </tr>
       <tr>
         <td style="width: 10%;"><i class="xi-subdirectory-arrow"></i></td>
-        <td style="display:block;">
-          <div th:text="${board.answerTitle}"></div>
+        <td style="display : table-cell;">
+          <div><h4 th:text="${board.answerTitle}"></h4></div>
           <div><pre th:text="${board.answerContent}" class="contents"></pre></div>
         </td>
       </tr>

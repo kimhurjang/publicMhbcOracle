@@ -200,7 +200,20 @@ public class BoardService {
     }
 
 
-
-
+    /**
+     *          myboard 사용자 idx 게시물 조회 정렬
+     *
+     * */
+    public List<BoardEntity> getBoardListByMemberIdx(Long memberIdx, String sortField, String sortDir) {
+        // Sort 객체 생성
+        Sort sort = Sort.by(sortField);
+        if ("DESC".equalsIgnoreCase(sortDir)) {
+            sort = sort.descending();
+        } else {
+            sort = sort.ascending();
+        }
+        // Repository 호출 (memberIdx 기준, Sort 적용)
+        return boardRepository.findByMemberIdx(memberIdx, sort);
+    }
 
 }

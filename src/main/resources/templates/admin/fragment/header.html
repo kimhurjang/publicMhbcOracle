@@ -11,10 +11,14 @@
         <strong><a th:href="@{/api/member/adminuser}">회원관리</a></strong>
       </li>
       <li th:classappend="${currentPath.startsWith('/admin/board')} ? 'active'">
-        <strong><a th:href="@{/admin/board/list}">게시물관리</a></strong>
+        <strong><a th:href="@{/admin/board/list}">게시판관리</a></strong>
         <ul class="sub">
-          <li><a th:href="@{/admin/board/list}">게시판 현황</a></li>
-          <li><a th:href="@{/admin/board/group_list}">게시물 관리</a></li>
+          <li th:classappend="${currentPath.startsWith('/admin/board/list')} ? 'active'">
+            <a th:href="@{/admin/board/list}">게시판현황</a>
+          </li>
+          <li  th:classappend="${currentPath.startsWith('/admin/board/group_list')} ? 'active'">
+            <a th:href="@{/admin/board/group_list}">게시물관리</a>
+          </li>
         </ul>
       </li>
       <li th:classappend="${#strings.startsWith(currentPath, '/admin/reservation') or #strings.startsWith(currentPath, '/admin/hall') or #strings.startsWith(currentPath, '/admin/schedule')} ? 'active'">

@@ -57,5 +57,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     // 4️⃣ 특정 그룹 + 키워드 포함
     Page<BoardEntity> findByGroupGroupIdxAndTitleContaining(Long groupIdx, String keyword, Pageable pageable);
 
+    //사용자 idx로 게시물 조회
+    List<BoardEntity> findByMemberIdx(Long memberIdx, Sort sort);
+
 }
 

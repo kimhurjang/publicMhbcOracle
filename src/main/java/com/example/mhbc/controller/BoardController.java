@@ -438,7 +438,7 @@ public class BoardController {
 
         // 해당 사용자의 게시물 목록을 가져오기
         MemberEntity member = memberRepository.findByIdx(loginUser);
-        List<BoardEntity> boardList = boardRepository.findByMember(member);
+        List<BoardEntity> boardList = boardService.getBoardListByMemberIdx(loginUser, "createdAt", "DESC");
 
 
         // boardList가 빈 리스트일 경우 처리
