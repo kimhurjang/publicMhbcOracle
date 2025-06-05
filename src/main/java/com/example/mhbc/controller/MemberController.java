@@ -70,21 +70,19 @@ public class MemberController {
 
     // 내 정보 수정 처리 (POST)
     @PostMapping("/mypage")
-    public String update(@ModelAttribute MemberEntity formMember) {
-        // 1. 기존 회원 데이터 조회
+    public String update(@ModelAttribute MemberEntity formMember, RedirectAttributes redirectAttributes) {
         MemberEntity existingMember = memberRepository.findById(formMember.getIdx())
                 .orElseThrow(() -> new RuntimeException("회원 정보가 없습니다"));
 
-        // 2. 수정 가능한 필드만 변경
         existingMember.setName(formMember.getName());
         existingMember.setEmail(formMember.getEmail());
         existingMember.setMobile(formMember.getMobile());
-        // 비밀번호, 가입날짜 등은 건드리지 않음
-
-        // 3. 저장
         memberRepository.save(existingMember);
 
-        return "redirect:/";
+        // 플래시 속성에 메시지 담기
+        redirectAttributes.addFlashAttribute("successMessage", "저장되었습니다");
+
+        return "redirect:/api/member/mypage";  // 저장 후 다시 마이페이지로 이동
     }
 
 

@@ -38,7 +38,6 @@
       <div>
         <label>가입일</label>
         <td th:text="${member.createdAt != null ? #dates.format(member.createdAt, 'yyyy.MM.dd HH:mm:ss') : '-'}">2021.07.01 12:30:45</td>
-
       </div>
       <div>
         <label>최종접속일</label>
@@ -72,6 +71,15 @@
       }
       return true;
     }
+  </script>
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    var successMessage = [[${successMessage != null}]] ? '[[${successMessage}]]' : '';
+    if(successMessage !== '') {
+      alert(successMessage);
+    }
+    /*]]>*/
   </script>
 </th:block>
 
