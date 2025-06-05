@@ -72,6 +72,12 @@ public class ReservationDTO {
       throw new IllegalArgumentException("날짜 형식이 잘못되었습니다: eventDate=" + eventDate + ", eventTimeSelect=" + eventTimeSelect);
     }
 
+    // contactTime 값 변환
+    String parsedContactTime = contactTime;
+    if (contactTime != null && contactTime.length() >= 8) { //25-04-24로 들어오면
+      parsedContactTime = "20" + contactTime; // 앞에 "20"을 추가하여 "2025-04-24" 형태로 변환
+    }
+
     ReservationEntity.ReservationEntityBuilder builder = ReservationEntity.builder()
       .name(name)
       .eventType(eventType)
@@ -79,7 +85,7 @@ public class ReservationDTO {
       .guestCnt(guestCnt)
       .mealType(mealType)
       .flower(flower)
-      .contactTime(contactTime)
+      .contactTime(parsedContactTime)
       .mobile(mobile)
       .status(status)
       .totalAmount(totalAmount)

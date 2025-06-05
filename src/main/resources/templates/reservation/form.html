@@ -114,7 +114,7 @@
           </div>
         </div>
         <div class="price_box">
-          <p><button type="button" id="calc_price_btn">금액 산출 버튼</button></p>
+          <p><button type="button" id="calc_price_btn" onclick="calcPrice()">금액 산출 버튼</button></p>
           <p id="price_result_display" class="price_display"></p>
           <input type="hidden" th:field="*{totalAmount}" id="price_result" value="0"> <!-- 서버 전송용 -->
           <p><button type="button" id="reset_btn">초기화</button></p>
