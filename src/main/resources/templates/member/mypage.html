@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+
+<body>
+
+<!-- CSS 삽입 -->
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/mypage.css" />
+</th:block>
+
+<section layout:fragment="content" id="container" class="sub member-mypage-page">
+  <div class="mypage-container">
+    <h1>회원정보 수정</h1>
+
+    <form th:action="@{/api/member/mypage}" method="post" th:object="${member}" onsubmit="return validateForm()">
+      <div>
+        <label>회원번호</label>
+        <input type="text" th:field="*{idx}" readonly />
+      </div>
+      <div>
+        <label>아이디</label>
+        <input type="text" th:field="*{userid}" readonly />
+      </div>
+      <div>
+        <label>이름</label>
+        <input type="text" th:field="*{name}" />
+      </div>
+      <div>
+        <label>이메일</label>
+        <input type="email" th:field="*{email}" />
+      </div>
+      <div>
+        <label>휴대폰</label>
+        <input type="text" th:field="*{mobile}" />
+      </div>
+      <div>
+        <label>가입일</label>
+        <td th:text="${member.createdAt != null ? #dates.format(member.createdAt, 'yyyy.MM.dd HH:mm:ss') : '-'}">2021.07.01 12:30:45</td>
+
+      </div>
+      <div>
+        <label>최종접속일</label>
+        <td th:text="${member.updatedAt != null ? #dates.format(member.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}">2021.07.02 15:45:00</td>
+      </div>
+      <button type="submit">저장</button>
+    </form>
+
+  </div>
+</section>
+
+<!-- 자바스크립트 -->
+<th:block layout:fragment="js">
+  <script>
+    function validateForm() {
+      const name = document.querySelector('input[name="name"]').value.trim();
+      const email = document.querySelector('input[name="email"]').value.trim();
+      const mobile = document.querySelector('input[name="mobile"]').value.trim();
+
+      if (!name) {
+        alert('이름을 입력해주세요.');
+        return false;
+      }
+      if (!email) {
+        alert('이메일을 입력해주세요.');
+        return false;
+      }
+      if (!mobile) {
+        alert('휴대폰 번호를 입력해주세요.');
+        return false;
+      }
+      return true;
+    }
+  </script>
+</th:block>
+
+</body>
+</html>

@@ -48,14 +48,15 @@
             <tbody>
             <tr th:each="member : ${memberPage.content}">
                 <td th:text="${member.idx}">00000000</td>
-                <td th:text="${member.name}">홍길동</td>
-                <td th:text="${member.userid}">아이디</td>
+                <td th:text="${member.name != null ? member.name : '-'}">홍길동</td>
+                <td th:text="${member.userid != null ? member.userid : '-'}">아이디</td>
                 <td th:text="${member.mobile != null ? member.mobile : '정보없음'}">정보없음</td>
-                <td th:text="${member.email}">abc@mail.com</td>
-                <td th:classappend="'status-' + ${member.status?.toLowerCase()}" th:text="${member.status}">정상</td>
-                <td th:text="${#dates.format(member.createdAt, 'yyyy.MM.dd')}">2021.07.01</td>
-                <td th:text="${#dates.format(member.updatedAt, 'yyyy.MM.dd')}">2021.07.02</td>
-                <td th:text="${member.grade == 10 ? '관리자' : '유저'}">유저</td>
+                <td th:text="${member.email != null ? member.email : '정보없음'}">abc@mail.com</td>
+                <td th:text="${member.status != null ? member.status : '-'}"
+                    th:classappend="'status-' + ${member.status?.toLowerCase()}">정상</td>
+                <td th:text="${member.createdAt != null ? #dates.format(member.createdAt, 'yyyy.MM.dd') : '-'}">2021.07.01</td>
+                <td th:text="${member.updatedAt != null ? #dates.format(member.updatedAt, 'yyyy.MM.dd') : '-'}">2021.07.02</td>
+                <td th:text="${member.grade != null ? (member.grade == 10 ? '관리자' : '유저') : '-'}">유저</td>
                 <td th:text="${member.snsType != null ? member.snsType : '없음'}">없음</td>
                 <td th:text="${member.snsId != null ? member.snsId : '없음'}">없음</td>
                 <td th:text="${member.snsName != null ? member.snsName : '없음'}">없음</td>

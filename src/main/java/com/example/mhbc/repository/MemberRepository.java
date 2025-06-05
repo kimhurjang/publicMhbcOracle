@@ -14,6 +14,8 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
+
+
     // 아이디로 회원 찾기
     Optional<MemberEntity> findByUserid(String userid);
 
