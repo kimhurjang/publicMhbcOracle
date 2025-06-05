@@ -61,6 +61,7 @@ function bindCalcPrice() {
     hiddenInput.value = total;                   // 서버용 (콤마 제거)
   });
 }
+//onclick 용 금액산출버튼
 function calcPrice() {
     const hallRadio = document.querySelector('input[name="hallIdx"]:checked');
     const guestRadio = document.querySelector('input[name="guestCnt"]:checked');
@@ -131,8 +132,8 @@ function bindDateValidations() {
       const today = new Date();
       today.setHours(0, 0, 0, 0); // 오늘도 00시로 고정
 
-      console.log(`선택된 날짜: ${selected}`);
-      console.log(`오늘 날짜: ${today}`);
+      //console.log(`선택된 날짜: ${selected}`);
+      //console.log(`오늘 날짜: ${today}`);
 
       if (selected <= today) {
         alert(`${label}은 당일 이후만 선택 가능합니다.`);
@@ -148,8 +149,8 @@ function bindDateValidations() {
           const twoWeeksBeforeEvent = new Date(eventDate);
           twoWeeksBeforeEvent.setDate(eventDate.getDate() - 14);
 
-          console.log(`행사 예정일: ${eventDate}`);
-          console.log(`상담 가능 최소 날짜: ${twoWeeksBeforeEvent}`);
+          //console.log(`행사 예정일: ${eventDate}`);
+          //console.log(`상담 가능 최소 날짜: ${twoWeeksBeforeEvent}`);
 
           if (selected > twoWeeksBeforeEvent) {
             alert(`상담 가능 날짜는 행사 예정일 최소 2주 이전이어야 합니다.`);
@@ -183,27 +184,9 @@ function validateForm() {
   return true;
 }
 
-//관리자 수정 입력
-function validateForm_edit() {
-    const contactDate = document.getElementById("contact_date").value;
-    const contactTime = document.getElementById("contact_time_select").value;
-
-    if (!contactDate) {
-        alert("상담 가능 날짜를 선택해주세요.");
-        return false;
-    }
-
-    if (!contactTime) {
-        alert("상담 가능 시간을 선택해주세요.");
-        return false;
-    }
-
-    return true;
-}
-
 // DOM 로드 완료 후 이벤트 바인딩
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("DOMContentLoaded 실행됨!");
+  //console.log("DOMContentLoaded 실행됨!");
 
   renderGuestOptions(); // 인원수 기본 렌더링
 

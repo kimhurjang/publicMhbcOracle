@@ -2,6 +2,7 @@ package com.example.mhbc.controller.admin;
 
 import com.example.mhbc.dto.ReservationDTO;
 import com.example.mhbc.dto.ReservationSearchCondition;
+import com.example.mhbc.entity.HallEntity;
 import com.example.mhbc.repository.HallRepository;
 import com.example.mhbc.repository.ReservationRepository;
 import com.example.mhbc.service.admin.AdminReservationService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
 import java.util.List;
@@ -135,6 +137,97 @@ public class AdminReservationController {
   public String reservationView(@RequestParam Long idx, Model model) {
     model.addAttribute("reservation", adminReservationService.findById(idx));
     return "/admin/reservation/view";
+  }
+  /*
+  @GetMapping("/edit")
+  public String editReservation(@RequestParam Long idx, Model model) {
+    ReservationDTO dto = adminReservationService.findById(idx);
+    model.addAttribute("reservationDTO", dto);
+    model.addAttribute("hallList", hallRepository.findAll());
+    model.addAttribute("editMode", true); // 수정모드 플래그
+    return "admin/reservation/form";
+  }
+
+  @PostMapping("/edit")
+  public String editReservationForm(@RequestParam("idx") Long idx, Model model) {
+    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> eidt");
+    //if (idx == null) throw new IllegalArgumentException("예약 번호가 없습니다.");
+    ReservationDTO dto = adminReservationService.findById(idx);
+    System.out.println(dto.toString());
+    //model.addAttribute("reservation", dto);
+    //model.addAttribute("hallList", hallRepository.findAll());
+    return "admin/reservation/edit";
+  } */
+
+  /*
+  // 📌 GET 요청으로 수정 페이지 열기
+  @GetMapping("/edit")
+  public String editReservationForm(@RequestParam Long idx, Model model) {
+    ReservationDTO reservation = adminReservationService.findById(idx);
+    if (reservation == null) {
+      model.addAttribute("popupError", "해당 예약이 존재하지 않습니다.");
+      return "redirect:/admin/reservation/list";
+    }
+
+    List<HallEntity> halls = hallRepository.findAll();
+    int hallCapacity = 250;
+    if (reservation.getHallIdx() != null) {
+      HallEntity hall = halls.stream()
+              .filter(h -> h.getIdx().equals(reservation.getHallIdx()))
+              .findFirst()
+              .orElse(null);
+      if (hall != null) hallCapacity = hall.getCapacity();
+    }
+
+    model.addAttribute("reservation", reservation);
+    model.addAttribute("halls", halls);
+    model.addAttribute("hallCapacity", hallCapacity);
+
+    return "admin/reservation/edit"; // 경로에 맞게 수정
+  }
+
+  // POST 요청으로 수정 데이터 저장
+  @PostMapping("/edit")
+  public String updateReservation(@ModelAttribute ReservationDTO dto,
+                                  RedirectAttributes redirectAttributes,
+                                  Model model) {
+    try {
+      adminReservationService.updateReservation(dto);
+      return "redirect:/admin/reservation/view?idx=" + dto.getIdx();
+    } catch (IllegalArgumentException e) {
+      // 에러 메시지를 flash 속성으로 전달
+      redirectAttributes.addFlashAttribute("popupError", e.getMessage());
+      return "redirect:/admin/reservation/edit?idx=" + dto.getIdx();
+    }
+  }
+*/
+  // 📌 GET 요청으로 수정 페이지 열기
+  @GetMapping("/edit")
+  public String editReservationPage(@RequestParam Long idx, Model model) {
+    ReservationDTO dto = adminReservationService.findById(idx);
+    if (dto == null) {
+      throw new IllegalArgumentException("예약 정보가 존재하지 않습니다.");
+    }
+
+    model.addAttribute("reservation", dto);
+    model.addAttribute("halls", hallRepository.findAll()); // 홀 전체 리스트
+
+    return "admin/reservation/edit"; // 수정 페이지로 이동
+  }
+
+  // 📌 POST 요청으로 수정 데이터 저장
+  @PostMapping("/edit")
+  public String updateReservation(@ModelAttribute ReservationDTO dto, RedirectAttributes redirectAttributes) {
+    try {
+      // 1. 서비스에서 업데이트 시도
+      adminReservationService.updateReservation(dto);
+      // 2. 성공 시 → 상세보기로 리다이렉트
+      return "redirect:/admin/reservation/view?idx=" + dto.getIdx();
+    } catch (IllegalArgumentException e) {
+      // 3. 실패 시 → 에러 메시지를 flash에 담아 수정페이지로 리다이렉트
+      redirectAttributes.addFlashAttribute("popupError", e.getMessage());
+      return "redirect:/admin/reservation/edit?idx=" + dto.getIdx();
+    }
   }
 
   // 관리자 메모 수정

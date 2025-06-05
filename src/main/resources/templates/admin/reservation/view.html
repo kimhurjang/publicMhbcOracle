@@ -20,8 +20,8 @@
           <tr>
             <th>회원번호</th>
             <td th:text="${reservation.memberIdx}">1</td>
-            <th>회원이름</th>
-            <td th:text="${reservation.name}">홍길동</td>
+            <th>회원ID</th>
+            <td th:text="${reservation.userid}">id</td>
           </tr>
           <tr>
             <th>예약번호</th>
@@ -75,6 +75,7 @@
       <div class="btn_group mt20">
         <button type="submit" class="btn color1">메모 저장</button>
         <a th:href="@{/admin/reservation/list}" class="btn white">목록</a>
+        <a th:href="@{/admin/reservation/edit(idx=${reservation.idx})}" class="btn color2">수정</a>
       </div>
     </form>
   </div><!--E content-->

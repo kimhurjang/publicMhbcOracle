@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+<body>
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/reservation.css">
+    <style>
+        input[type="text"], input[type="date"], input[type="number"], select { width:auto; }
+        input[type="radio"] + label { margin-right:10px; }
+        .form_group label {font-weight:400;}
+        .price_box {margin-top:10px;}
+    </style>
+</th:block>
+
+<section layout:fragment="content" id="container" class="reservation edit" >
+    <h1>예약 정보 수정</h1>
+    <div id="content" class="content">
+        <form th:action="@{/admin/reservation/edit}" th:object="${reservation}" method="post" onsubmit="return validateForm_edit();">
+            <table class="tbl_type_01 tl_td">
+                <colgroup>
+                    <col style="width: 20%;">
+                    <col>
+                    <col style="width: 20%;">
+                    <col>
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th>회원번호</th>
+                    <td>
+                        <span th:text="*{memberIdx}"></span>
+                        <input type="hidden" th:field="*{memberIdx}">
+                    </td>
+                    <th>예약번호</th>
+                    <td>
+                        <span th:text="*{idx}"></span>
+                        <input type="hidden" th:field="*{idx}">
+                    </td>
+                    <th style="width:100px;">예약자 이름</th>
+                    <td style="width:120px;">
+                        <span th:text="*{name}"></span>
+                        <input type="hidden" th:field="*{name}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>행사 종류</th>
+                    <td colspan="5">
+                        <select th:field="*{eventType}">
+                            <option value="예식">예식</option>
+                            <option value="기업행사">기업행사</option>
+                            <option value="일반행사">일반행사</option>
+                            <option value="다과파티">다과파티</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>행사 예정일시</th>
+                    <td colspan="5">
+                        <input type="date" th:field="*{eventDate}">
+                        <select th:field="*{eventTimeSelect}">
+                            <option value="10">10시</option>
+                            <option value="12">12시</option>
+                            <option value="14">14시</option>
+                            <option value="16">16시</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>홀 선택</th>
+                    <td colspan="5">
+                        <div th:each="hall : ${halls}" style="display:inline-block;margin-right:10px;">
+                            <input type="radio" th:field="*{hallIdx}" th:value="${hall.idx}" th:id="'hall_' + ${hall.idx}" th:data-capacity="${hall.capacity}">
+                            <label th:for="'hall_' + ${hall.idx}" th:text="${hall.name}"></label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>인원수</th>
+                    <td colspan="5">
+                        <div class="guestCntContainer">
+                            <div id="guestCntContainer"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>식사 종류</th>
+                    <td colspan="5">
+                        <input type="radio" th:field="*{mealType}" value="뷔페A실속" id="meal_a">
+                        <label for="meal_a">뷔페A 실속</label>
+                        <input type="radio" th:field="*{mealType}" value="뷔페B실속" id="meal_b">
+                        <label for="meal_b">뷔페B 실속</label>
+                        <input type="radio" th:field="*{mealType}" value="도시락" id="meal_lunchbox">
+                        <label for="meal_lunchbox">도시락</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>꽃 장식</th>
+                    <td colspan="5">
+                        <input type="radio" th:field="*{flower}" value="조화" id="flower_artificial">
+                        <label for="flower_artificial">조화</label>
+                        <input type="radio" th:field="*{flower}" value="조화 + 생화" id="flower_mixed">
+                        <label for="flower_mixed">조화 + 생화</label>
+                        <input type="radio" th:field="*{flower}" value="생화" id="flower_real">
+                        <label for="flower_real">생화</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>연락처</th>
+                    <td colspan="5">
+                        <input type="text" th:field="*{mobile}" placeholder="010-1234-5678">
+                    </td>
+                </tr>
+                <tr>
+                    <th>상담 가능 시간</th>
+                    <td colspan="5" style="border-right:0">
+                        <input type="date" id="contact_date" th:value="${#dates.format(reservation.eventDate, 'yyyy-MM-dd')}">
+                        <select id="contact_time_select">
+                            <option value="오전" th:selected="${#strings.contains(reservation.contactTime, '오전')}">오전</option>
+                            <option value="오후" th:selected="${#strings.contains(reservation.contactTime, '오후')}">오후</option>
+                        </select>
+                        <input type="hidden" name="contactTime" id="contactTime" th:value="${reservation.contactTime}">
+                    </td>
+                    <script>
+                        document.getElementById("contact_date").addEventListener("change", function () {
+                            document.getElementById("contactTime").value = this.value + " / " + document.getElementById("contact_time_select").value;
+                        });
+                        document.getElementById("contact_time_select").addEventListener("change", function () {
+                            document.getElementById("contactTime").value = document.getElementById("contact_date").value + " / " + this.value;
+                        });
+                    </script>
+                </tr>
+                <tr>
+                    <th>총금액</th>
+                    <td colspan="5">
+                        <input type="text"  id="totalAmount" th:value="${reservation.totalAmount != null ? #numbers.formatInteger(reservation.totalAmount, 3, 'COMMA') : ''}" oninput="formatAmount(this)">
+                        <div class="price_box">
+                            <p><button type="button" id="calc_price_btn" onclick="calcPrice()">금액 산출 버튼</button></p>
+                            <p id="price_result_display" class="price_display"></p>
+                        </div>
+                        <input type="hidden" th:field="*{totalAmount}" id="price_result" value="0"> <!-- 서버 전송용 -->
+                    </td>
+                </tr>
+                <tr>
+                    <th>상태</th>
+                    <td colspan="5">
+                        <select th:field="*{status}">
+                            <option value="접수">접수</option>
+                            <option value="예약확정">예약확정</option>
+                            <option value="보류">보류</option>
+                            <option value="취소">취소</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>문의사항</th>
+                    <td colspan="5">
+                        <textarea th:field="*{userNote}" rows="5"></textarea>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="btn_group mt20">
+                <button type="submit" class="btn color1">저장</button>
+                <a th:href="@{/admin/reservation/view(idx=${reservation.idx})}" class="btn white">취소</a>
+            </div>
+        </form>
+
+        <script th:inline="javascript">
+            const hallMap = {
+              /*[# th:each="hall : ${halls}"]*/
+              [[${hall.idx}]]: {
+                name: '[[${hall.name}]]',
+                capacity: [[${hall.capacity}]],
+                price: [[${hall.price}]]
+              },
+              /*[/]*/
+            };
+
+            /*<![CDATA[*/
+              var popupError = /*[[${popupError}]]*/ null;
+              if (popupError) {
+                alert(popupError);
+              }
+            /*]]>*/
+        </script>
+
+        <script th:src="@{/js/reservation_admin.js}"></script>
+        <script th:inline="javascript">
+            const selectedGuestCnt = [[${reservation.guestCnt}]];
+            const selectedHall = document.querySelector('input[name="hallIdx"]:checked');
+            if (selectedHall) {
+              const capacity = parseInt(selectedHall.dataset.capacity);
+              console.log("[디버그] 선택된 hall capacity =", capacity);
+              console.log("[디버그] 기존 인원수 =", selectedGuestCnt);
+              renderGuestOptions(capacity, selectedGuestCnt);
+            }
+        </script>
+
+    </div>
+</section>
+</body>
+</html>

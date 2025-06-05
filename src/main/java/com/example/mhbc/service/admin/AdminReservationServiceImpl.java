@@ -88,7 +88,7 @@ public class AdminReservationServiceImpl implements AdminReservationService {
           // 3. 차단된 일정이 있는지 확인
           System.out.println("확정 ?? " + status);
           if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {
-            throw new IllegalArgumentException("등록된 확정 일정이 있어 변경이 불가능합니다.");
+            throw new IllegalArgumentException("등록된 차단 일정이 있어 변경이 불가능합니다.");
           } else {
             ScheduleBlockEntity block = new ScheduleBlockEntity();
             // 4. 상태 변경 및 저장
@@ -112,34 +112,62 @@ public class AdminReservationServiceImpl implements AdminReservationService {
       });
     }
   }
-  @Override
-  public void updateReservation(ReservationDTO dto) {
-    ReservationEntity existing = reservationRepository.findById(dto.getIdx())
-            .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
 
-    // 상태가 '예약확정'일 경우 유효성 검증
-    if ("예약확정".equals(dto.getStatus())) {
-      if (dto.getEventDate() == null || dto.getEventTimeSelect() == null || dto.getEventTimeSelect().isEmpty()) {
-        throw new IllegalArgumentException("예약확정은 행사예정일과 시간이 모두 입력되어야 합니다.");
-      }
+ //수정
+ @Override
+ public void updateReservation(ReservationDTO dto) {
+   if (dto.getIdx() == null) {
+     throw new IllegalArgumentException("예약 번호(idx)가 없습니다.");
+   }
 
-      String timeSlot = dto.getEventTimeSelect() + "시";
-      if (scheduleBlockRepository.existsByEventDateAndTimeSlot(dto.getEventDate(), timeSlot)) {
-        throw new IllegalArgumentException("해당 날짜 및 시간대는 이미 차단된 일정이 있어 예약확정이 불가능합니다.");
-      }
-    }
+   // 기존 예약 가져오기
+   ReservationEntity existing = reservationRepository.findById(dto.getIdx())
+           .orElseThrow(() -> new IllegalArgumentException("예약 정보를 찾을 수 없습니다."));
 
-    // 관계 주입
-    HallEntity hall = hallRepository.findById(dto.getHallIdx())
-            .orElseThrow(() -> new IllegalArgumentException("해당 홀 정보가 없습니다."));
-    MemberEntity member = existing.getMember();
+   // 행사일 및 시간 검증
+   if ("예약확정".equals(dto.getStatus())) {
+     if (dto.getEventDate() == null || dto.getEventTimeSelect() == null || dto.getEventTimeSelect().isEmpty()) {
+       throw new IllegalArgumentException("예약확정 상태에서는 행사일과 시간을 입력해야 합니다.");
+     }
 
-    // toEntity로 변환
-    ReservationEntity updated = dto.toEntity(member, hall);
-    updated.setCreatedAt(existing.getCreatedAt()); // 생성일 유지
+     String timeSlot = dto.getEventTimeSelect() + "시";
+     if (scheduleBlockRepository.existsByEventDateAndTimeSlot(dto.getEventDate(), timeSlot)) {
+       throw new IllegalArgumentException("해당 날짜 및 시간은 이미 차단된 일정이 있어 예약확정이 불가능합니다.");
+     }
+   }
 
-    reservationRepository.save(updated);
-  }
+   // 관계 엔티티 조회
+   HallEntity hall = hallRepository.findById(dto.getHallIdx())
+           .orElseThrow(() -> new IllegalArgumentException("해당 홀 정보가 없습니다."));
+   MemberEntity member = existing.getMember();
+
+   // DTO → Entity 변환
+   ReservationEntity updated = dto.toEntity(member, hall);
+   updated.setCreatedAt(existing.getCreatedAt()); // 기존 생성일 유지
+   updated.setUpdatedAt(new Date()); // 수정일 갱신
+
+   // 예약 상태가 확정이면 일정 차단 등록
+   if ("예약확정".equals(dto.getStatus())) {
+     String timeSlot = dto.getEventTimeSelect() + "시";
+     ScheduleBlockEntity block = new ScheduleBlockEntity();
+     block.setEventDate(dto.getEventDate());
+     block.setTimeSlot(timeSlot);
+     block.setReason("예약 확정");
+     block.setCreatedAt(new Date());
+     block.setModifiedBy(dto.getLastModifiedBy());
+     block.setReservation(updated);
+     scheduleBlockRepository.save(block);
+   }
+
+   // 상태가 취소, 상담대기, 보류인 경우 일정 차단 제거
+   if ("취소".equals(dto.getStatus()) || "상담대기".equals(dto.getStatus()) || "보류".equals(dto.getStatus())) {
+     String timeSlot = dto.getEventTimeSelect() + "시";
+     scheduleBlockRepository.deleteByEventDateAndTimeSlot(dto.getEventDate(), timeSlot);
+   }
+
+   // 최종 저장
+   reservationRepository.save(updated);
+ }
 
   // 시간 추출 (ex: 2025-06-01 14:00:00 → "14시")
   private String extractTime(Date date) {
