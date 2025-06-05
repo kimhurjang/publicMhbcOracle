@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
 window.addEventListener('load', () => AOS.refresh());
 
 window.addEventListener("load", function () {
-  console.log(document.querySelectorAll(".ani_box").length);
-  console.log(typeof ScrollTrigger);
+  //console.log(document.querySelectorAll(".ani_box").length);
+  //console.log(typeof ScrollTrigger);
 
   gsap.registerPlugin(ScrollTrigger);
 

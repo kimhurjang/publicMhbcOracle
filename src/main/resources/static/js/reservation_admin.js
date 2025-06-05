@@ -7,14 +7,14 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("[디버그] 관리자 reservation_admin.js 실행됨");
+  //console.log("[디버그] 관리자 reservation_admin.js 실행됨");
 
   // guestCnt 초기화는 HTML <script>에서 처리하므로 여기선 생략
   // 선택된 hall 변경 시 → guestCnt 다시 그리기
   document.querySelectorAll('input[name="hallIdx"]').forEach(radio => {
     radio.addEventListener('change', function () {
       const capacity = parseInt(this.dataset.capacity);
-      console.log("[디버그] 홀 변경됨 → capacity =", capacity);
+      //console.log("[디버그] 홀 변경됨 → capacity =", capacity);
       renderGuestOptions(capacity, null);
     });
   });
@@ -54,7 +54,7 @@ function renderGuestOptions(capacity, selectedValue = null) {
     guestContainer.appendChild(label);
   }
 
-  console.log(`[디버그] guestCnt 라디오 ${capacity >= 100 ? Math.floor((capacity - 100) / 50) + 1 : 0}개 생성 완료`);
+  //console.log(`[디버그] guestCnt 라디오 ${capacity >= 100 ? Math.floor((capacity - 100) / 50) + 1 : 0}개 생성 완료`);
 }
 
 /**
@@ -75,8 +75,8 @@ function bindDateValidations() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      console.log(`[디버그] ${label} 선택됨 → ${selected.toISOString().slice(0, 10)}`);
-      console.log(`[디버그] 오늘 날짜: ${today.toISOString().slice(0, 10)}`);
+      //console.log(`[디버그] ${label} 선택됨 → ${selected.toISOString().slice(0, 10)}`);
+      //console.log(`[디버그] 오늘 날짜: ${today.toISOString().slice(0, 10)}`);
 
       if (selected <= today) {
         alert(`${label}은 당일 이후만 선택 가능합니다.`);
@@ -91,8 +91,8 @@ function bindDateValidations() {
           const twoWeeksBeforeEvent = new Date(eventDate);
           twoWeeksBeforeEvent.setDate(eventDate.getDate() - 14);
 
-          console.log(`[디버그] 행사일: ${eventDate.toISOString().slice(0, 10)}`);
-          console.log(`[디버그] 상담 가능 최소일: ${twoWeeksBeforeEvent.toISOString().slice(0, 10)}`);
+          //console.log(`[디버그] 행사일: ${eventDate.toISOString().slice(0, 10)}`);
+          //console.log(`[디버그] 상담 가능 최소일: ${twoWeeksBeforeEvent.toISOString().slice(0, 10)}`);
 
           if (selected > twoWeeksBeforeEvent) {
             alert(`상담 가능 날짜는 행사 예정일 최소 2주 이전이어야 합니다.`);
@@ -140,7 +140,7 @@ function validateForm_edit() {
   if (viewInput && hiddenInput) {
     const value = viewInput.value.replace(/,/g, "").replace("원", "").trim();
     hiddenInput.value = value || "0";
-    console.log("[디버그] 서버 전송용 totalAmount =", hiddenInput.value);
+    //console.log("[디버그] 서버 전송용 totalAmount =", hiddenInput.value);
   }
 
   return true;

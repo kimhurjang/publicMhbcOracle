@@ -90,8 +90,7 @@ public class ReservationServiceImpl implements ReservationService {
   @Override
   public List<ReservationDTO> findAll() {
     List<ReservationEntity> entities = reservationRepository.findAllByOrderByIdxDesc();
-    System.out.println(">> JPA로 가져온 Entity 수: " + entities.size());
-
+    //System.out.println(">> JPA로 가져온 Entity 수: " + entities.size());
     //entities.forEach(e -> System.out.println(">> entity: " + e.getIdx() + " / " + e.getName() + " / " + e.getStatus()));
 
     return reservationRepository.findAllByOrderByIdxDesc() // DB에서 모든 예약 목록 가져옴

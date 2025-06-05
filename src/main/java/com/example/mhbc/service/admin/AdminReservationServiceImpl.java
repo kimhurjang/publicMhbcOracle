@@ -86,7 +86,7 @@ public class AdminReservationServiceImpl implements AdminReservationService {
 
         if ("확정".equals(status)) {
           // 3. 차단된 일정이 있는지 확인
-          System.out.println("확정 ?? " + status);
+          //System.out.println("확정 ?? " + status);
           if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {
             throw new IllegalArgumentException("등록된 차단 일정이 있어 변경이 불가능합니다.");
           } else {
@@ -101,7 +101,7 @@ public class AdminReservationServiceImpl implements AdminReservationService {
             scheduleBlockRepository.save(block);
           }
         } else if("상담대기".equals(status) || "취소".equals(status) || "보류".equals(status) ){
-          System.out.println("상담대기 ?? " + status);
+          //System.out.println("상담대기 ?? " + status);
           if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {
             scheduleBlockRepository.deleteByEventDateAndTimeSlot(eventDate, timeSlot);
           }

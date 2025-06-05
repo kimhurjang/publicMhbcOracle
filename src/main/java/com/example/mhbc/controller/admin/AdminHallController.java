@@ -24,7 +24,7 @@ public class AdminHallController {
     model.addAttribute("webtitle", "예약관리 | 홀 현황");
 
     List<HallDTO> hallList = adminHallService.findAll();
-    System.out.println(">>>>>>>>>" + hallList.toString());
+    //System.out.println(">>>>>>>>>" + hallList.toString());
     model.addAttribute("hallList", hallList);
     return "admin/hall/list";
   }

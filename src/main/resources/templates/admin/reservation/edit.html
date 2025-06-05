@@ -191,8 +191,8 @@
             const selectedHall = document.querySelector('input[name="hallIdx"]:checked');
             if (selectedHall) {
               const capacity = parseInt(selectedHall.dataset.capacity);
-              console.log("[디버그] 선택된 hall capacity =", capacity);
-              console.log("[디버그] 기존 인원수 =", selectedGuestCnt);
+              //console.log("[디버그] 선택된 hall capacity =", capacity);
+              //console.log("[디버그] 기존 인원수 =", selectedGuestCnt);
               renderGuestOptions(capacity, selectedGuestCnt);
             }
         </script>
