@@ -1,5 +1,6 @@
 package com.example.mhbc.service;
 
+import com.example.mhbc.dto.HallDTO;
 import com.example.mhbc.entity.HallEntity;
 
 import java.util.List;
@@ -12,4 +13,5 @@ import java.util.List;
 public interface HallService {
   HallEntity findById(Long idx);             // 홀 단건 조회
   List<HallEntity> getAllHalls();            // 전체 홀 목록 조회
+  public HallDTO getHallById(Long hallIdx);
 }
