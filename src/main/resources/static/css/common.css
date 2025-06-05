@@ -88,36 +88,20 @@ body.menu_open::after {opacity:1;pointer-events:auto;}
 
 
 /*---------------------- 탑버튼----------------------*/
-.scroll-top {
-   position: fixed;
-   visibility: hidden;
-   opacity: 0;
-   right: 15px;
-   bottom: -15px;
-   z-index: 99999;
+.side {
+   width:45px; position: fixed;
+   visibility: hidden; opacity: 0; right: 15px; bottom: 70px; z-index: 99999;
    background-color: var(--accent-color);
    transition: all 0.4s;
  }
- .scroll-top button{
-    width: 45px;
-    height: 45px;
-    border-radius: 80px;
-    padding:0;
- }
- .scroll-top i {
-   font-size: 24px;
-   color: var(--contrast-color);
-   line-height: 0;
- }
- .scroll-top:hover {
-   background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
-   color: var(--contrast-color);
- }
- .scroll-top.active {
-   visibility: visible;
-   opacity: 1;
-   bottom: 15px;
- }
+.side.active {visibility:visible; opacity: 1; bottom:55px;}
+.scroll-top button{ width: 45px; height: 45px; border-radius: 80px; padding:0; }
+.scroll-top i { font-size: 24px; color: var(--contrast-color); line-height: 0;}
+.scroll-top:hover { background-color: color-mix(in srgb, var(--accent-color), transparent 20%); color: var(--contrast-color);}
+.scroll-top.active { visibility: visible;}
+
+.reservation_btn .xi-emoticon-happy { color:#fff; font-size:28px; }
+.reservation_btn { width:45px; margin-bottom:10px; background-color:#5350a1; border-radius:80px; padding:10px 5px; word-break:auto-phrase; text-align:center; font-size:14px; font-weight:600; color:#fff;}
 
 /* footer */
 #user footer { background-color:#9b89b3; color:#F7F4ED; padding:80px; display:flex; justify-content:space-between;} /* 보라색 배경 */

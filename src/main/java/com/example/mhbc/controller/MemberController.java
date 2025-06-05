@@ -11,6 +11,7 @@ import com.example.mhbc.service.KakaoService;
 import com.example.mhbc.service.LoginService;
 import com.example.mhbc.service.MemberService;
 import com.example.mhbc.service.UserDetailServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,15 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.validation.Valid;
 import java.lang.reflect.Member;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -47,6 +52,40 @@ public class MemberController {
     private LoginService loginService;
     @Autowired
     private MemberService memberService;
+
+    @GetMapping("/mypage")
+    public String mypage(Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        Optional<MemberEntity> optionalMember = memberRepository.findByUserid(principal.getName());
+        if (optionalMember.isEmpty()) {
+            return "error/noMember";
+        }
+
+        model.addAttribute("member", optionalMember.get());
+        return "member/mypage";  // templates/member/mypage.html
+    }
+
+    // 내 정보 수정 처리 (POST)
+    @PostMapping("/mypage")
+    public String update(@ModelAttribute MemberEntity formMember, RedirectAttributes redirectAttributes) {
+        MemberEntity existingMember = memberRepository.findById(formMember.getIdx())
+                .orElseThrow(() -> new RuntimeException("회원 정보가 없습니다"));
+
+        existingMember.setName(formMember.getName());
+        existingMember.setEmail(formMember.getEmail());
+        existingMember.setMobile(formMember.getMobile());
+        memberRepository.save(existingMember);
+
+        // 플래시 속성에 메시지 담기
+        redirectAttributes.addFlashAttribute("successMessage", "저장되었습니다");
+
+        return "redirect:/api/member/mypage";  // 저장 후 다시 마이페이지로 이동
+    }
+
+
 
     @GetMapping("/login")
     public String loginForm(@RequestParam(value = "errorCode", required = false) String errorCode,
@@ -178,15 +217,17 @@ public class MemberController {
 
     @GetMapping("/kakao")
     public String socialLogin(@RequestParam("code") String code, HttpSession session) {
+        // 카카오에서 액세스 토큰 받기
         String accessToken = kakaoService.getKakaoAccessToken(code);
         session.setAttribute("kakaoAccessToken", accessToken);
 
+        // 카카오에서 유저 정보 받아오기
         SocialUserInfoDTO userInfo = kakaoService.getUserInfoFromKakao(accessToken);
-
         if (userInfo == null || userInfo.getSnsEmail() == null) {
             return "redirect:/api/member/login";
         }
 
+        // SNS 유저 조회 또는 신규 생성
         SnsEntity snsUser = snsRepository.findBySnsId(userInfo.getUserid()).orElseGet(() -> {
             MemberEntity member = memberRepository.findByEmail(userInfo.getSnsEmail()).orElseGet(() -> {
                 MemberEntity newMember = new MemberEntity();
@@ -211,29 +252,47 @@ public class MemberController {
             return snsRepository.save(newSnsUser);
         });
 
-        session.setAttribute("loginSnsUser", snsUser);
-
+        // 회원정보 가져오기
         MemberEntity member = snsUser.getMember();
         if (member == null) {
             member = memberRepository.findByEmail(userInfo.getSnsEmail()).orElse(null);
         }
+
+        // 회원 상태 체크: 탈퇴, 정지일 경우 로그인 차단
+        if (member == null
+                || "탈퇴".equals(member.getStatus())
+                || "정지".equals(member.getStatus())) {
+
+            String errorCode = "WITHDRAW";  // 기본 탈퇴
+            if (member != null && "정지".equals(member.getStatus())) {
+                errorCode = "STOP";          // 정지 상태일 경우
+            }
+            String userid = (member != null) ? member.getUserid() : "";
+
+            return "redirect:/api/member/login?errorCode=" + errorCode + "&userid=" + userid;
+        }
+
+        // 정상 회원일 경우 로그인 처리
+        session.setAttribute("loginSnsUser", snsUser);
         session.setAttribute("loginMember", member);
 
-        // 여기서 UserDetailsServiceImpl를 주입받아 사용하세요
         UserDetails userDetails = userDetailsService.loadUserByUsername(member.getUserid());
-
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
+        // 휴대폰 번호가 없으면 등록 페이지로
         if (snsUser.getSnsMobile() == null || snsUser.getSnsMobile().isBlank()) {
             return "redirect:/api/member/mobile";
         }
 
+        // 정상 로그인 후 메인 페이지 이동
         return "redirect:/";
     }
+
+
 
     @RequestMapping("/join")
     public String join() {
@@ -396,29 +455,45 @@ public class MemberController {
         return "redirect:/api/member/adminuser";
     }
 
-
     @GetMapping("/adminuserinfo")
-    public String getUserInfo(@RequestParam Long idx, Model model) {
+    public String getUserInfo(@RequestParam("idx") Long idx, Model model, HttpServletRequest request) {
         MemberEntity member = memberRepository.findByIdx(idx);
-        model.addAttribute("member", member);
+        if (member == null) {
+            return "redirect:/api/member/adminuser";
+        }
+        model.addAttribute("member", member.toDTO());
+
+        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
+        if (flashMap != null && flashMap.containsKey("message")) {
+            model.addAttribute("message", flashMap.get("message"));
+        }
+
         return "member/adminuserinfo";
     }
 
     @PostMapping("/adminuserinfo")
-    public String updateUserInfo(@ModelAttribute MemberEntity updatedMember) {
-        MemberEntity member = memberRepository.findByIdx(updatedMember.getIdx());
+    public String updateUserInfo(@Valid @ModelAttribute("member") MemberDTO memberDTO,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "member/adminuserinfo";
+        }
 
+        MemberEntity member = memberRepository.findByIdx(memberDTO.getIdx());
         if (member != null) {
-            member.setName(updatedMember.getName());
-            member.setEmail(updatedMember.getEmail());
-            member.setMobile(updatedMember.getMobile());
-            member.setTelecom(updatedMember.getTelecom());
-            member.setStatus(updatedMember.getStatus());
-            member.setGrade(updatedMember.getGrade());
+            member.setName(memberDTO.getName());
+            member.setEmail(memberDTO.getEmail());
+            member.setMobile(memberDTO.getMobile());
+            member.setTelecom(memberDTO.getTelecom());
+            member.setStatus(memberDTO.getStatus());
+            member.setGrade(memberDTO.getGrade());
             memberRepository.save(member);
         }
 
-        return "redirect:/api/member/adminuserinfo?idx=" + updatedMember.getIdx();
+        redirectAttributes.addFlashAttribute("message", "저장되었습니다.");
+        return "redirect:/api/member/adminuserinfo?idx=" + memberDTO.getIdx();
     }
+
+
 
 }

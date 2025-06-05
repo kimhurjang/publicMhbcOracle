@@ -3,6 +3,10 @@ package com.example.mhbc.entity;
 import com.example.mhbc.dto.MemberDTO;
 import jakarta.persistence.*;
 import lombok.*;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.List;
 
@@ -16,36 +20,43 @@ public class MemberEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long idx; // 회원번호
+  private Long idx;
 
   @Column(unique = true)
-  private String userid; // 회원아이디
+  private String userid;
 
-  private String pwd; // 패스워드
-  private String name; // 회원이름
-  private String telecom; // 통신사
-  private String mobile; // 휴대폰번호
-  private String email; // 이메일
-  private String nickname; // 닉네임
+  private String pwd;
+
+  @NotBlank(message = "이름은 필수입니다.")
+  private String name;
+
+  @NotBlank(message = "통신사를 선택해주세요.")
+  private String telecom;
+
+  @NotBlank(message = "휴대폰 번호는 필수입니다.")
+  @Pattern(regexp = "\\d{3}-\\d{3,4}-\\d{4}", message = "휴대폰 번호 형식이 올바르지 않습니다. 예: 010-1234-5678")
+  private String mobile;
+
+  @NotBlank(message = "이메일은 필수입니다.")
+  @Email(message = "이메일 형식이 올바르지 않습니다.")
+  private String email;
+
+  private String nickname;
 
   @Builder.Default
-  @Column(name = "GRADE")
-  private Integer grade = 0; // 등급
+  private Integer grade = 0;
 
-
-  @Column(name = "STATUS")
-  private String status; // 기본값은 DB값에 따라 들어옴
-  // 회원상태
+  @NotBlank(message = "회원 상태를 선택해주세요.")
+  private String status;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "CREATE_AT")
-  private Date createdAt; // 가입일
+  private Date createdAt;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "UPDATE_AT")
-  private Date updatedAt; // 수정일
+  private Date updatedAt;
 
-  // Member 와 SnsEntity 간 1:N 연관관계 매핑
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
@@ -63,14 +74,21 @@ public class MemberEntity {
     updatedAt = new Date();
   }
 
+  // 이 메서드는 선택 사항, 없어도 됨. 사용할 경우 변환 처리 필수
   public MemberDTO toDTO() {
     return MemberDTO.builder()
+            .idx(idx)
             .userid(userid)
+            .pwd(pwd)
             .name(name)
-            .email(email)
+            .telecom(telecom)
             .mobile(mobile)
+            .email(email)
+            .nickname(nickname)
             .grade(grade)
             .status(status)
+            .createdAt(MemberDTO.convertToLocalDateTime(createdAt))  // 변환 처리
+            .updatedAt(MemberDTO.convertToLocalDateTime(updatedAt))
             .build();
   }
 }

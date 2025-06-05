@@ -3,13 +3,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
-<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block>
+<section layout:fragment="content" id="container" class="sub pagename pageSubname">
     <h1>회원 가입</h1>
     <p class="section_title_sub"><span class="required">*</span> 필수 입력 항목</p>
 
     <form id="joinForm" action="/api/member/join" method="post">
-
         <input type="hidden" name="create_at" value="create_at">
         <input type="hidden" name="idx" value="idx">
         <input type="hidden" name="grade" value="1">
@@ -41,7 +40,7 @@
             <input type="text" id="nickname" name="nickname" required>
         </div>
 
-        <!-- 연락처 (선택 입력) -->
+        <!-- 연락처 -->
         <div class="form_group mobile">
             <label for="mobile">연락처 <span class="required">*</span></label>
             <input type="text" name="mobile1" maxlength="3" placeholder="010" required>
@@ -49,13 +48,13 @@
             <input type="text" name="mobile3" maxlength="4" required>
         </div>
 
-        <!-- 이메일 (선택 입력) -->
+        <!-- 이메일 -->
         <div class="form_group">
             <label for="email">이메일</label>
             <input type="text" id="email" name="email">
         </div>
 
-        <!-- 생년월일 (선택 입력) -->
+        <!-- 생년월일 -->
         <div class="form_group">
             <label for="birthdate">생년월일</label>
             <input type="date" id="birthdate" name="birthdate">
@@ -76,9 +75,10 @@
             <button type="submit" class="color1">제출</button>
         </div>
     </form>
+
     <script>
         // 아이디 중복 확인
-        document.getElementById("checkIdBtn").addEventListener("click", function() {
+        document.getElementById("checkIdBtn").addEventListener("click", function () {
             var userid = document.getElementById("userid").value;
 
             if (userid === "") {
@@ -87,7 +87,7 @@
             }
 
             var checkBtn = document.getElementById("checkIdBtn");
-            checkBtn.disabled = true;  // 중복 확인 버튼 비활성화
+            checkBtn.disabled = true;
 
             fetch("/api/member/idcheck?userid=" + encodeURIComponent(userid))
                 .then(response => response.text())
@@ -107,12 +107,12 @@
                 });
         });
 
-        // 폼 제출 전에 유효성 검사
-        document.getElementById("joinForm").addEventListener("submit", function(event) {
+        // 유효성 검사
+        document.getElementById("joinForm").addEventListener("submit", function (event) {
             var userid = document.getElementById("userid").value;
             var idCheckResult = document.getElementById("idCheckResult").textContent;
 
-            // 아이디 중복 체크
+            // 아이디 중복 검사
             if (idCheckResult === "아이디가 중복됩니다.") {
                 event.preventDefault();
                 alert("아이디가 중복됩니다. 다른 아이디를 사용해주세요.");
@@ -123,11 +123,10 @@
                 return;
             }
 
-            // 필수 항목 검사 (input[required] + checked radio)
+            // 필수 항목 검사
             var requiredInputs = document.querySelectorAll("input[required]");
             for (var i = 0; i < requiredInputs.length; i++) {
                 if (requiredInputs[i].type === "radio") {
-                    // radio 그룹 중 하나라도 선택되었는지 확인
                     var name = requiredInputs[i].name;
                     var checked = document.querySelector('input[name="' + name + '"]:checked');
                     if (!checked) {
@@ -144,8 +143,28 @@
                     }
                 }
             }
+
+            // 연락처 유효성 (3-4-4)
+            var mobile1 = document.querySelector('input[name="mobile1"]').value.trim();
+            var mobile2 = document.querySelector('input[name="mobile2"]').value.trim();
+            var mobile3 = document.querySelector('input[name="mobile3"]').value.trim();
+
+            if (!/^\d{3}$/.test(mobile1) || !/^\d{4}$/.test(mobile2) || !/^\d{4}$/.test(mobile3)) {
+                event.preventDefault();
+                alert("연락처를 정확히 입력해주세요. (예: 010-1234-5678)");
+                return;
+            }
+
+            // 이메일 @ 포함 여부 검사
+            var email = document.getElementById("email").value.trim();
+            if (email !== "" && !email.includes("@")) {
+                event.preventDefault();
+                alert("유효한 이메일 주소를 입력해주세요. (@ 포함)");
+                document.getElementById("email").focus();
+                return;
+            }
         });
     </script>
-</section><!--E container-->
+</section>
 </body>
 </html>

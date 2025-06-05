@@ -71,6 +71,8 @@
             </select>
             <input type="hidden" th:field="*{eventTimeSelect}">
           </div>
+          <input type="checkbox" name="date_choice" id="event_date_undecided">
+          <label for="event_date_undecided">미정</label>
         </div>
 
         <div class="form_group">
@@ -153,7 +155,7 @@
         /*[/]*/
       };
     </script>
-    <script th:src="@{/js/reservation_form.js?v=1.0}"></script>
+    <script th:src="@{/js/reservation_form.js}"></script>
 
   </div><!--E content-->
 </section><!--E container-->

@@ -69,8 +69,7 @@ public class ReservationController {
   // 예약 저장 처리
   @PostMapping("/save")
   public String saveReservation(@ModelAttribute ReservationDTO reservationDTO) {
-    System.out.println(">>>>>>>>> memberIdx: " + reservationDTO.getMemberIdx()); // 전달된 값 확인
-
+    //System.out.println(">>>>>>>>> memberIdx: " + reservationDTO.getMemberIdx()); // 전달된 값 확인
     reservationService.save(reservationDTO);
     return "redirect:/reservation/list";
   }

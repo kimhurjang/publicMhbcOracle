@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragment/layout}">
-<body>
+
 <th:block layout:fragment="css">
   <link rel="stylesheet" href="/css/adminuserinfo.css">
 </th:block>
@@ -11,9 +11,8 @@
   <h1 class="page_title">회원 관리</h1>
   <div id="content" class="content">
 
-    <form th:action="@{/api/member/adminuserinfo}" method="post" th:object="${member}" xmlns:th="http://www.w3.org/1999/xhtml">
-
-
+    <form th:action="@{/api/member/adminuserinfo}" method="post" th:object="${member}"
+          onsubmit="return validateForm()">
       <section class="info_card">
         <div class="info_row">
           <div class="info_item">
@@ -23,26 +22,39 @@
           <div class="info_item">
             <label for="name">회원 이름</label>
             <input type="text" id="name" th:field="*{name}">
+            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message" style="color: red;"></p>
           </div>
           <div class="info_item">
             <label for="email">이메일</label>
             <input type="text" id="email" th:field="*{email}">
+            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message" style="color: red;"></p>
           </div>
           <div class="info_item">
             <label for="telecom">통신사</label>
-            <select th:field="*{telecom}">
+            <select id="telecom" th:field="*{telecom}">
               <option value="skt">SKT</option>
               <option value="kt">KT</option>
               <option value="lg">LG</option>
             </select>
-            <input type="text" th:field="*{mobile}">
+          </div>
+          <div class="info_item">
+            <label for="mobile">휴대폰 번호</label>
+            <input type="text" id="mobile" th:field="*{mobile}">
+            <p th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}" class="error-message" style="color: red;"></p>
           </div>
         </div>
-
         <div class="info_row">
           <div class="info_item">
+            <label for="createdAt">가입일</label>
+            <input type="text" id="createdAt" th:value="${#temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm:ss')}" readonly />
+          </div>
+          <div class="info_item">
+            <label for="updatedAt">최종접속</label>
+            <input type="text" id="updatedAt" th:value="${#temporals.format(member.updatedAt, 'yyyy-MM-dd HH:mm:ss')}" readonly />
+          </div>
+          <div class="info_item">
             <label for="status">회원 상태</label>
-            <select th:field="*{status}">
+            <select id="status" th:field="*{status}">
               <option value="정상">정상</option>
               <option value="탈퇴">탈퇴</option>
               <option value="정지">정지</option>
@@ -50,21 +62,55 @@
           </div>
           <div class="info_item">
             <label for="grade">권한</label>
-            <select th:field="*{grade}">
+            <select id="grade" th:field="*{grade}">
               <option value="1">일반</option>
               <option value="10">관리자</option>
             </select>
           </div>
         </div>
+
       </section>
 
       <div class="bottom_btns">
-        <button type="submit" class="save_btn">저장</button>
-        <a href="/api/member/adminuser" class="save_btn">목록</a>
+        <button type="submit" class="btn_save">저장</button>
+        <a href="/api/member/adminuser" class="btn_list">목록</a>
       </div>
     </form>
 
-  </div><!--E content-->
-</section><!--E container-->
-</body>
+    <script>
+      function validateForm() {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const mobile = document.getElementById('mobile').value.trim();
+
+        if (name === '') {
+          alert('회원 이름을 입력해주세요.');
+          return false;
+        }
+        if (email === '') {
+          alert('이메일을 입력해주세요.');
+          return false;
+        }
+        if (mobile === '') {
+          alert('휴대폰 번호를 입력해주세요.');
+          return false;
+        }
+
+        return true;
+      }
+    </script>
+
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      let msg = /*[[${message} != null ? ${message} : '']]*/ '';
+      if (msg && msg.trim() !== '') {
+        alert(msg);
+      }
+      /*]]>*/
+    </script>
+
+
+  </div><!-- E content -->
+</section><!-- E container -->
+
 </html>

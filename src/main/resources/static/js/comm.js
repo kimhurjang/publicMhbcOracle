@@ -1,8 +1,9 @@
 // scroll-top 버튼 기능
+const side = document.querySelector('.side');
 const scrollTop = document.querySelector('.scroll-top');
 function toggleScrollTop() {
   if (scrollTop) {
-    window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
+    window.scrollY > 100 ? side.classList.add('active') : side.classList.remove('active');
   }
 }
 scrollTop.addEventListener('click', (e) => {
@@ -25,8 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
 window.addEventListener('load', () => AOS.refresh());
 
 window.addEventListener("load", function () {
-  console.log(document.querySelectorAll(".ani_box").length);
-  console.log(typeof ScrollTrigger);
+  //console.log(document.querySelectorAll(".ani_box").length);
+  //console.log(typeof ScrollTrigger);
 
   gsap.registerPlugin(ScrollTrigger);
 
