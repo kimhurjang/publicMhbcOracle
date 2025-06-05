@@ -8,6 +8,8 @@
   <a th:href="@{/board/gallery}"><h1>갤러리 게시물 수정</h1></a>
   <div id="content" class="content">
     <form name="galleryModify" method="post" action="/board/modify_proc" enctype="multipart/form-data">
+      <!-- 1) 삭제 의도 전달용 hidden 필드 -->
+      <input type="hidden" id="deleteAttachmentFlag" name="deleteAttachmentFlag" value="N"/>
       <input type="hidden" name="boardIdx" th:value="${board.idx}">
       <input type="hidden" name="memberIdx" th:value="${member.idx}">
       <input type="hidden" name="group_idx" th:value="${groupIdx}">
@@ -34,25 +36,34 @@
             <textarea cols="30" rows="2" name="content" th:text="${board.content}" required placeholder="본문을 입력해주세요."></textarea>
           </td>
         </tr>
-        <!-- 첨부가 있을 때-->
-        <tr th:if="${board.attachment != null}">
+        <!-- attachmentRow 하나만 사용. th:if로 서버 상태에 따라 보여주는 내용이 달라짐 -->
+        <tr id="attachmentRow">
           <td>첨부 파일</td>
           <td>
-            <span th:text="${board.attachment.fileName}">파일명</span>
-            <input type="file" name="attachment" style="visibility:hidden;">
-            <a th:href="@{/board/file/delete(idx=${board.attachment.idx},board_idx=${board.idx})}">
-              <button type="button">삭제</button>
-            </a>
+            <!-- A) 서버에 기존 파일이 있을 때 -->
+            <span th:if="${board.attachment != null}"
+                  id="existingFilename"
+                  th:text="${board.attachment.fileName}">
+                    파일명
+                  </span>
+            <button th:if="${board.attachment != null}"
+                    type="button"
+                    onclick="removeAttachment()">
+              삭제
+            </button>
+
+            <!-- B) 서버에 기존 파일이 없을 때 -->
+            <input th:if="${board.attachment == null}"
+                   type="file"
+                   name="attachment"
+                   id="newAttachmentInput"
+                   required
+                   placeholder="첨부파일을 선택하세요.">
+            <div th:if="${board.attachment == null and #fields.hasErrors('attachment')}"
+                 th:errors="*{attachment}"
+                 style="color:red;"></div>
           </td>
         </tr>
-        <!-- 첨부가 없을 때-->
-        <tr th:if="${board.attachment == null}">
-          <td>첨부 파일</td>
-          <td>
-            <input type="file" name="attachment" required placeholder="해당 페이지는 첨부파일 필수입니다.">
-          </td>
-        </tr>
-        <tr>
           <td colspan="2">
             <div class="btn_group mt20">
               <button type="button" onclick="goBack()" class="small">뒤로가기</button>
@@ -65,5 +76,27 @@
     </form>
   </div><!--E content-->
 </section><!--E container-->
+<th:block layout:fragment="script">
+  <script>
+    function removeAttachment() {
+      document.getElementById('deleteAttachmentFlag').value = 'Y';
+
+      const attachmentRow = document.getElementById('attachmentRow');
+      if (!attachmentRow) return;
+
+      attachmentRow.innerHTML = `
+        <td>첨부 파일</td>
+        <td>
+          <input type="file"
+                 name="attachment"
+                 id="newAttachmentInput"
+                 required
+                 placeholder="첨부파일을 선택하세요.">
+          <div id="attachmentError" style="color:red;"></div>
+        </td>
+      `;
+    }
+  </script>
+</th:block>
 </body>
 </html>

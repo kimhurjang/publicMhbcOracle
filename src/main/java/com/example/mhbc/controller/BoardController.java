@@ -950,17 +950,22 @@ public class BoardController {
     }
 
     @PostMapping("/modify_proc")
-    public String modify(@ModelAttribute BoardEntity board,
-                         @RequestParam("group_idx") Long groupIdx,
-                         @RequestParam(value = "attachment", required = false) MultipartFile attachment,
-                         @RequestParam("board_type") Long boardType,
-                         @RequestParam("memberIdx") Long memberIdx,
-                         @RequestParam("boardIdx") Long boardIdx,
-                         @RequestParam("comments_idx")Long commentsIdx,
-                         @RequestParam(value = "startAt", required = false) String startAtStr,
-                         @RequestParam(value = "closedAt", required = false) String closedAtStr,
-                         @RequestParam(value = "commentContent", required = false) String commentContent) throws IOException {
+    public String modify(
+            @ModelAttribute BoardEntity board,
+            BindingResult bindingResult,
+            @RequestParam("group_idx") Long groupIdx,
+            @RequestParam(value = "attachment", required = false) MultipartFile attachment,
+            @RequestParam(value = "deleteAttachmentFlag", defaultValue = "N") String deleteFlag,
+            @RequestParam("board_type") Long boardType,
+            @RequestParam("memberIdx") Long memberIdx,
+            @RequestParam("boardIdx") Long boardIdx,
+            @RequestParam("comments_idx") Long commentsIdx,
+            @RequestParam(value = "startAt", required = false) String startAtStr,
+            @RequestParam(value = "closedAt", required = false) String closedAtStr,
+            @RequestParam(value = "commentContent", required = false) String commentContent
+    ) throws IOException {
 
+        // 1) base 경로 결정 (기존 코드 그대로)
         String base = switch (groupIdx.intValue()) {
             case 1 -> "notice_page";
             case 2 -> "cmct_page";
@@ -970,7 +975,7 @@ public class BoardController {
             default -> "cmct_page";
         };
 
-        /*이벤트 페이지용 날짜 세팅*/
+        // 2) 이벤트 페이지의 날짜 파싱 (기존 코드 그대로)
         Date startAt = null;
         Date closedAt = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -983,8 +988,46 @@ public class BoardController {
             closedAt = Date.from(localClosedAt.atStartOfDay(ZoneId.systemDefault()).toInstant());
         }
 
-        // 자주 묻는 질문 게시판에서 답변을 분리 처리하는 경우
-        if (groupIdx == 5 && boardType == 2 && commentsIdx == 0 && boardIdx >= 1 &&  (attachment == null || attachment.isEmpty())) {
+        // 3) “이미지 필수” 게시판인지 확인 (예: gallery_page)
+        boolean isImageRequired = (groupIdx == 4);  // groupIdx == 4 → gallery_page 로 가정
+
+        // 4) 기존 첨부파일 존재 여부 확인
+        boolean hadExistingAttachment = boardService.existsAttachment(boardIdx);
+
+        // 5) 서버 단 유효성 검사: 이미지가 필수인 경우
+        if (isImageRequired) {
+            // (1) 기존 파일이 있었고, deleteFlag=“Y” 이면서 새 파일도 없는 경우 → 오류
+            if (hadExistingAttachment
+                    && "Y".equalsIgnoreCase(deleteFlag)
+                    && (attachment == null || attachment.isEmpty())) {
+                bindingResult.rejectValue("attachment", "NotNull.gallery", "이미지를 반드시 등록해야 합니다.");
+            }
+            // (2) 기존 파일이 없었고, deleteFlag=N 이지만 attachment도 비어 있으면 → 오류
+            if (!hadExistingAttachment
+                    && (attachment == null || attachment.isEmpty())) {
+                bindingResult.rejectValue("attachment", "NotNull.gallery", "이미지를 반드시 등록해야 합니다.");
+            }
+        }
+
+        // 6) 유효성 오류가 있으면 폼으로 되돌려서 오류 메시지 출력
+        if (bindingResult.hasErrors()) {
+            return base + "/modify_form";
+        }
+
+        // 7) “삭제 플래그”가 Y일 때: 기존 첨부파일(메타 + 물리 파일) 삭제
+        if ("Y".equalsIgnoreCase(deleteFlag) && hadExistingAttachment) {
+            boardService.deleteAttachments(boardIdx);
+            // 이제 DB 측 BoardEntity와 연관관계가 끊기면서 첨부파일 레코드는 사라졌습니다.
+        }
+
+        // 8) “자주 묻는 질문” 페이지 답변 분리 처리 (기존 로직 유지)
+        if (groupIdx == 5
+                && boardType == 2
+                && commentsIdx == 0
+                && boardIdx >= 1
+                && (attachment == null || attachment.isEmpty())
+                && !"Y".equalsIgnoreCase(deleteFlag))
+        {
             boardService.modifyBoard(
                     boardIdx,
                     board.getTitle(),
@@ -994,11 +1037,13 @@ public class BoardController {
                     startAt,
                     closedAt
             );
+            return "redirect:/board/list";
         }
-        // 댓글이 아닌 게시글 수정일 때
+
+        // 9) 댓글이 아닌 게시글 수정 처리 (기존 로직 + 새 파일 처리 포함)
         if (commentsIdx == 0 && boardIdx >= 1) {
 
-            // 공통 게시글 수정 처리
+            // 9-1) 공통 게시글 수정 처리
             boardService.modifyBoard(
                     boardIdx,
                     board.getTitle(),
@@ -1009,10 +1054,19 @@ public class BoardController {
                     closedAt
             );
 
-            // 첨부파일이 존재하면 수정
+            // 9-2) 새로 업로드된 파일이 있으면 덮어쓰기
             if (attachment != null && !attachment.isEmpty()) {
+                // 만약 deleteFlag가 “Y”라면 위에서 이미 deleteAttachments()로 삭제했으니,
+                // 새로 받은 파일을 저장하는 로직만 수행한다.
                 boardService.modifyAttachment(attachment, boardIdx);
+
+                // 9-3) deleteFlag=Y 이고 새 파일도 없으면 → 이미 deleteAttachments()로 파일과 메타를 삭제했으므로,
+                //       DB 컬럼 상에서 Attachment 정보만 null 처리해도 충분하다.
+            } else if ("Y".equalsIgnoreCase(deleteFlag)) {
+                // (선택) 추가로 삭제 후 DB 컬럼만 클리어해야 한다면 이 메서드 사용
+                boardService.clearAttachmentInfo(boardIdx);
             }
+            // 9-4) deleteFlag=N 이고 attachment도 없으면 → 기존 파일 그대로 유지
         }
 
 

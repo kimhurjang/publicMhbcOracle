@@ -7,6 +7,7 @@ import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.entity.*;
 import com.example.mhbc.repository.*;
 import com.example.mhbc.util.Utility;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -214,6 +215,64 @@ public class BoardService {
         }
         // Repository 호출 (memberIdx 기준, Sort 적용)
         return boardRepository.findByMemberIdx(memberIdx, sort);
+    }
+    /**
+     * 해당 boardIdx로 등록된 Attachment가 있으면 true, 없으면 false 반환
+     */
+    public boolean existsAttachment(long boardIdx) {
+        return attachmentRepository.findByBoard_idx(boardIdx).isPresent();
+    }
+
+    /**
+     * 1) 게시글(boardIdx)에 연결된 Attachment 한 건 조회
+     * 2) 물리 파일 삭제 (uploadDir + filePath)
+     * 3) BoardEntity와 AttachmentEntity 연관관계 제거(orphanRemoval=true라면 자동 삭제)
+     */
+    @Transactional
+    public void deleteAttachments(long boardIdx) {
+        // 1) AttachmentEntity 조회
+        AttachmentEntity attachment = attachmentRepository
+                .findByBoard_idx(boardIdx)
+                .orElseThrow(() -> new EntityNotFoundException("첨부파일이 없습니다. boardIdx=" + boardIdx));
+
+        // 2) 물리 파일 삭제
+        String fullPath = uploadDir + attachment.getFilePath();
+        File file = new File(fullPath);
+        if (file.exists()) {
+            if (!file.delete()) {
+                System.out.println("파일 삭제 실패: " + file.getAbsolutePath());
+            }
+        } else {
+            System.out.println("삭제하려는 파일이 존재하지 않음: " + file.getAbsolutePath());
+        }
+
+        // 3) 엔티티 연관관계 제거
+        BoardEntity board = attachment.getBoard();
+        board.setAttachment(null);
+        boardRepository.save(board);
+
+        // 만약 orphanRemoval 설정이 되어 있지 않다면 아래 주석을 해제하여 직접 삭제하세요.
+        // attachmentRepository.delete(attachment);
+    }
+
+    /**
+     * 물리 파일은 이미 다른 로직(deleteAttachments 등)에서 삭제된 상태이고,
+     * DB 상에서만 BoardEntity의 attachment 필드를 null로 바꿔주고 싶을 때 사용합니다.
+     */
+    @Transactional
+    public void clearAttachmentInfo(long boardIdx) {
+        // 1) AttachmentEntity 조회
+        AttachmentEntity attachment = attachmentRepository
+                .findByBoard_idx(boardIdx)
+                .orElseThrow(() -> new EntityNotFoundException("삭제할 첨부파일이 없습니다. boardIdx=" + boardIdx));
+
+        // 2) BoardEntity ↔ AttachmentEntity 연관관계 제거
+        BoardEntity board = attachment.getBoard();
+        board.setAttachment(null);
+        boardRepository.save(board);
+
+        // 3) AttachmentEntity 자체도 삭제 (orphanRemoval=true라면 board.setAttachment(null)만으로 충분)
+        attachmentRepository.delete(attachment);
     }
 
 }
