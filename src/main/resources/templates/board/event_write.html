@@ -4,9 +4,11 @@
       layout:decorate="~{fragment/layout}">
 <th:block layout:fragment="css">
   <link rel="stylesheet" href="/css/event.css">
+  <style>
+    .left {text-align: left;}
+  </style>
 </th:block>
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <a th:href="@{/board/event}"><h1>이벤트</h1></a>
   <div id="content" class="content">
@@ -46,16 +48,16 @@
         </tr>
         <tr>
           <td>이미지 첨부파일</td>
-          <td>
+          <td class="left pd10">
             <input type="file" name="attachment" required placeholder="해당 페이지는 첨부파일 필수입니다.">
           </td>
         </tr>
         <tr>
           <td colspan="2">
             <div class="btn_group mt20">
-              <button type="button" onclick="goBack()" class="small">뒤로가기</button>
+              <button type="button" onclick="goBack()">뒤로가기</button>
               <button type="submit" class="color2">작성하기</button>
-              <button type="reset" class="small">초기화</button>
+              <button type="reset" >초기화</button>
             </div>
           </td>
         </tr>

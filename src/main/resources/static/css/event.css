@@ -22,7 +22,7 @@
     border-bottom: 1px solid lightgray;
 }
 .event.view{
-    padding: 20px;
+    padding: 20px 10px;
     display: flex;
     justify-content: space-between;
 }

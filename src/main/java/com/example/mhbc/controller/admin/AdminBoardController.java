@@ -10,6 +10,7 @@ import com.example.mhbc.repository.BoardRepository;
 import com.example.mhbc.service.BoardService;
 import com.example.mhbc.service.admin.AdminBoardService;
 import com.example.mhbc.util.Utility;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -138,17 +139,21 @@ public class AdminBoardController {
     public String deleteBoard(@RequestParam("id") Long id,
                               @RequestParam("groupIdx") Long groupIdx,
                               @RequestParam("page") int page,
-                              Model model) {
+                              HttpServletRequest request,
+                              RedirectAttributes redirectAttributes) {
         // 삭제 로직 처리
         adminBoardService.deleteById(id);
         BoardGroupEntity board = boardGroupRepository.findByGroupIdx(groupIdx);
         Long BoardType = board.getBoardType();
 
-        model.addAttribute("boardType" , BoardType);
-        model.addAttribute("groupIdx" , groupIdx);
-        model.addAttribute("group_idx" , groupIdx);
-        model.addAttribute("page" , page);
-        return "/admin/board/group_list";
+        redirectAttributes.addAttribute("boardType" , BoardType);
+        redirectAttributes.addAttribute("groupIdx" , groupIdx);
+        redirectAttributes.addAttribute("group_idx" , groupIdx);
+        redirectAttributes.addAttribute("page" , page);
+
+        // 이전 페이지 리다이렉트 (Referer 사용)
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/admin/board/group_list_select");
     }
 
 
