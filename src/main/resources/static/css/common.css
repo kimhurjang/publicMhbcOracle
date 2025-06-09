@@ -103,6 +103,8 @@ body.menu_open::after {opacity:1;pointer-events:auto;}
 .reservation_btn .xi-emoticon-happy { color:#fff; font-size:28px; }
 .reservation_btn { width:45px; margin-bottom:10px; background-color:#5350a1; border-radius:80px; padding:10px 5px; word-break:auto-phrase; text-align:center; font-size:14px; font-weight:600; color:#fff;}
 
+.home_btn{ width: 45px; height: 45px; border-radius: 80px; margin: 10px 0; border: 1px solid #ccc; font-size: 30px; text-align: center; background:white;}
+
 /* footer */
 #user footer { background-color:#9b89b3; color:#F7F4ED; padding:80px; display:flex; justify-content:space-between;} /* 보라색 배경 */
 

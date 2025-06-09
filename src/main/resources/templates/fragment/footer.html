@@ -2,6 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <footer th:fragment="footer" class="bg-holder">
     <div class="side">
+        <a href="/home" class="home_btn"
+           th:if="${currentUri != '/' and currentUri != '/home' and currentUri != '/index'}">
+            <i class="xi-home-o"></i>
+        </a>
         <a href="/reservation/" class="reservation_btn"><i class="xi-emoticon-happy"></i>대관하러가기</a>
         <a href="#" class="scroll-top"><button class="btn xi-arrow-up"></button></a>
     </div>
