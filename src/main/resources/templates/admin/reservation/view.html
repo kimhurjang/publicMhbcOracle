@@ -57,7 +57,7 @@
             <th>총금액</th>
             <td th:text="${ reservation.totalAmount != null ? #numbers.formatInteger(reservation.totalAmount, 3, 'COMMA') + '원' : '' }">1,000,000원</td>
             <th>상태</th>
-            <td th:text="${reservation.status}">접수</td>
+            <td th:text="${reservation.status}">상담대기</td>
           </tr>
           <tr>
             <th>문의사항</th>

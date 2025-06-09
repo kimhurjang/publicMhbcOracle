@@ -84,7 +84,7 @@ public class AdminReservationServiceImpl implements AdminReservationService {
                 .toLocalDateTime();
         String timeSlot = String.format("%02d", eventDateTime.getHour()) + "시"; // "14" 형태로 변환
 
-        if ("확정".equals(status)) {
+        if ("예약확정".equals(status)) {
           // 3. 차단된 일정이 있는지 확인
           //System.out.println("확정 ?? " + status);
           if (scheduleBlockRepository.existsByEventDateAndTimeSlot(eventDate, timeSlot)) {
@@ -94,7 +94,7 @@ public class AdminReservationServiceImpl implements AdminReservationService {
             // 4. 상태 변경 및 저장
             block.setEventDate(eventDate);
             block.setTimeSlot(timeSlot);
-            block.setReason("확정");
+            block.setReason("예약확정");
             block.setCreatedAt(new Date());
             block.setModifiedBy(entity.getLastModifiedBy());
             block.setReservation(entity); //예약엔티티 연결
@@ -152,7 +152,7 @@ public class AdminReservationServiceImpl implements AdminReservationService {
      ScheduleBlockEntity block = new ScheduleBlockEntity();
      block.setEventDate(dto.getEventDate());
      block.setTimeSlot(timeSlot);
-     block.setReason("예약 확정");
+     block.setReason("예약확정");
      block.setCreatedAt(new Date());
      block.setModifiedBy(dto.getLastModifiedBy());
      block.setReservation(updated);

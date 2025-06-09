@@ -21,7 +21,7 @@ public class ScheduleBlockDTO {
   private String timeSlot;           // 단일 시간대 (list에서 사용)
   private List<String> timeSlots;    // 복수 시간대 (form에서 사용)
 
-  private String reservationName;  // 예약자명 (확정일 경우)
+  private String reservationName;  // 예약자명 (예약확정일 경우)
   private Long reservationIdx; // 예약 ID
 
   public static ScheduleBlockDTO fromEntity(ScheduleBlockEntity entity) {

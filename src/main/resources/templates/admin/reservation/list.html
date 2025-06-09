@@ -39,8 +39,8 @@
             <label><input type="checkbox" name="status" value="상담대기" class="status"
                      th:checked="${status != null and status.contains('상담대기')}"> 상담대기
             </label>
-            <label><input type="checkbox" name="status" value="확정" class="status"
-                     th:checked="${status != null and status.contains('확정')}"> 확정
+            <label><input type="checkbox" name="status" value="예약확정" class="status"
+                     th:checked="${status != null and status.contains('예약확정')}"> 예약확정
             </label>
             <label><input type="checkbox" name="status" value="보류" class="status"
                      th:checked="${status != null and status.contains('보류')}"> 보류
@@ -155,7 +155,7 @@
                       th:data-idx="${r.idx}"
                       th:data-status="${r.status}"
                       th:text="${r.status}"
-                      th:classappend="${r.status == '확정' ? 'color1' : (r.status == '취소' ? 'disabled2' : '')}">
+                      th:classappend="${r.status == '예약확정' ? 'color1' : (r.status == '취소' ? 'disabled2' : '')}">
               </button>
               <a th:href="@{/admin/reservation/view(idx=${r.idx})}" class="btn small">보기</a>
             </td>
@@ -169,7 +169,7 @@
     <div th:if="${pagination != null}" th:replace="~{admin/fragment/paging :: paging}"></div>
 
     <script>
-      const statusOrder = ["상담대기", "보류", "확정", "취소"];
+      const statusOrder = ["상담대기", "보류", "예약확정", "취소"];
       const statusMap = new Map();
 
       document.querySelectorAll(".status_btn").forEach(btn => {

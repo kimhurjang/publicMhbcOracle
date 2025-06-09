@@ -74,7 +74,7 @@
         </tr>
         <tr>
           <th>상태</th>
-          <td th:text="${reservation.status}">접수</td>
+          <td th:text="${reservation.status}">상담대기</td>
         </tr>
         <tr>
           <th>문의사항</th>
@@ -85,7 +85,7 @@
         </tbody>
       </table>
 
-      <mark th:unless="${reservation.status == '상담대기'}">상태 확정, 보류, 취소이면 수정 및 삭제가 불가합니다. 기타 문의는 고객센터 또는 1:1 문의 바랍니다.</mark>
+      <mark th:unless="${reservation.status == '상담대기'}">상태 예약확정, 보류, 취소이면 수정 및 삭제가 불가합니다. 기타 문의는 고객센터 또는 1:1 문의 바랍니다.</mark>
       <div class="btn_group mt20">
         <!-- 수정 버튼 -->
         <button th:if="${reservation.status == '상담대기'}"
