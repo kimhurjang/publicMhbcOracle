@@ -3,6 +3,8 @@ window.onload = function () {
 
     allSections.each(function (index) {
         $(this).on("mousewheel DOMMouseScroll", function (e) {
+          const isOnMap = e.target.closest('#map');
+          if (isOnMap) return; // 지도가 휠 이벤트 처리하게 둠
             e.preventDefault();
 
             let delta = 0;

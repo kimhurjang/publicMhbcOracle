@@ -176,28 +176,109 @@
         // 초기 바인딩
         document.addEventListener('DOMContentLoaded', initMenu);
         window.addEventListener('resize', debounce(initMenu, 300));
+                      //카카오 맵
+              (function() {
+                  var kakaoMapContainer = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
+                  var kakaoMapOptions = { // 지도를 생성할 때 필요한 기본 옵션
+                    center: new kakao.maps.LatLng(34.960922, 128.385499), // 지도의 중심좌표.
+                    level: 3 // 지도의 레벨(확대, 축소 정도)
+                  };
 
-        // 뒤로가기 버튼 함수
-        function goBack() { history.back(); }
+                  var kakaoMapInstance = new kakao.maps.Map(kakaoMapContainer, kakaoMapOptions);
 
-        // 카카오맵은 기존 즉시 실행 IIFE 유지
-        (function() {
-          var mapContainer = document.getElementById('map');
-          var mapOptions = { center: new kakao.maps.LatLng(34.960922,128.385499), level: 3 };
-          var map = new kakao.maps.Map(mapContainer, mapOptions);
-          var markerImage = new kakao.maps.MarkerImage(
-            '/image/marker.png', new kakao.maps.Size(64,69), {offset: new kakao.maps.Point(27,69)}
-          );
-          var marker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(34.960378,128.385466), image: markerImage });
-          marker.setMap(map);
-          var overlayContent = `...`; // 생략
-          var overlay = new kakao.maps.CustomOverlay({ map, position: new kakao.maps.LatLng(34.960394,128.385516), content: overlayContent, yAnchor:1 });
-          window.setMapType = function(type) { /* ... */ };
-          window.zoomIn = function(){ map.setLevel(map.getLevel()-1); };
-          window.zoomOut = function(){ map.setLevel(map.getLevel()+1); };
-          window.kakaoOverlayClose = function(){ overlay.setMap(null); };
-          kakao.maps.event.addListener(marker, 'click', function(){ overlay.setMap(map); });
-        })();
+                  // 마커 이미지 설정
+                  var kakaoImageSrc = '/image/marker.png'; // 마커이미지의 주소입니다
+                  var kakaoImageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+                  var kakaoImageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지 옵션
+
+                  var kakaoMarkerImage = new kakao.maps.MarkerImage(kakaoImageSrc, kakaoImageSize, kakaoImageOption);
+                  var kakaoMarkerPosition = new kakao.maps.LatLng(34.960378, 128.385466); // 마커가 표시될 위치입니다
+
+                  var kakaoMarker = new kakao.maps.Marker({
+                    position: kakaoMarkerPosition,
+                    image: kakaoMarkerImage
+                  });
+                  kakaoMarker.setMap(kakaoMapInstance);
+
+                  // 커스텀 오버레이 내용
+                  var kakaoOverlayContent = `
+                    <div class="customOverlayWrap">
+                      <div class="customOverlayInfo">
+                        <div class="customOverlayTitle">
+                          만화방초
+                          <div class="customOverlayClose" onclick="kakaoOverlayClose()" title="닫기"></div>
+                        </div>
+                        <div class="customOverlayBody">
+                          <div class="customOverlayImg">
+                            <img src="/image/logo_1-2_mo.png" width="73" height="70">
+                          </div>
+                          <div class="customOverlayDesc">
+                            <div class="ellipsis">경남 고성군 거류면 은황길 82-91</div>
+                            <div class="jibun linkBox">
+                              <div class="jibun ellipsis">(지번)거류면 은월리 17-5</div>
+                              <a href="https://kko.kakao.com/-eU_FnkAY7" target="_blank" class="link"><i class="xi-search"></i></a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+
+                  var kakaoOverlayPosition = new kakao.maps.LatLng(34.960394, 128.385516);
+                  var kakaoCustomOverlay = new kakao.maps.CustomOverlay({
+                    map: kakaoMapInstance,
+                    position: kakaoOverlayPosition,
+                    content: kakaoOverlayContent,
+                    yAnchor: 1
+                  });
+
+                  // 지도 타입 변경 함수
+                  window.setMapType = function(maptype) {
+                    var roadmapControl = document.getElementById('btnRoadmap');
+                    var skyviewControl = document.getElementById('btnSkyview');
+                    if (maptype === 'roadmap') {
+                      kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+                      roadmapControl.className = 'selected_btn';
+                      skyviewControl.className = 'btn';
+                    } else {
+                      kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+                      skyviewControl.className = 'selected_btn';
+                      roadmapControl.className = 'btn';
+                    }
+                  };
+
+                  // 확대, 축소 함수
+                  window.zoomIn = function() {
+                    kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() - 1);
+                  };
+                  window.zoomOut = function() {
+                    kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() + 1);
+                  };
+
+                  window.kakaoOverlayClose = function() {
+                    kakaoCustomOverlay.setMap(null);
+                  };
+
+                  kakao.maps.event.addListener(kakaoMarker, 'click', function() {
+                    kakaoCustomOverlay.setMap(kakaoMapInstance);
+                  });
+                  kakaoMapContainer.addEventListener('wheel', function(e) {
+                    e.stopPropagation(); // 버블링 방지
+                  }, { passive: false });
+                      kakaoMapContainer.addEventListener('mouseenter', function() {
+                      document.body.style.overflow = 'hidden';
+                    });
+                    kakaoMapContainer.addEventListener('mouseleave', function() {
+                      document.body.style.overflow = '';
+                    });
+                })();
+
+
+                // 뒤로가기 버튼
+                function goBack() {
+                  history.back();
+                }
+
     </script>
 
 

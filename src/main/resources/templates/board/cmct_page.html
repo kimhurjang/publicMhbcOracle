@@ -69,7 +69,7 @@
         <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"  style="width: 15%;"></td>
         <td th:text="${commentCountMap[board.idx] != null ? commentCountMap[board.idx] : 0}"></td>
       </tr>
-      <tr>
+      <tr th:if="${paging != null and not paging.empty}">
         <td colspan="4">
           <div th:replace="~{fragment/paging_board :: paging}"></div>
         </td>

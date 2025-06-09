@@ -60,6 +60,7 @@ body.menu_open::after {opacity:1;pointer-events:auto;}
   /* 활성화 시 전환 */
   .nav_item.active .sub_nav_layer {opacity:1; pointer-events:auto; transform:translateY(0);}
   .nav_item.active .sub_group {opacity:1; pointer-events:auto; transform:translateY(0);}
+  ul.sub_group.group4{ position: absolute; left: -260px;}
 }
 
 @media screen and (max-width: 764px) {
