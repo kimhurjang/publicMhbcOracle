@@ -14,7 +14,9 @@
             <a th:href="@{/board/gallery_write(board_type=${boardType}, group_idx=${groupIdx})}" sec:authorize="hasRole('ADMIN')"><button class="small mb15">[관리자]글쓰기</button></a>
         </div>
         <div class="gallery">
-
+            <div th:if="${#lists.isEmpty(boardList)}" style="text-align: center; width: 100%; padding: 40px 0; color: gray;">
+                등록된 게시물이 없습니다.
+            </div>
             <a th:href="@{/board/gallery_view(idx=${board.idx}, board_type=${boardType}, group_idx=${groupIdx})}" th:if="${groupIdx == 4}" th:each="board : ${boardList}" class="card" >
 
                 <div th:if="${board.attachment != null}">

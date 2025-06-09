@@ -58,6 +58,7 @@
                    name="attachment"
                    id="newAttachmentInput"
                    required
+                   accept="image/*"
                    placeholder="첨부파일을 선택하세요.">
             <div th:if="${board.attachment == null and #fields.hasErrors('attachment')}"
                  th:errors="*{attachment}"

@@ -50,7 +50,7 @@
         </tr>
       </table>
     </div>
-
+    <p>paging 값: <span th:text="${paging}">[값 없음]</span></p>
     <table th:if="${isSearch == null or not isSearch}">
       <tr>
         <th>NO</th>
@@ -58,6 +58,9 @@
         <th>작성자</th>
         <th>작성일</th>
         <th>댓글</th>
+      </tr>
+      <tr th:if="${paging == null or paging.empty}">
+        <td colspan="5" style="text-align: center;">등록된 게시물이 없습니다.</td>
       </tr>
       <tr th:each=" board,stat : ${paging}">
         <td th:text="${startNum - stat.index}" style="width: 5%;"></td>
