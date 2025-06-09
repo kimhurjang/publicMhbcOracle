@@ -38,9 +38,9 @@
                 locale: 'ko',
                 height: 800,
                 events: scheduleList.map(item => {
-                  const isConfirmed = item.reason === '확정' && item.reservationName;
+                  const isConfirmed = item.reason === '예약확정' && item.reservationName;
                   const title = isConfirmed
-                    ? `${item.reservationName} 확정 (${item.timeSlot})`
+                    ? `${item.reservationName} 예약확정 (${item.timeSlot})`
                     : `${item.reason || '차단'} (${item.timeSlot})`;
 
                   return {

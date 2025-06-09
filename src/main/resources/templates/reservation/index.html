@@ -104,12 +104,8 @@
               eventDidMount: function(info) {
                 const { tooltip, reason } = info.event.extendedProps;
 
-                if (reason) {
-                  info.event.setProp("title", `${reason}`);
-                }
-                if (tooltip) {
-                  info.el.setAttribute('title', tooltip);
-                }
+                if (reason) info.event.setProp("title", `${reason}`);
+                if (tooltip) info.el.setAttribute('title', tooltip);
                 if (info.event.classNames.includes('disabled-event')) {
                   info.el.addEventListener('click', function(e) {
                     e.preventDefault();

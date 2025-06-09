@@ -48,7 +48,7 @@ public class ReservationEntity {
   private String contactTime; // 연락 가능 시간
   private String mobile; // 연락처
 
-  private String status; // 예약 상태 (예: 상담대기, 확정 등)
+  private String status; // 예약 상태 (예: 상담대기, 예약확정 등)
   private Integer totalAmount; // 총 금액
 
   @Column(name = "user_note")
