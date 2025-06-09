@@ -19,7 +19,7 @@
     .fc-h-event * {font-size:13px;}
     .disabled-event {cursor:not-allowed!important; opacity:0.9; background:#ededed; pointer-events:auto;}
     .fc .fc-daygrid-day-events {display:flex; flex-wrap:wrap;}
-    .fc .fc-daygrid-event-harness {flex:1 1 calc(50% - 5px); max-width:calc(50% - 5px);}
+    .fc .fc-daygrid-event-harness {flex:1 1 calc(50%); max-width:calc(50% - 5px);}
   </style>
 </th:block>
 <section layout:fragment="content" id="container" class="reservation list">
@@ -131,39 +131,59 @@
                 const ymd = current.toISOString().slice(0, 10);
                 const isPast = current < new Date(today.getFullYear(), today.getMonth(), today.getDate());
                 const day = current.getDay();
-                const isTooSoon = (current - today) / (1000 * 60 * 60 * 24) < 14; //2주여부
+                const isTooSoon = (current - today) / (1000 * 60 * 60 * 24) < 14;
 
                 if (day === 0 || day === 1) {
-                  ['10시', '12시', '14시', '16시'].forEach(time => {
-                    const key = `${ymd}_${time}`;
-                    if (existingEventKeys.has(key)) return;
+                  const allKey = `${ymd}_ALL`;
+                  const isAllBlocked = blockedMap.has(allKey);
 
+                  ['10시', '12시', '14시', '16시'].forEach(time => {
+                    // ALL 차단된 날은 10시에만 하나 표시
+                    if (isAllBlocked) {
+                      if (time !== '10시') return;
+                      const reason = blockedMap.get(allKey);
+                      events.push({
+                        title: reason,
+                        date: ymd,
+                        url: null,
+                        classNames: ['disabled-event', 'all-blocked'], //ALL일 때 전용 클래스 추가
+                        extendedProps: {
+                          tooltip: 'ALL',
+                          reason: reason
+                        }
+                      });
+                      //console.log("ALL 차단 처리됨:", ymd, reason); // 디버깅용
+                      return;
+                    }
+
+                    // 개별 시간 차단 처리
+                    const key = `${ymd}_${time}`;
                     const rawReason = blockedMap.get(key);
                     const isBlocked = rawReason != null && rawReason.trim() !== '';
                     const reason = isBlocked ? rawReason : null;
-
                     const isDisabled = isPast || isTooSoon || isBlocked;
 
                     events.push({
-                      //title: isPast ? '불가' : isBlocked ? reason : '가능',
-                      title: isDisabled ? '불가' : '가능',
+                      title: isDisabled ? (isBlocked ? reason : '불가') : '가능',
                       date: ymd,
                       url: isDisabled ? null : `/reservation/form?date=${ymd}&time=${time}`,
                       classNames: isDisabled ? ['disabled-event'] : ['available-event'],
                       extendedProps: {
-                          tooltip: time,
-                          reason: reason
+                        tooltip: time,
+                        reason: reason
                       }
                     });
 
                     existingEventKeys.add(key);
                   });
                 }
+
                 current.setDate(current.getDate() + 1);
               }
 
               return events;
             }
+
           });
         </script>
       </section>
