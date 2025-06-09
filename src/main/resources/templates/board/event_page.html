@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="/css/event.css">
 </th:block>
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/event.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <a th:href="@{/board/event}"><h1>이벤트</h1></a>
 
@@ -15,6 +14,10 @@
   </div>
 
   <div id="content" class="content event">
+    <!-- 게시물이 없는 경우 -->
+    <div th:if="${#lists.isEmpty(boardList)}" style="text-align: center; padding: 20px; COLOR: gray;">
+      등록된 게시물이 없습니다.
+    </div>
     <a th:if="${groupIdx == 3}" th:each="board : ${boardList}" th:href="@{/board/event_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}" class="event board">
       <div class="event card">
         <div th:if="${board.attachment != null}" class="card-img">

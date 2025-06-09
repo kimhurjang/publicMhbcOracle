@@ -11,6 +11,9 @@
     <div id="content" class="content">
 
         <table>
+            <tr th:if="${#lists.isEmpty(paging)}">
+                <td colspan="5" style="text-align: center;">등록된 게시물이 없습니다.</td>
+            </tr>
             <tr th:each="board : ${paging}" th:if="${groupIdx == 5 and board.re == 1}">
                 <td><a th:href="@{/board/oftenquestion_view(group_idx=${groupIdx}, board_type=${boardType}, title=${board.title}, idx=${board.idx})}" th:text="${board.title}"></a></td>
             </tr>

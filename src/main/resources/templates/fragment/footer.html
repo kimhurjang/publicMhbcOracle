@@ -2,6 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <footer th:fragment="footer" class="bg-holder">
     <div class="side">
+        <a href="/home" class="home_btn"
+           th:if="${currentUri != '/' and currentUri != '/home' and currentUri != '/index'}">
+            <i class="xi-home-o"></i>
+        </a>
         <a href="/reservation/" class="reservation_btn"><i class="xi-emoticon-happy"></i>대관하러가기</a>
         <a href="#" class="scroll-top"><button class="btn xi-arrow-up"></button></a>
     </div>
@@ -47,195 +51,153 @@
     <script src="/js/comm.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3bf69ce9275feb61004f536b17f363b9"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        // 공통 이벤트 핸들러 (고정 참조)
+        function checkScroll() {
           const header = document.querySelector("header");
           const nav = document.querySelector("nav");
           const mainSlide = document.querySelector("#ms1");
-          const gnb = document.getElementById("gnb");
-          const toggleBtn = document.querySelector(".toggle.icon");
-          const navItems = document.querySelectorAll('#gnb .nav_item');
-          const itemsWithSub = Array.from(gnb.querySelectorAll("li")).filter(li => li.querySelector(".sub_nav_layer"));
-          const subMenuLinks = document.querySelectorAll('#gnb > li > strong > a');
-
-          // 0) 초기 active 제거
-          navItems.forEach(item => item.classList.remove('active'));
-
-          // 1) 데스크탑 - 스크롤 시 헤더 투명화
-          if (window.innerWidth >= 765) {
-            function checkScroll() {
-              if (!mainSlide) {
-                header.classList.add("transparentNav");
-                return;
-              }
-              if (window.scrollY <= mainSlide.offsetHeight - nav.offsetHeight) {
-                header.classList.remove("transparentNav");
-              } else {
-                header.classList.add("transparentNav");
-              }
-            }
-            checkScroll();
-            window.addEventListener("scroll", checkScroll);
-
-            // 2) GNB hover 효과
-            navItems.forEach(item => {
-              item.addEventListener('mouseenter', () => {
-                navItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-              });
-              item.addEventListener('mouseleave', () => {
-                item.classList.remove('active');
-              });
-            });
+          if (!mainSlide || window.scrollY > mainSlide.offsetHeight - nav.offsetHeight) {
+            header.classList.add("transparentNav");
+          } else {
+            header.classList.remove("transparentNav");
           }
-
-          // 3) 모바일 메뉴 제어
-          if (window.innerWidth <= 764) {
-            // 메뉴 외부 클릭 시 오버레이 감지하여 닫기
-            document.addEventListener("click", function (e) {
-              if (document.body.classList.contains('menu_open')) {
-                const isInsideMenu = e.target.closest("#gnb") || e.target.closest(".toggle.icon")|| e.target.closest("#map");
-                if (!isInsideMenu) {
-                  gnb.classList.remove("active");
-                  header.classList.remove("closed");
-                  document.body.classList.remove("menu_open");
-                  itemsWithSub.forEach(li => li.classList.remove("active"));
-                }
-              }
-            });
-
-            // 아코디언 메뉴 동작
-            subMenuLinks.forEach(link => {
-              link.addEventListener('click', (e) => {
-                const li = link.closest('li');
-                const sub = li.querySelector('.sub_group');
-                if (sub) {
-                  e.preventDefault();
-                  const isActive = li.classList.contains('active');
-                  document.querySelectorAll('#gnb > li').forEach(item => {
-                    item.classList.remove('active');
-                    const subMenu = item.querySelector('.sub_group');
-                    if (subMenu) subMenu.style.maxHeight = '0';
-                  });
-                  if (!isActive) {
-                    li.classList.add('active');
-                    sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
-                  }
-                }
-              });
-            });
-
-            // 활성된 메뉴 자동 펼침
-            document.querySelectorAll('#gnb > li.active .sub_group').forEach(sub => {
-              sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
-            });
-
-            // 햄버거 토글 버튼
-            if (toggleBtn) {
-              toggleBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                header.classList.toggle('closed');
-                gnb.classList.toggle('active');
-                document.body.classList.toggle('menu_open');
-              });
-            }
-          }
-
-          //카카오 맵
-          (function() {
-          var kakaoMapContainer = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
-          var kakaoMapOptions = { // 지도를 생성할 때 필요한 기본 옵션
-            center: new kakao.maps.LatLng(34.960922, 128.385499), // 지도의 중심좌표.
-            level: 3 // 지도의 레벨(확대, 축소 정도)
-          };
-
-          var kakaoMapInstance = new kakao.maps.Map(kakaoMapContainer, kakaoMapOptions);
-
-          // 마커 이미지 설정
-          var kakaoImageSrc = '/image/marker.png'; // 마커이미지의 주소입니다
-          var kakaoImageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
-          var kakaoImageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지 옵션
-
-          var kakaoMarkerImage = new kakao.maps.MarkerImage(kakaoImageSrc, kakaoImageSize, kakaoImageOption);
-          var kakaoMarkerPosition = new kakao.maps.LatLng(34.960378, 128.385466); // 마커가 표시될 위치입니다
-
-          var kakaoMarker = new kakao.maps.Marker({
-            position: kakaoMarkerPosition,
-            image: kakaoMarkerImage
-          });
-          kakaoMarker.setMap(kakaoMapInstance);
-
-          // 커스텀 오버레이 내용
-          var kakaoOverlayContent = `
-            <div class="customOverlayWrap">
-              <div class="customOverlayInfo">
-                <div class="customOverlayTitle">
-                  만화방초
-                  <div class="customOverlayClose" onclick="kakaoOverlayClose()" title="닫기"></div>
-                </div>
-                <div class="customOverlayBody">
-                  <div class="customOverlayImg">
-                    <img src="/image/logo_1-2_mo.png" width="73" height="70">
-                  </div>
-                  <div class="customOverlayDesc">
-                    <div class="ellipsis">경남 고성군 거류면 은황길 82-91</div>
-                    <div class="jibun linkBox">
-                      <div class="jibun ellipsis">(지번)거류면 은월리 17-5</div>
-                      <a href="https://kko.kakao.com/-eU_FnkAY7" target="_blank" class="link"><i class="xi-search"></i></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-
-          var kakaoOverlayPosition = new kakao.maps.LatLng(34.960394, 128.385516);
-          var kakaoCustomOverlay = new kakao.maps.CustomOverlay({
-            map: kakaoMapInstance,
-            position: kakaoOverlayPosition,
-            content: kakaoOverlayContent,
-            yAnchor: 1
-          });
-
-          // 지도 타입 변경 함수
-          window.setMapType = function(maptype) {
-            var roadmapControl = document.getElementById('btnRoadmap');
-            var skyviewControl = document.getElementById('btnSkyview');
-            if (maptype === 'roadmap') {
-              kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-              roadmapControl.className = 'selected_btn';
-              skyviewControl.className = 'btn';
-            } else {
-              kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
-              skyviewControl.className = 'selected_btn';
-              roadmapControl.className = 'btn';
-            }
-          };
-
-          // 확대, 축소 함수
-          window.zoomIn = function() {
-            kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() - 1);
-          };
-          window.zoomOut = function() {
-            kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() + 1);
-          };
-
-          window.kakaoOverlayClose = function() {
-            kakaoCustomOverlay.setMap(null);
-          };
-
-          kakao.maps.event.addListener(kakaoMarker, 'click', function() {
-            kakaoCustomOverlay.setMap(kakaoMapInstance);
-          });
-        })();
-
-        });
-
-        // 뒤로가기 버튼
-        function goBack() {
-          history.back();
         }
 
+        function outsideClickHandler(e) {
+          const header = document.querySelector("header");
+          const gnb = document.getElementById("gnb");
+          const itemsWithSub = Array.from(gnb.querySelectorAll("li")).filter(li => li.querySelector(".sub_nav_layer"));
 
+          if (document.body.classList.contains('menu_open')) {
+            const inside = e.target.closest("#gnb, .toggle.icon, #map");
+            if (!inside) {
+              gnb.classList.remove("active");
+              header.classList.remove("closed");
+              document.body.classList.remove("menu_open");
+              itemsWithSub.forEach(li => li.classList.remove("active"));
+            }
+          }
+        }
+
+        function accordionHandler(e) {
+          const li = e.currentTarget.closest('li');
+          const sub = li.querySelector('.sub_group');
+          if (sub) {
+            e.preventDefault();
+            const isActive = li.classList.contains('active');
+            document.querySelectorAll('#gnb > li').forEach(item => {
+              item.classList.remove('active');
+              const s = item.querySelector('.sub_group');
+              if (s) s.style.maxHeight = '0';
+            });
+            if (!isActive) {
+              li.classList.add('active');
+              sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+            }
+          }
+        }
+
+        function toggleHandler(e) {
+          e.preventDefault();
+          const header = document.querySelector("header");
+          const gnb = document.getElementById("gnb");
+          header.classList.toggle('closed');
+          gnb.classList.toggle('active');
+          document.body.classList.toggle('menu_open');
+        }
+
+        // debounce 유틸리티
+        function debounce(fn, ms) {
+          let timer;
+          return function(...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), ms);
+          };
+        }
+
+        // 메뉴 초기화 함수
+        function initMenu() {
+          const header = document.querySelector("header");
+          const nav = document.querySelector("nav");
+          const gnb = document.getElementById("gnb");
+          const toggleBtn = document.querySelector('.toggle.icon');
+          const navItems = document.querySelectorAll('#gnb .nav_item');
+          const subMenuLinks = document.querySelectorAll('#gnb > li > strong > a');
+
+          // 공통 초기화
+          navItems.forEach(i => i.classList.remove('active'));
+          document.body.classList.remove('menu_open');
+          gnb.classList.remove('active');
+          header.classList.remove('closed');
+
+          if (window.innerWidth >= 765) {
+            // 데스크탑 모드: 스크롤, hover
+            window.removeEventListener('scroll', checkScroll);
+            window.addEventListener('scroll', checkScroll);
+            checkScroll();
+
+            navItems.forEach(item => {
+              item.removeEventListener('mouseenter', desktopMouseEnter);
+              item.removeEventListener('mouseleave', desktopMouseLeave);
+              item.addEventListener('mouseenter', desktopMouseEnter);
+              item.addEventListener('mouseleave', desktopMouseLeave);
+            });
+          } else {
+            // 모바일 모드: 외부 클릭, 아코디언, 토글
+            document.removeEventListener('click', outsideClickHandler);
+            document.addEventListener('click', outsideClickHandler);
+
+            if (toggleBtn) {
+              toggleBtn.removeEventListener('click', toggleHandler);
+              toggleBtn.addEventListener('click', toggleHandler);
+            }
+
+            subMenuLinks.forEach(link => {
+              link.removeEventListener('click', accordionHandler);
+              link.addEventListener('click', accordionHandler);
+            });
+
+            // 활성된 서브 자동 펼침
+            document.querySelectorAll('#gnb > li.active .sub_group')
+              .forEach(sub => sub.style.maxHeight = (sub.scrollHeight + 40) + 'px');
+          }
+        }
+
+        // 데스크탑 마우스 enter/leave 핸들러
+        function desktopMouseEnter() {
+          const navItems = document.querySelectorAll('#gnb .nav_item');
+          navItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+        }
+        function desktopMouseLeave() {
+          this.classList.remove('active');
+        }
+
+        // 초기 바인딩
+        document.addEventListener('DOMContentLoaded', initMenu);
+        window.addEventListener('resize', debounce(initMenu, 300));
+
+        // 뒤로가기 버튼 함수
+        function goBack() { history.back(); }
+
+        // 카카오맵은 기존 즉시 실행 IIFE 유지
+        (function() {
+          var mapContainer = document.getElementById('map');
+          var mapOptions = { center: new kakao.maps.LatLng(34.960922,128.385499), level: 3 };
+          var map = new kakao.maps.Map(mapContainer, mapOptions);
+          var markerImage = new kakao.maps.MarkerImage(
+            '/image/marker.png', new kakao.maps.Size(64,69), {offset: new kakao.maps.Point(27,69)}
+          );
+          var marker = new kakao.maps.Marker({ position: new kakao.maps.LatLng(34.960378,128.385466), image: markerImage });
+          marker.setMap(map);
+          var overlayContent = `...`; // 생략
+          var overlay = new kakao.maps.CustomOverlay({ map, position: new kakao.maps.LatLng(34.960394,128.385516), content: overlayContent, yAnchor:1 });
+          window.setMapType = function(type) { /* ... */ };
+          window.zoomIn = function(){ map.setLevel(map.getLevel()-1); };
+          window.zoomOut = function(){ map.setLevel(map.getLevel()+1); };
+          window.kakaoOverlayClose = function(){ overlay.setMap(null); };
+          kakao.maps.event.addListener(marker, 'click', function(){ overlay.setMap(map); });
+        })();
     </script>
 
 

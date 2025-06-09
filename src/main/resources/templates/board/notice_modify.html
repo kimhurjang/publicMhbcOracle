@@ -2,12 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragment/layout}">
+<th:block layout:fragment="css">
+
+</th:block><!--넣고자 하는 css 이름 변경-->
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <a th:href="@{/board/notice}"><h1>공지 사항</h1></a>
   <div id="content" class="content">
     <form name="notice" action="/board/modify_proc" method="post" enctype="multipart/form-data">
+      <!-- 1) 삭제 의도 전달용 hidden 필드 -->
+      <input type="hidden" id="deleteAttachmentFlag" name="deleteAttachmentFlag" value="N"/>
       <input type="hidden" name="boardIdx" th:value="${board.idx}">
       <input type="hidden" name="memberIdx" th:value="${member.idx}">
       <input type="hidden" name="group_idx" th:value="${groupIdx}">
@@ -15,44 +19,72 @@
       <input type="hidden" name="comments_idx" value="0">
       <table>
         <tr>
-          <td>제목</td>
+          <th>제목</th>
           <td><input type="text" th:value="${board.title}" name="title" required placeholder="제목을 입력해주세요.">
           </td>
         </tr>
-        <td>본문</td>
+        <th>본문</th>
         <td>
           <textarea cols="30" rows="2" name="content" th:text="${board.content}" required placeholder="본문을 입력해주세요."></textarea>
         </td>
         </tr>
-        <!-- 첨부가 있을 때-->
-        <tr th:if="${board.attachment != null}">
-          <td>첨부 파일</td>
-          <td>
-            <span th:text="${board.attachment.fileName}">파일명</span>
-            <a th:href="@{/board/file/delete(idx=${board.attachment.idx},board_idx=${board.idx})}">
-              <button type="button">삭제</button>
-            </a>
-          </td>
-        </tr>
-        <!-- 첨부가 없을 때-->
-        <tr th:if="${board.attachment == null}">
-          <td>첨부 파일</td>
-          <td>
-            <input type="file" name="attachment">
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <div class="btn_group mt20">
-              <button type="button" onclick="goBack()" class="small">뒤로가기</button>
-              <button type="submit" class="color2">작성하기</button>
-              <button type="reset" class="small">초기화</button>
-            </div>
+        <!-- attachmentRow 하나만 사용. th:if로 서버 상태에 따라 보여주는 내용이 달라짐 -->
+        <tr id="attachmentRow">
+          <th>첨부 파일</th>
+          <td class="tl">
+            <!-- A) 서버에 기존 파일이 있을 때 -->
+            <span th:if="${board.attachment != null}"
+                  id="existingFilename"
+                  th:text="${board.attachment.fileName}">
+                      파일명
+                    </span>
+            <button th:if="${board.attachment != null}"
+                    type="button"
+                    onclick="removeAttachment()">
+              삭제
+            </button>
+
+            <!-- B) 서버에 기존 파일이 없을 때 -->
+            <input th:if="${board.attachment == null}"
+                   type="file"
+                   name="attachment"
+                   id="newAttachmentInput"
+                   placeholder="첨부파일을 선택하세요.">
+            <div th:if="${board.attachment == null and #fields.hasErrors('attachment')}"
+                 th:errors="*{attachment}"
+                 style="color:red;"></div>
           </td>
         </tr>
       </table>
+      <div class="btn_group mt20">
+        <button type="button" onclick="goBack()" class="small">뒤로가기</button>
+        <button type="submit" class="color2">작성하기</button>
+        <button type="reset" class="small">초기화</button>
+      </div>
     </form>
   </div><!--E content-->
 </section><!--E container-->
+<th:block layout:fragment="script">
+  <script>
+    function removeAttachment() {
+      document.getElementById('deleteAttachmentFlag').value = 'Y';
+
+      const attachmentRow = document.getElementById('attachmentRow');
+      if (!attachmentRow) return;
+
+      attachmentRow.innerHTML = `
+        <th>첨부 파일</th>
+        <td class="tl">
+          <input type="file"
+                 name="attachment"
+                 id="newAttachmentInput"
+                 required
+                 placeholder="첨부파일을 선택하세요.">
+          <div id="attachmentError" style="color:red;"></div>
+        </td>
+      `;
+    }
+  </script>
+</th:block>
 </body>
 </html>

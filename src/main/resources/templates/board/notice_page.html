@@ -10,14 +10,25 @@
   </div>
   <div id="content" class="content">
     <table th:if="${groupIdx == 1}">
-      <tr th:each="board, stat : ${paging}">
+      <!-- 게시물이 없을 때 -->
+      <tbody th:if="${paging.empty}">
+      <tr>
+        <td colspan="5" style="text-align: center; color: gray;">등록된 게시물이 없습니다.</td>
+      </tr>
+      </tbody>
+
+      <!-- 게시물이 있을 때 -->
+      <tbody th:if="${not paging.empty}" th:each="board, stat : ${paging}">
+      <tr>
         <td th:text="${startNum - stat.index}" style="width: 5%;"></td>
         <td style="width: 80%;">
           <a th:href="@{/board/notice_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}" th:text="${board.title}"></a>
         </td>
         <td th:text="${#dates.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
       </tr>
-      <tr>
+      </tbody>
+
+      <tr th:if="${not paging.empty}">
         <td colspan="3">
           <div th:replace="~{fragment/paging_board :: paging}"></div>
         </td>

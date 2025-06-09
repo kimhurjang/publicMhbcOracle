@@ -82,4 +82,12 @@ public class GlobalModelAdvice {
       model.addAttribute("webtitle", "만화방초");
     }
   }
+
+/**
+ *    main 버튼 활성화용: 현재 요청 URI구하기
+ * */
+  @ModelAttribute("currentUri")
+  public String currentUri(HttpServletRequest request) {
+    return request.getRequestURI();
+  }
 }

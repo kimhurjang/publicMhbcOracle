@@ -2,8 +2,17 @@
 const side = document.querySelector('.side');
 const scrollTop = document.querySelector('.scroll-top');
 function toggleScrollTop() {
+const path = window.location.pathname;
   if (scrollTop) {
-    window.scrollY > 100 ? side.classList.add('active') : side.classList.remove('active');
+    // 메인 페이지일 경우 (예: "/index.html" 혹은 "/")
+    if (path === '/' || path === '/home' || path === '/index') {
+      window.scrollY > 100
+        ? side.classList.add('active')
+        : side.classList.remove('active');
+    } else {
+      // 서브 페이지는 항상 active
+      side.classList.add('active');
+    }
   }
 }
 scrollTop.addEventListener('click', (e) => {
