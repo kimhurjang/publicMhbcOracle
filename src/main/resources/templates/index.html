@@ -255,7 +255,7 @@
                     <div class="board content" th:each="board : ${board}">
                         <p th:text="${board.title}"></p><br>
                         <sub th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></sub><br>
-                        <p th:text="${board.content.length() > 30} ? ${#strings.substring(board.content, 0, 30) + '...'} : ${board.content}"></p>
+                        <p th:text="${board.content.length() > 15} ? ${#strings.substring(board.content, 0, 15) + '...'} : ${board.content}"></p>
                         <a th:href="@{/board/notice_view(group_idx=${board.group.groupIdx}, board_type=${board.group.boardType}, idx=${board.idx})}"><button class="xi-arrow-right"></button></a>
                     </div>
                 </div>

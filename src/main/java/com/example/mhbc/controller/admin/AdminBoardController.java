@@ -102,7 +102,7 @@ public class AdminBoardController {
             case 2 -> "커뮤니티";
             case 3 -> "이벤트";
             case 4 -> "갤러리";
-            case 5 -> "자주 질문";
+            case 5 -> "자주 묻는 질문";
             case 6 -> "1 대 1 질문";
             default -> "기타";
         };
@@ -174,7 +174,7 @@ public class AdminBoardController {
             case 2 -> "커뮤니티";
             case 3 -> "이벤트";
             case 4 -> "갤러리";
-            case 5 -> "자주 질문";
+            case 5 -> "자주 묻는 질문";
             case 6 -> "1 대 1";
             default -> "기타";
         };
@@ -204,7 +204,7 @@ public class AdminBoardController {
             case 2 -> "커뮤니티";
             case 3 -> "이벤트";
             case 4 -> "갤러리";
-            case 5 -> "자주 질문";
+            case 5 -> "자주 묻는 질문";
             case 6 -> "1 대 1";
             default -> "기타";
         };
