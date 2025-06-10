@@ -72,5 +72,58 @@
     </form>
   </div><!--E content-->
 </section><!--E container-->
+<th:block layout:fragment="script">
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const startInput = document.getElementById("startAt");
+      const endInput = document.getElementById("closedAt");
+
+      if (!startInput || !endInput) return;
+
+      startInput.addEventListener("change", function () {
+        const startDate = new Date(this.value + "T00:00:00");
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (startDate < today) {
+          alert("시작일은 당일 이후만 가능합니다.");
+          this.value = "";
+          this.focus();
+          return;
+        }
+
+        const endValue = endInput.value;
+        if (endValue) {
+          const endDate = new Date(endValue + "T00:00:00");
+          if (endDate <= startDate) {
+            alert("종료일은 시작일 이후여야 합니다.");
+            endInput.value = "";
+            endInput.focus();
+          }
+        }
+      });
+
+      endInput.addEventListener("change", function () {
+        const endDate = new Date(this.value + "T00:00:00");
+        const startValue = startInput.value;
+
+        if (!startValue) {
+          alert("먼저 시작일을 선택해주세요.");
+          this.value = "";
+          this.focus();
+          return;
+        }
+
+        const startDate = new Date(startValue + "T00:00:00");
+        if (endDate <= startDate) {
+          alert("종료일은 시작일 이후여야 합니다.");
+          this.value = "";
+          this.focus();
+        }
+      });
+    });
+  </script>
+</th:block>
+
 </body>
 </html>

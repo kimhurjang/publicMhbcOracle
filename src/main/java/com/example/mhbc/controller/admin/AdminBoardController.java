@@ -84,7 +84,7 @@ public class AdminBoardController {
         // 공통: 쿼리스트링에 groupIdx, page, keyword 유지
         redirectAttributes.addAttribute("group_idx", groupIdx);
         redirectAttributes.addAttribute("groupIdx", groupIdx);
-        redirectAttributes.addAttribute("protectedIds", List.of(326L, 327L, 328L, 329L, 330L, 331L));
+        redirectAttributes.addAttribute("protectedIds", List.of(325L,326L, 327L, 328L, 329L, 330L, 331L));
         redirectAttributes.addAttribute("page", page);
         if (keyword != null && !keyword.isBlank()) {
             redirectAttributes.addAttribute("keyword", keyword);
@@ -133,7 +133,7 @@ public class AdminBoardController {
         model.addAttribute("paging", paging);
         model.addAttribute("category", category);
         model.addAttribute("keyword", keyword);
-        model.addAttribute("protectedIds", List.of(326L, 327L, 328L, 329L, 330L, 331L));
+        model.addAttribute("protectedIds", List.of(325L,326L, 327L, 328L, 329L, 330L, 331L));
 
         return "/admin/board/group_list";
     }

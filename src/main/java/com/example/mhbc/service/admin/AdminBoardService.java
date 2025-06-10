@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,8 +57,9 @@ public class AdminBoardService {
     }
 
     public void deleteBoardsByIds(List<Long> ids) {
-        Set<Long> protectedIds = Set.of(326L, 327L, 328L, 329L, 330L, 331L);
+        Set<Long> protectedIds = Set.of(325L,326L, 327L, 328L, 329L, 330L, 331L);
         List<Long> filtered = ids.stream()
+                .filter(Objects::nonNull)
                 .filter(id -> !protectedIds.contains(id))
                 .collect(Collectors.toList());
 
@@ -65,7 +67,7 @@ public class AdminBoardService {
     }
 
     public void deleteById(Long idx) {
-        Set<Long> protectedIds = Set.of(326L, 327L, 328L, 329L, 330L, 331L);
+        Set<Long> protectedIds = Set.of(325L,326L, 327L, 328L, 329L, 330L, 331L);
 
         // 실제 게시물 조회
         Optional<BoardEntity> optionalBoard = boardRepository.findById(idx);
