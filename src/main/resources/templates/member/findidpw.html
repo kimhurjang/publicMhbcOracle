@@ -13,70 +13,72 @@
 <section layout:fragment="content" id="container" class="sub login-page">
   <div class="login-container">
     <div class="login_box">
-      <h2>아이디 비밀번호 찾기</h2>
 
-      <div class="tab">
-        <ul class="tabnav">
-          <li><a href="#" class="active" data-tab="tab1">아이디 찾기</a></li>
-          <li><a href="#" data-tab="tab2">비밀번호 찾기</a></li>
-        </ul>
+      <!-- 제목 영역 -->
+      <h2 id="form-title" th:text="${pwError} == null ? '아이디 찾기' : '비밀번호 찾기'">아이디 찾기</h2>
 
-        <div class="tabcontent">
-          <!-- 아이디 찾기 탭 -->
-          <div id="tab1" class="active">
-            <form id="find-id-form" method="POST" action="/api/member/find-id">
-              <div class="input_group">
-                <label for="name_input1">이름</label>
-                <input type="text" id="name_input1" name="name" required placeholder="이름을 입력하세요" />
-              </div>
-
-              <div class="input_group">
-                <label for="mobile_input1">전화번호</label><br />
-                <input type="text" id="mobile_input1" name="mobile1" maxlength="3" required placeholder="010" style="width: 70px;" /> -
-                <input type="text" id="mobile_input2" name="mobile2" maxlength="4" required placeholder="1234" style="width: 80px;" /> -
-                <input type="text" id="mobile_input3" name="mobile3" maxlength="4" required placeholder="5678" style="width: 80px;" />
-              </div>
-
-              <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
-                <!-- 성공 시 로그인 버튼만 -->
-                <button class="login_button" type="button" onclick="location.href='/api/member/login'" th:if="${message != null}">로그인</button>
-
-                <!-- 실패 시 아이디 찾기 버튼과 회원가입 버튼 -->
-                <th:block th:if="${message == null}">
-                  <button type="submit" class="login_button">아이디 찾기</button>
-                  <a href="/api/member/join">
-                    <button class="login_button" type="button">회원가입</button>
-                  </a>
-                </th:block>
-              </div>
-            </form>
-
-            <div style="margin-top: 15px;">
-              <p th:if="${message}" th:text="${message}" style="color: green;"></p>
-              <p th:if="${error}" th:text="${error}" style="color: red;"></p>
-            </div>
-          </div>
-
-          <!-- 비밀번호 찾기 탭 -->
-          <div id="tab2">
-            <form action="/api/member/find-password" method="post">
-              <div class="input_group">
-                <label for="id_input">아이디</label>
-                <input type="text" id="id_input" name="id" placeholder="아이디" required />
-              </div>
-
-              <div class="input_group">
-                <label for="name_input2">이름</label>
-                <input type="text" id="name_input2" name="name" placeholder="이름" required />
-              </div>
-
-              <p th:if="${pwError}" th:text="${pwError}" style="color: red; margin-top: 10px;"></p>
-
-              <button type="submit" class="login_button">비밀번호 찾기</button>
-            </form>
-          </div>
+      <!-- 아이디 찾기 폼 -->
+      <form id="find-id-form" method="POST" action="/api/member/find-id"
+            th:style="${pwError} != null ? 'display:none;' : 'display:block;'">
+        <div class="input_group">
+          <label for="name_input1">이름</label>
+          <input type="text" id="name_input1" name="name" required placeholder="이름을 입력하세요" />
         </div>
-      </div>
+
+        <div class="input_group">
+          <label for="mobile_input1">전화번호</label><br />
+          <input type="text" id="mobile_input1" name="mobile1" maxlength="3" required placeholder="010" style="width: 70px;" /> -
+          <input type="text" id="mobile_input2" name="mobile2" maxlength="4" required placeholder="1234" style="width: 80px;" /> -
+          <input type="text" id="mobile_input3" name="mobile3" maxlength="4" required placeholder="5678" style="width: 80px;" />
+        </div>
+
+        <!-- 아이디 찾기 메시지 표시 -->
+        <p th:if="${message}" th:text="${message}" style="color: green; margin-top: 10px;"></p>
+        <p th:if="${error}" th:text="${error}" style="color: red; margin-top: 10px;"></p>
+
+        <!-- 아이디 찾기 폼용 링크 (전화번호 입력 밑) -->
+        <div class="links" style="margin-bottom: 20px;">
+          <a href="#" class="link-find-id" th:style="${pwError} == null ? 'font-weight: bold;' : 'font-weight: normal;'">아이디 찾기</a> |
+          <a href="#" class="link-find-pw" th:style="${pwError} != null ? 'font-weight: bold;' : 'font-weight: normal;'">비밀번호 찾기</a> |
+          <a href="/api/member/join">회원가입</a>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+          <!-- 성공 시 로그인 버튼만 -->
+          <button class="login_button" type="button" onclick="location.href='/api/member/login'" th:if="${message != null}">로그인</button>
+
+          <!-- 실패 시 아이디 찾기 버튼과 회원가입 버튼 -->
+          <th:block th:if="${message == null}">
+            <button type="submit" class="login_button">아이디 찾기</button>
+          </th:block>
+        </div>
+      </form>
+
+      <!-- 비밀번호 찾기 폼 -->
+      <form id="find-pw-form" action="/api/member/find-password" method="post"
+            th:style="${pwError} != null ? 'display:block;' : 'display:none;'">
+        <div class="input_group">
+          <label for="id_input">아이디</label>
+          <input type="text" id="id_input" name="id" placeholder="아이디" required />
+        </div>
+
+        <div class="input_group">
+          <label for="name_input2">이름</label>
+          <input type="text" id="name_input2" name="name" placeholder="이름" required />
+        </div>
+
+        <!-- 비밀번호 찾기 폼용 링크 (입력칸 바로 밑) -->
+        <div class="links" style="margin-bottom: 20px;">
+          <a href="#" class="link-find-id" th:style="${pwError} == null ? 'font-weight: bold;' : 'font-weight: normal;'">아이디 찾기</a> |
+          <a href="#" class="link-find-pw" th:style="${pwError} != null ? 'font-weight: bold;' : 'font-weight: normal;'">비밀번호 찾기</a> |
+          <a href="/api/member/join">회원가입</a>
+        </div>
+
+        <!-- 비밀번호 찾기 오류 메시지 -->
+        <p th:if="${pwError}" th:text="${pwError}" style="color: red; margin-top: 10px;"></p>
+
+        <button type="submit" class="login_button">비밀번호 찾기</button>
+      </form>
 
     </div>
   </div>
@@ -85,43 +87,42 @@
 <th:block layout:fragment="js">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const tabLinks = document.querySelectorAll('.tabnav a');
-      const tabContents = document.querySelectorAll('.tabcontent > div');
+    document.addEventListener('DOMContentLoaded', () => {
+      // 링크 요소들 - 각각 두 폼 내에 있으므로 querySelectorAll으로 각각 선택
+      const linkFindIdList = document.querySelectorAll('.link-find-id');
+      const linkFindPwList = document.querySelectorAll('.link-find-pw');
+      const formTitle = document.getElementById('form-title');
+      const findIdForm = document.getElementById('find-id-form');
+      const findPwForm = document.getElementById('find-pw-form');
 
-      function showTab(targetId) {
-        tabLinks.forEach(link => link.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
-
-        document.querySelector(`.tabnav a[data-tab="${targetId}"]`)?.classList.add('active');
-        document.getElementById(targetId)?.classList.add('active');
+      function activateLink(selected) {
+        if(selected === 'id') {
+          formTitle.textContent = '아이디 찾기';
+          findIdForm.style.display = 'block';
+          findPwForm.style.display = 'none';
+          linkFindIdList.forEach(el => el.style.fontWeight = 'bold');
+          linkFindPwList.forEach(el => el.style.fontWeight = 'normal');
+        } else {
+          formTitle.textContent = '비밀번호 찾기';
+          findIdForm.style.display = 'none';
+          findPwForm.style.display = 'block';
+          linkFindIdList.forEach(el => el.style.fontWeight = 'normal');
+          linkFindPwList.forEach(el => el.style.fontWeight = 'bold');
+        }
       }
 
-      const hash = window.location.hash.replace('#', '');
-      if (hash && document.getElementById(hash)) {
-        showTab(hash);
-      } else {
-        showTab('tab1');
-      }
+      // 이벤트 리스너 연결
+      linkFindIdList.forEach(el => el.addEventListener('click', (e) => {
+        e.preventDefault();
+        activateLink('id');
+      }));
 
-      tabLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          const targetId = this.getAttribute('data-tab');
-          showTab(targetId);
-          history.replaceState(null, null, `#${targetId}`);
-        });
-      });
-    });
-
-    // ✅ 모든 리소스 로딩이 끝난 후에 스크롤 위로
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'auto' });
-      }, 0);
+      linkFindPwList.forEach(el => el.addEventListener('click', (e) => {
+        e.preventDefault();
+        activateLink('pw');
+      }));
     });
   </script>
-
 </th:block>
 
 </body>
