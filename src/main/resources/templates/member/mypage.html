@@ -37,21 +37,36 @@
       </div>
       <div>
         <label>가입일</label>
-        <td th:text="${member.createdAt != null ? #dates.format(member.createdAt, 'yyyy.MM.dd HH:mm:ss') : '-'}">2021.07.01 12:30:45</td>
+        <td th:text="${member.createdAt != null ? #dates.format(member.createdAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></td>
       </div>
       <div>
         <label>최종접속일</label>
-        <td th:text="${member.updatedAt != null ? #dates.format(member.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}">2021.07.02 15:45:00</td>
+        <td th:text="${member.updatedAt != null ? #dates.format(member.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></td>
       </div>
-      <button type="submit">저장</button>
+
+      <!-- 버튼을 한 줄에 배치 -->
+      <div class="button-row">
+        <button type="submit" class="save-button">저장</button>
+        <button type="button" class="withdraw-button" onclick="submitWithdrawForm()">탈퇴</button>
+      </div>
     </form>
+
+    <!-- 탈퇴용 별도 폼 (숨김) -->
+    <form id="withdrawForm" th:action="@{/api/member/withdraw}" method="post" style="display:none;"></form>
 
   </div>
 </section>
 
 <!-- 자바스크립트 -->
 <th:block layout:fragment="js">
-  <script>
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    const successMessage = /*[[${successMessage}]]*/ null;
+    if (typeof successMessage === 'string' && successMessage.trim() !== '') {
+      alert(successMessage);
+    }
+    /*]]>*/
+
     function validateForm() {
       const name = document.querySelector('input[name="name"]').value.trim();
       const email = document.querySelector('input[name="email"]').value.trim();
@@ -71,16 +86,31 @@
       }
       return true;
     }
+
+    function submitWithdrawForm() {
+  if (confirm("정말 탈퇴하시겠습니까?")) {
+    fetch("/api/member/withdraw", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("탈퇴 요청 실패");
+      return response.json();
+    })
+    .then(data => {
+      alert(data.message);
+      window.location.href = "/api/member/login";
+    })
+    .catch(error => {
+      alert("탈퇴 중 오류가 발생했습니다.");
+      console.error(error);
+    });
+  }
+}
   </script>
 
-  <script th:inline="javascript">
-    /*<![CDATA[*/
-    var successMessage = [[${successMessage != null}]] ? '[[${successMessage}]]' : '';
-    if(successMessage !== '') {
-      alert(successMessage);
-    }
-    /*]]>*/
-  </script>
 </th:block>
 
 </body>

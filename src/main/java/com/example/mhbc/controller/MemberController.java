@@ -52,9 +52,30 @@ public class MemberController {
     private LoginService loginService;
     @Autowired
     private MemberService memberService;
+    @PostMapping("/withdraw")
+    @ResponseBody
+    public Map<String, Object> withdrawMember(Principal principal, HttpSession session) {
+        if (principal == null) {
+            return Map.of("success", false, "message", "로그인이 필요합니다.");
+        }
+
+        String userid = principal.getName();
+        boolean result = memberService.withdrawMember(userid);
+
+        if (result) {
+            session.invalidate();
+            return Map.of("success", true, "message", "탈퇴되었습니다. 감사합니다.");
+        } else {
+            return Map.of("success", false, "message", "탈퇴에 실패했습니다.");
+        }
+    }
+
+
+
+
 
     @GetMapping("/mypage")
-    public String mypage(Principal principal, Model model) {
+    public String mypage(Principal principal, Model model, @ModelAttribute("successMessage") String successMessage) {
         if (principal == null) {
             return "redirect:/login";
         }
@@ -65,8 +86,10 @@ public class MemberController {
         }
 
         model.addAttribute("member", optionalMember.get());
+        model.addAttribute("successMessage", successMessage);  // 플래시 속성 전달
         return "member/mypage";  // templates/member/mypage.html
     }
+
 
     // 내 정보 수정 처리 (POST)
     @PostMapping("/mypage")
@@ -217,62 +240,68 @@ public class MemberController {
 
     @GetMapping("/kakao")
     public String socialLogin(@RequestParam("code") String code, HttpSession session) {
-        // 카카오에서 액세스 토큰 받기
         String accessToken = kakaoService.getKakaoAccessToken(code);
         session.setAttribute("kakaoAccessToken", accessToken);
 
-        // 카카오에서 유저 정보 받아오기
         SocialUserInfoDTO userInfo = kakaoService.getUserInfoFromKakao(accessToken);
         if (userInfo == null || userInfo.getSnsEmail() == null) {
             return "redirect:/api/member/login";
         }
 
-        // SNS 유저 조회 또는 신규 생성
-        SnsEntity snsUser = snsRepository.findBySnsId(userInfo.getUserid()).orElseGet(() -> {
-            MemberEntity member = memberRepository.findByEmail(userInfo.getSnsEmail()).orElseGet(() -> {
-                MemberEntity newMember = new MemberEntity();
-                newMember.setUserid(userInfo.getUserid());
-                newMember.setName(userInfo.getSnsName());
-                newMember.setEmail(userInfo.getSnsEmail());
-                newMember.setStatus("정상");
-                newMember.setGrade(1);
-                newMember.setCreatedAt(new Date());
-                newMember.setUpdatedAt(new Date());
-                return memberRepository.save(newMember);
-            });
+        Optional<SnsEntity> snsUserOpt = snsRepository.findBySnsId(userInfo.getUserid());
+        SnsEntity snsUser;
+        MemberEntity member;
 
-            SnsEntity newSnsUser = new SnsEntity();
-            newSnsUser.setSnsType("KAKAO");
-            newSnsUser.setSnsId(userInfo.getUserid());
-            newSnsUser.setSnsEmail(userInfo.getSnsEmail());
-            newSnsUser.setSnsName(userInfo.getSnsName());
-            newSnsUser.setConnectedAt(LocalDateTime.now());
-            newSnsUser.setMember(member);
+        if (snsUserOpt.isPresent()) {
+            snsUser = snsUserOpt.get();
+            member = snsUser.getMember();
 
-            return snsRepository.save(newSnsUser);
-        });
+            if ("탈퇴".equals(member.getStatus())) {
+                member.setStatus("정상");
+                member.setUpdatedAt(new Date());
+                memberRepository.save(member);
+            }
+        } else {
+            Optional<MemberEntity> memberOpt = memberRepository.findByUserid(userInfo.getUserid());
 
-        // 회원정보 가져오기
-        MemberEntity member = snsUser.getMember();
-        if (member == null) {
-            member = memberRepository.findByEmail(userInfo.getSnsEmail()).orElse(null);
+            if (memberOpt.isPresent()) {
+                member = memberOpt.get();
+
+                if ("탈퇴".equals(member.getStatus())) {
+                    member.setStatus("정상");
+                    member.setUpdatedAt(new Date());
+                    memberRepository.save(member);
+                }
+            } else {
+                member = new MemberEntity();
+                member.setUserid(userInfo.getUserid());
+                member.setName(userInfo.getSnsName());
+                member.setEmail(userInfo.getSnsEmail());
+                member.setStatus("정상");
+                member.setGrade(1);
+                member.setCreatedAt(new Date());
+                member.setUpdatedAt(new Date());
+                member = memberRepository.save(member);
+            }
+
+            snsUser = new SnsEntity();
+            snsUser.setSnsType("KAKAO");
+            snsUser.setSnsId(userInfo.getUserid());
+            snsUser.setSnsEmail(userInfo.getSnsEmail());
+            snsUser.setSnsName(userInfo.getSnsName());
+            snsUser.setConnectedAt(LocalDateTime.now());
+            snsUser.setMember(member);
+
+            snsUser = snsRepository.save(snsUser);
         }
 
-        // 회원 상태 체크: 탈퇴, 정지일 경우 로그인 차단
-        if (member == null
-                || "탈퇴".equals(member.getStatus())
-                || "정지".equals(member.getStatus())) {
-
-            String errorCode = "WITHDRAW";  // 기본 탈퇴
-            if (member != null && "정지".equals(member.getStatus())) {
-                errorCode = "STOP";          // 정지 상태일 경우
-            }
+        // 로그인 차단 조건 체크
+        if (member == null || "정지".equals(member.getStatus())) {
+            String errorCode = "STOP";
             String userid = (member != null) ? member.getUserid() : "";
-
             return "redirect:/api/member/login?errorCode=" + errorCode + "&userid=" + userid;
         }
 
-        // 정상 회원일 경우 로그인 처리
         session.setAttribute("loginSnsUser", snsUser);
         session.setAttribute("loginMember", member);
 
@@ -283,12 +312,10 @@ public class MemberController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
-        // 휴대폰 번호가 없으면 등록 페이지로
         if (snsUser.getSnsMobile() == null || snsUser.getSnsMobile().isBlank()) {
             return "redirect:/api/member/mobile";
         }
 
-        // 정상 로그인 후 메인 페이지 이동
         return "redirect:/";
     }
 

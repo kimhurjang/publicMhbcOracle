@@ -93,57 +93,58 @@ public class KakaoService {
 
     public void saveUserInfoToSns(String accessToken) {
         SocialUserInfoDTO userInfo = getUserInfoFromKakao(accessToken);
-
-        if (userInfo != null) {
-            // 기존 회원 조회 또는 신규 회원 생성
-            Optional<MemberEntity> optionalMember = memberRepository.findByUserid(userInfo.getUserid());
-
-            MemberEntity member = optionalMember.orElseGet(() -> {
-                MemberEntity newMember = MemberEntity.builder()
-                        .userid(userInfo.getUserid())
-                        .name(userInfo.getSnsName())
-                        .email(userInfo.getSnsEmail())
-                        .status("ACTIVE")
-                        .createdAt(new Date())
-                        .updatedAt(new Date())
-                        .build();
-                MemberEntity saved = memberRepository.save(newMember);
-                System.out.println("신규 회원 저장, idx: " + saved.getIdx());
-                return saved;
-            });
-
-            boolean snsExists = snsRepository.existsBySnsIdAndMember(userInfo.getUserid(), member);
-
-            if (!snsExists) {
-                SnsEntity snsEntity = SnsEntity.builder()
-                        .snsType(userInfo.getSnsType())
-                        .snsId(userInfo.getUserid())
-                        .snsEmail(userInfo.getSnsEmail())
-                        .snsName(userInfo.getSnsName())
-                        .connectedAt(userInfo.getConnectedAt())
-                        .member(member)
-                        .build();
-
-                snsRepository.save(snsEntity);
-                System.out.println("✅ SNS 저장 완료: " + userInfo.getSnsName());
-            } else {
-                System.out.println("이미 SNS 정보가 존재합니다: " + userInfo.getSnsName());
-            }
-
-            // ✅ 여기서 인증 객체를 직접 등록 (로그인 처리)
-            UserDetails userDetails = User.withUsername(member.getUserid())
-                    .password("") // 비밀번호는 필요 없음
-                    .authorities("ROLE_USER")
-                    .build();
-
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            System.out.println("✅ Spring Security 로그인 처리 완료");
-
-        } else {
-            System.out.println("❌ SNS 테이블 저장 실패");
+        if (userInfo == null) {
+            System.out.println("❌ 사용자 정보 불러오기 실패");
+            return;
         }
+
+        Optional<MemberEntity> memberOpt = memberRepository.findByUserid(userInfo.getUserid());
+        MemberEntity member;
+
+        if (memberOpt.isPresent()) {
+            member = memberOpt.get();
+
+            if ("탈퇴".equals(member.getStatus())) {
+                member.setStatus("정상");
+                member.setUpdatedAt(new Date());
+                memberRepository.save(member);
+            }
+        } else {
+            member = MemberEntity.builder()
+                    .userid(userInfo.getUserid())
+                    .name(userInfo.getSnsName())
+                    .email(userInfo.getSnsEmail())
+                    .status("정상")
+                    .createdAt(new Date())
+                    .updatedAt(new Date())
+                    .build();
+            member = memberRepository.save(member);
+        }
+
+        Optional<SnsEntity> snsOpt = snsRepository.findBySnsId(userInfo.getUserid());
+        if (!snsOpt.isPresent()) {
+            SnsEntity snsEntity = SnsEntity.builder()
+                    .snsType(userInfo.getSnsType())
+                    .snsId(userInfo.getUserid())
+                    .snsEmail(userInfo.getSnsEmail())
+                    .snsName(userInfo.getSnsName())
+                    .connectedAt(userInfo.getConnectedAt())
+                    .member(member)
+                    .build();
+            snsRepository.save(snsEntity);
+            System.out.println("✅ SNS 정보 저장 완료");
+        }
+
+        // 로그인 처리
+        UserDetails userDetails = User.withUsername(member.getUserid())
+                .password("")
+                .authorities("ROLE_USER")
+                .build();
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        System.out.println("✅ Spring Security 로그인 처리 완료");
     }
 }

@@ -30,7 +30,7 @@
 
 .event.board{
     padding: 20px;
-    height: 500px;
+    min-height: 500px;
     width: 400px;
     position: relative;
     margin: 30px auto;

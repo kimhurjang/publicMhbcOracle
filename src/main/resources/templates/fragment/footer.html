@@ -29,7 +29,7 @@
             </div>
             <div th:if="${loginMember != null and loginMember.grade == 1}">
                 <p><b>내 정보</b></p>
-                <p><a href="">마이 페이지</a></p>
+                <p><a th:href="@{/api/member/mypage}">마이 페이지</a></p>
                 <p><a href="">예약 정보 조회 / 수정</a></p>
             </div>
         </div>
@@ -131,20 +131,32 @@
           header.classList.remove('closed');
 
           if (window.innerWidth >= 765) {
+            navItems.forEach(item => {
+                // 모바일에서 남아있던 인라인 maxHeight 제거 리사이즈 했을 때 피씨버전 서브메뉴 오류 해결용
+                const sub = item.querySelector('.sub_group');
+                if (sub) sub.style.maxHeight = '';
+
+                // 모바일에서 남아있던 active 클래스 제거
+                item.classList.remove('active');
+              });
             // 데스크탑 모드: 스크롤, hover
             window.removeEventListener('scroll', checkScroll);
             window.addEventListener('scroll', checkScroll);
             checkScroll();
 
             navItems.forEach(item => {
-              item.removeEventListener('mouseenter', desktopMouseEnter);
-              item.removeEventListener('mouseleave', desktopMouseLeave);
+<!--              item.removeEventListener('mouseenter', desktopMouseEnter);-->
+<!--              item.removeEventListener('mouseleave', desktopMouseLeave);-->
               item.addEventListener('mouseenter', desktopMouseEnter);
               item.addEventListener('mouseleave', desktopMouseLeave);
             });
           } else {
             // 모바일 모드: 외부 클릭, 아코디언, 토글
-            document.removeEventListener('click', outsideClickHandler);
+            navItems.forEach(item => {
+              item.removeEventListener('mouseenter', desktopMouseEnter);  // 🔧 수정됨
+              item.removeEventListener('mouseleave', desktopMouseLeave); // 🔧 수정됨
+            });
+<!--            document.removeEventListener('click', outsideClickHandler);-->
             document.addEventListener('click', outsideClickHandler);
 
             if (toggleBtn) {
