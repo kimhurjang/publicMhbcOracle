@@ -1,107 +1,128 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>아이디 비밀번호 찾기</title>
-  <link rel="stylesheet" href="/css/find.css">
-</head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+
 <body>
 
-<div class="container">
-  <h2>아이디 비밀번호 찾기</h2>
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/find.css" />
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+</th:block>
 
-  <div class="tab">
-    <ul class="tabnav">
-      <li><a href="#tab1" class="active">아이디 찾기</a></li>
-      <li><a href="#tab2">비밀번호 찾기</a></li>
-    </ul>
+<section layout:fragment="content" id="container" class="sub login-page">
+  <div class="login-container">
+    <div class="login_box">
+      <h2>아이디 비밀번호 찾기</h2>
 
-    <div class="tabcontent">
-      <!-- 아이디 찾기 폼 -->
-      <div id="tab1" class="active">
-        <form id="find-id-form" method="POST" action="/api/member/find-id">
-          <label for="name_input1">이름</label><br>
-          <input type="text" id="name_input1" name="name" required placeholder="이름을 입력하세요"><br>
+      <div class="tab">
+        <ul class="tabnav">
+          <li><a href="#" class="active" data-tab="tab1">아이디 찾기</a></li>
+          <li><a href="#" data-tab="tab2">비밀번호 찾기</a></li>
+        </ul>
 
-          <label for="mobile_input1">전화번호</label><br>
-          <input type="text" id="mobile_input1" name="mobile1" maxlength="3" required placeholder="010" style="width: 60px;"> -
-          <input type="text" id="mobile_input2" name="mobile2" maxlength="4" required placeholder="1234" style="width: 70px;"> -
-          <input type="text" id="mobile_input3" name="mobile3" maxlength="4" required placeholder="5678" style="width: 70px;"><br>
+        <div class="tabcontent">
+          <!-- 아이디 찾기 탭 -->
+          <div id="tab1" class="active">
+            <form id="find-id-form" method="POST" action="/api/member/find-id">
+              <div class="input_group">
+                <label for="name_input1">이름</label>
+                <input type="text" id="name_input1" name="name" required placeholder="이름을 입력하세요" />
+              </div>
 
-          <button type="submit" class="btn" id="find-id-btn">아이디 찾기</button>
-        </form>
+              <div class="input_group">
+                <label for="mobile_input1">전화번호</label><br />
+                <input type="text" id="mobile_input1" name="mobile1" maxlength="3" required placeholder="010" style="width: 70px;" /> -
+                <input type="text" id="mobile_input2" name="mobile2" maxlength="4" required placeholder="1234" style="width: 80px;" /> -
+                <input type="text" id="mobile_input3" name="mobile3" maxlength="4" required placeholder="5678" style="width: 80px;" />
+              </div>
 
-        <!-- 결과 메시지 및 버튼 표시 영역 -->
-        <div style="margin-top: 15px;">
-          <p th:if="${message}" th:text="${message}" style="color: green;"></p>
-          <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+              <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+                <!-- 성공 시 로그인 버튼만 -->
+                <button class="login_button" type="button" onclick="location.href='/api/member/login'" th:if="${message != null}">로그인</button>
 
-          <div th:if="${notFound}">
-            <button class="btn" onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=3a729b684852129622871e6b959a97e6&redirect_uri=http://localhost:8090/api/member/kakao&response_type=code'">
-              카카오로 로그인
-            </button>
-            <a href="/api/member/join"><button class="btn">회원가입</button></a>
+                <!-- 실패 시 아이디 찾기 버튼과 회원가입 버튼 -->
+                <th:block th:if="${message == null}">
+                  <button type="submit" class="login_button">아이디 찾기</button>
+                  <a href="/api/member/join">
+                    <button class="login_button" type="button">회원가입</button>
+                  </a>
+                </th:block>
+              </div>
+            </form>
+
+            <div style="margin-top: 15px;">
+              <p th:if="${message}" th:text="${message}" style="color: green;"></p>
+              <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+            </div>
+          </div>
+
+          <!-- 비밀번호 찾기 탭 -->
+          <div id="tab2">
+            <form action="/api/member/find-password" method="post">
+              <div class="input_group">
+                <label for="id_input">아이디</label>
+                <input type="text" id="id_input" name="id" placeholder="아이디" required />
+              </div>
+
+              <div class="input_group">
+                <label for="name_input2">이름</label>
+                <input type="text" id="name_input2" name="name" placeholder="이름" required />
+              </div>
+
+              <p th:if="${pwError}" th:text="${pwError}" style="color: red; margin-top: 10px;"></p>
+
+              <button type="submit" class="login_button">비밀번호 찾기</button>
+            </form>
           </div>
         </div>
       </div>
 
-      <!-- 비밀번호 찾기 폼 -->
-      <div id="tab2">
-        <form action="/api/member/find-password" method="post">
-          <label for="id_input">아이디</label> <br>
-          <input type="text" id="id_input" name="id" placeholder="아이디" required><br>
-
-          <label for="name_input2">이름</label> <br>
-          <input type="text" id="name_input2" name="name" placeholder="이름" required><br>
-
-          <button type="submit" class="btn">비밀번호 찾기</button>
-        </form>
-      </div>
     </div>
   </div>
-</div>
+</section>
 
-<script>
-  const tabLinks = document.querySelectorAll('.tabnav a');
-  const tabContents = document.querySelectorAll('.tabcontent > div');
+<th:block layout:fragment="js">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const tabLinks = document.querySelectorAll('.tabnav a');
+      const tabContents = document.querySelectorAll('.tabcontent > div');
 
-  // 탭 클릭 시 동작
-  tabLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-          e.preventDefault();
+      function showTab(targetId) {
+        tabLinks.forEach(link => link.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
 
-          // 모든 탭 비활성화
-          tabLinks.forEach(t => t.classList.remove('active'));
-          tabContents.forEach(c => c.classList.remove('active'));
-
-          // 선택된 탭 활성화
-          this.classList.add('active');
-          const targetId = this.getAttribute('href').replace('#', '');
-          document.getElementById(targetId).classList.add('active');
-
-          // URL 해시값도 바꿔줌
-          history.replaceState(null, null, `#${targetId}`);
-      });
-  });
-
-  // 페이지 로드시 해시값 확인하여 탭 자동 전환
-  window.addEventListener('DOMContentLoaded', () => {
-      const hash = window.location.hash.replace('#', '');
-      const targetTab = document.getElementById(hash);
-
-      if (targetTab) {
-          tabLinks.forEach(t => t.classList.remove('active'));
-          tabContents.forEach(c => c.classList.remove('active'));
-
-          targetTab.classList.add('active');
-          const targetLink = document.querySelector(`.tabnav a[href="#${hash}"]`);
-          if (targetLink) {
-              targetLink.classList.add('active');
-          }
+        document.querySelector(`.tabnav a[data-tab="${targetId}"]`)?.classList.add('active');
+        document.getElementById(targetId)?.classList.add('active');
       }
-  });
-</script>
+
+      const hash = window.location.hash.replace('#', '');
+      if (hash && document.getElementById(hash)) {
+        showTab(hash);
+      } else {
+        showTab('tab1');
+      }
+
+      tabLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('data-tab');
+          showTab(targetId);
+          history.replaceState(null, null, `#${targetId}`);
+        });
+      });
+    });
+
+    // ✅ 모든 리소스 로딩이 끝난 후에 스크롤 위로
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }, 0);
+    });
+  </script>
+
+</th:block>
 
 </body>
 </html>

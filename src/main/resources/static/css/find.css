@@ -1,95 +1,178 @@
-/* 초기화 코드 */
+/* Reset */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.container{
-  margin-top: 100px;
-}
-body {
-  font-family: Arial, sans-serif;
-  padding: 30px;
-  display: flex;
-  justify-content: flex-start; /* 상단에 정렬 */
-  align-items: center; /* 수평 중앙 정렬 */
-  min-height: 100vh; /* 화면 전체 높이를 차지하지 않도록 설정 */
-  flex-direction: column; /* 자식 요소들이 세로로 배치되도록 설정 */
+html, body {
+    height: 100%;
+    font-family: sans-serif;
+    background-color: #f0f0f0;
 }
 
-h2 {
-  margin-bottom: 20px;
+/* 페이지 기본 레이아웃 */
+.login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;   /* 추가: 세로 가운데 정렬 */
+    min-height: auto; /* 여기만 수정함 */
+    position: relative;
 }
 
+.login-container {
+    background-color: #f8f5ee;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    height: 600px;
+    width: 400px;
+    margin-top: 20px;
+    /* flex-grow: 1;  삭제 */
+    display: flex;
+    align-items: center;
+}
+
+.login_box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2 {
+    text-align: left;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+/* 입력 그룹 */
+.input_group {
+    margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    height: 50px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* 로그인 버튼 및 공통 버튼 */
+.login_button,
+.btn {
+    background-color: #8e7cc3;
+    color: white;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.login_button:hover,
+.btn:hover {
+    background-color: #7768ae;
+}
+
+/* 링크 */
+.links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.links a {
+    color: #555;
+    text-decoration: none;
+    font-size: 0.85em;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+/* SNS 로그인 아이콘 */
+.sns-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.sns-icons a {
+    background-color: #fee500;
+    color: #000;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.sns-icons a:hover {
+    background-color: #ffeb3b;
+}
+
+.sns-icons a img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.sns-icons a img:hover {
+    transform: scale(1.1);
+}
+
+/* ----------- 아이디/비밀번호 찾기 탭 스타일 ----------- */
+
+/* 탭 네비게이션 */
 .tabnav {
-  list-style: none;
-  display: flex;
-  padding: 0;
-  margin-bottom: 10px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #ddd;
+    padding: 0;
 }
 
 .tabnav li {
-  margin-right: 10px;
+    margin: 0 10px;
 }
 
-.tabnav li a {
-  display: block;
-  padding: 10px 20px;
-  background: #eee;
-  text-decoration: none;
-  color: black;
-  border-radius: 8px 8px 0 0;
+.tabnav a {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #555;
+    border-radius: 5px 5px 0 0;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
 }
 
-#tab1.active {
-  width: 550px;
+.tabnav a.active {
+    background-color: #8e7cc3;
+    color: white;
+    border-bottom: 2px solid white;
 }
 
-#tab2.active {
-  width: 550px;
-}
-
-.tabnav li a.active {
-  background: #8676A1;
-  color: white;
-}
-
-
+/* 탭 콘텐츠 */
 .tabcontent > div {
-  display: none;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 0 0 8px 8px;
+    display: none;
 }
 
 .tabcontent > div.active {
-  display: block;
-}
-
-input, select {
-  margin-top: 5px;
-  margin-bottom: 15px;
-  padding: 8px;
-  width: 200px;
-}
-
-button {
-  background-color: #8e7cc3;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  font-size: 14px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #7768ae;
-}
-
-.wrapper {
-  width: 100%;
-  max-width: 700px; /* 최대 너비 설정 */
-  text-align: center;
+    display: block;
 }

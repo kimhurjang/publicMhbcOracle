@@ -151,3 +151,27 @@ button:hover {
     text-align: center;
     margin-top: 20px;
 }
+.btn_wrap {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* 초기화 버튼도 제출 버튼처럼 보이도록 */
+.color1,
+.color2 {
+    background-color: #D6CAE8;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 0.95em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.color1:hover,
+.color2:hover {
+    background-color: #8676A1;
+    color: #fff;
+}
