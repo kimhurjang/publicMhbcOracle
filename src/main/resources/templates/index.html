@@ -204,7 +204,7 @@
                 <h2>현재 진행 중인 이벤트가 없습니다.</h2>
             </div>
 
-            <div th:each="event : ${event}"  data-aos="fade-down" data-aos-delay="200" class="event card">
+            <div th:each="event : ${event}"  data-aos="fade-down" data-aos-delay="200" class="card">
                 <div style="overflow:hidden;">
                     <img th:if="${event.attachment != null}" th:src="@{|/data/${event.attachment.filePath}|}">
                 </div>
