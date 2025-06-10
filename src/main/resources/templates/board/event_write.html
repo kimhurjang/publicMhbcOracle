@@ -49,7 +49,7 @@
         <tr>
           <td>이미지 첨부파일</td>
           <td class="left pd10">
-            <input type="file" name="attachment" required accept="image/*" placeholder="해당 페이지는 첨부파일 필수입니다.">
+            <input type="file" name="attachment" required accept="image/*" id="imageInput" placeholder="해당 페이지는 첨부파일 필수입니다.">
           </td>
         </tr>
         <tr>
@@ -121,6 +121,22 @@
           this.focus();
         }
       });
+    });
+    const input = document.getElementById('imageInput');
+
+    input.addEventListener('change', () => {
+      const MAX_SIZE = 1000 * 1024 * 1024; // 1000MB
+      const file = input.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        alert('해당 페이지는 이미지 파일만 업로드할 수 있습니다.');
+        input.value = ''; // 선택 초기화
+      }
+      if (file.size > MAX_SIZE) {
+          alert('첨부파일은 최대 1000MB(1GB)까지만 업로드할 수 있습니다.');
+          this.value = ''; // 파일 입력 초기화
+        }
     });
   </script>
 </th:block>

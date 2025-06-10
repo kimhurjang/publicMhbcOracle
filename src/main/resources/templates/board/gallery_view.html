@@ -20,7 +20,9 @@
       <div>조회수 : <span th:text="${board.viewCnt}"></span></div>
     </div>
     <div class="btn_group mt20">
-      <button type="button" onclick="goBack()" class="small">뒤로가기</button>
+      <a th:href="@{/board/gallery}">
+        <button type="button" class="small">목록으로</button>
+      </a>
       <div th:if="${member != null and member.grade == 10}">
         <a th:if="${board.idx != 326 and board.idx != 327 and board.idx != 328 and board.idx != 329 and board.idx != 330 and board.idx != 331}"
            th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${member.idx}, comments_idx=${0})}">

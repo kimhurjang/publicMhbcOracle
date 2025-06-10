@@ -26,15 +26,16 @@
             <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="display: none;"></div>
           </td>
         </tr>
-        <td>본문</td>
-        <td>
-          <textarea cols="30" rows="2" name="content" required placeholder="본문을 입력해주세요."></textarea>
-          <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="display: none;"></div>
-        </td>
+        <tr>
+          <td>본문</td>
+          <td>
+            <textarea cols="30" rows="2" name="content" required placeholder="본문을 입력해주세요."></textarea>
+            <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="display: none;"></div>
+          </td>
         </tr>
         <tr>
           <td>첨부 파일</td>
-          <td class="left pd10"><input type="file" name="attachment"></td>
+          <td class="left pd10"><input type="file" id="inputFile" name="attachment"></td>
         </tr>
         <tr>
           <td colspan="2">
@@ -56,5 +57,25 @@
     </form>
   </div><!--E content-->
 </section><!--E container-->
+<th:block layout:fragment="script">
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const MAX_SIZE = 1000 * 1024 * 1024; // 1000MB
+      const input = document.getElementById('inputFile');
+
+      if (!input) return;
+
+      input.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        if (file.size > MAX_SIZE) {
+          alert('첨부파일은 최대 1000MB(1GB)까지만 업로드할 수 있습니다.');
+          this.value = ''; // 파일 입력 초기화
+        }
+      });
+    });
+  </script>
+</th:block>
 </body>
 </html>

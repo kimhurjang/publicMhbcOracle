@@ -104,24 +104,84 @@
 </section>
 <th:block layout:fragment="script">
 <script>
-  function removeAttachment() {
-    document.getElementById('deleteAttachmentFlag').value = 'Y';
+  document.addEventListener("DOMContentLoaded", function () {
+     const startInput = document.getElementById("startAt");
+     const endInput = document.getElementById("closedAt");
 
-    const attachmentRow = document.getElementById('attachmentRow');
-    if (!attachmentRow) return;
+     if (!startInput || !endInput) return;
 
-    attachmentRow.innerHTML = `
-      <th>첨부 파일</th>
-      <td class="tl">
-        <input type="file"
-               name="attachment"
-               id="newAttachmentInput"
-               required
-               placeholder="첨부파일을 선택하세요.">
-        <div id="attachmentError" style="color:red;"></div>
-      </td>
-    `;
-  }
+     startInput.addEventListener("change", function () {
+       const startDate = new Date(this.value + "T00:00:00");
+       const today = new Date();
+       today.setHours(0, 0, 0, 0);
+
+       if (startDate < today) {
+         alert("시작일은 당일 이후만 가능합니다.");
+         this.value = "";
+         this.focus();
+         return;
+       }
+
+       const endValue = endInput.value;
+       if (endValue) {
+         const endDate = new Date(endValue + "T00:00:00");
+         if (endDate <= startDate) {
+           alert("종료일은 시작일 이후여야 합니다.");
+           endInput.value = "";
+           endInput.focus();
+         }
+       }
+     });
+
+     endInput.addEventListener("change", function () {
+       const endDate = new Date(this.value + "T00:00:00");
+       const startValue = startInput.value;
+
+       if (!startValue) {
+         alert("먼저 시작일을 선택해주세요.");
+         this.value = "";
+         this.focus();
+         return;
+       }
+
+       const startDate = new Date(startValue + "T00:00:00");
+       if (endDate < startDate) {
+         alert("종료일은 시작일 이후여야 합니다.");
+         this.value = "";
+         this.focus();
+       }
+     });
+   });
+ function removeAttachment() {
+   document.getElementById('deleteAttachmentFlag').value = 'Y';
+
+   const attachmentRow = document.getElementById('attachmentRow');
+   if (!attachmentRow) return;
+
+   attachmentRow.innerHTML = `
+     <th>첨부 파일</th>
+     <td class="tl">
+       <input type="file"
+              name="attachment"
+              id="newAttachmentInput"
+              required
+              accept="image/*"
+              placeholder="첨부파일을 선택하세요.">
+       <div id="attachmentError" style="color:red;"></div>
+     </td>
+   `;
+   const input = document.getElementById('newAttachmentInput');
+
+   input.addEventListener('change', () => {
+     const file = input.files[0];
+     if (!file) return;
+
+     if (!file.type.startsWith('image/')) {
+       alert('해당 페이지는 이미지 파일만 업로드할 수 있습니다.');
+       input.value = ''; // 선택 초기화
+     }
+   });
+ }
 </script>
 </th:block>
 </body>
