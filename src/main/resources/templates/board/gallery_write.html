@@ -21,24 +21,24 @@
       <input type="hidden" name="pwd" value="password123" />
     <table>
       <tr>
-        <td colspan="2">현재 페이지는 관리자 전용 페이지입니다.</td>
+        <th colspan="2">현재 페이지는 관리자 전용 페이지입니다.</th>
       </tr>
       <tr>
-        <td>제목</td>
+        <th>제목</th>
         <td>
           <input type="text" name="title" value="" required placeholder="제목을 입력해주세요.">
           <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="display: none;"></div>
         </td>
       </tr>
       <tr>
-        <td>본문</td>
+        <th>본문</th>
         <td>
           <textarea cols="30" rows="2" name="content" required placeholder="본문을 입력해주세요."></textarea>
           <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="display: none;"></div>
         </td>
       </tr>
       <tr>
-        <td>이미지 첨부파일</td>
+        <th>이미지 첨부파일</th>
         <td class="left pd10"><input type="file" id="imageInput" name="attachment" required accept="image/*" placeholder="해당 페이지는 첨부파일 필수입니다."></td>
       </tr>
       <tr>

@@ -33,7 +33,7 @@ public class Utility {
     private final MemberRepository memberRepository;
     private final AttachmentRepository attachmentRepository;
     private final CommentsRepository commentsRepository;
-    private String uploadDir = "C:/Users/YJ/Documents/GitHub/public/data/";
+    private String baseDir = "C:/Users/YJ/Documents/GitHub/public/data/";
     /**
     * 파일
     * */
@@ -42,12 +42,12 @@ public class Utility {
         if (!attachment.isEmpty()) {
             String uuidFileName = UUID.randomUUID().toString() + "_" + attachment.getOriginalFilename();
 
-            File directory = new File(uploadDir);
+            File directory = new File(baseDir);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
-            File destination = new File(uploadDir, uuidFileName);
+            File destination = new File(baseDir, uuidFileName);
             attachment.transferTo(destination);
 
             // 상대 경로만 DB에 저장
@@ -79,8 +79,7 @@ public class Utility {
                 .orElseThrow(() -> new EntityNotFoundException("첨부파일이 없습니다. boardIdx=" + boardIdx));
 
         // 2) 물리 파일 삭제
-        String dir = "Z:/public/data/";
-        File file = new File(dir, attachment.getFilePath());
+        File file = new File(baseDir, attachment.getFilePath());
         if (file.exists()) {
             if (!file.delete()) {
                 System.out.println("파일 삭제 실패: {}" + file.getAbsolutePath());

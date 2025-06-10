@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -222,9 +223,23 @@ public class BoardController {
             model.addAttribute("member", null);  // 로그인되지 않은 경우
         }
 
+        // Timestamp → LocalDateTime 변환
+        Date closedAt = board.getClosedAt();
+        Date startAt = board.getStartAt();
+        // Date -> Instant 변환 후, LocalDateTime으로 변환 (시스템 기본 타임존 사용)
+        LocalDateTime closedAtLocalDateTime = closedAt.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        LocalDateTime startAtLocalDateTime = startAt.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+
+        model.addAttribute("startAtLocalDateTime", startAtLocalDateTime);
+        model.addAttribute("closedAtLocalDateTime", closedAtLocalDateTime);
         model.addAttribute("board", board);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
+
 
         return "board/event_view";
     }

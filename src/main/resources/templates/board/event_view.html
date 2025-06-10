@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="/css/event.css">
   <style>
     .left {text-align: left !important;}
+    .line35 {line-height: 35px}
   </style>
 </th:block>
 <body>
@@ -18,7 +19,23 @@
       <img th:src="@{|/data/${board.attachment.filePath}|}" alt="첨부 이미지" class="card-img"/>
     </div>
     <div class="event at">
-      <b>진행 기간</b> <div th:text="${#dates.format(board.startAt, 'yyyy년 MM월 dd일')}+' ~ '+${#dates.format(board.closedAt, 'yyyy년 MM월 dd일')}" class="left pd10"></div>
+      <b>진행 기간</b>
+      <div class="left pd10">
+        <span th:text="${#dates.format(board.startAt, 'yyyy년 MM월 dd일')} + ' ~ ' + ${#dates.format(board.closedAt, 'yyyy년 MM월 dd일')}"></span>
+        <br>
+        <!-- 조건: 종료일이 현재 날짜보다 이전이면 '이벤트 종료' -->
+        <span th:if="${closedAtLocalDateTime.isBefore(T(java.time.LocalDateTime).now())}" class="tag red">
+          종료
+        </span>
+        <span th:unless="${closedAtLocalDateTime.isBefore(T(java.time.LocalDateTime).now())}" class="tag green">
+          진행중
+        </span>
+
+        <!-- 조건: 시작일과 종료일이 같으면 '당일' -->
+        <span th:if="${startAtLocalDateTime.toLocalDate().isEqual(closedAtLocalDateTime.toLocalDate())}" class="tag ">
+          당일
+        </span>
+    </div>
     </div>
     <div id="eventContent">
       <pre th:text="${board.content}" class="pd10"></pre>

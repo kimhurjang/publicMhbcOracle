@@ -36,7 +36,7 @@
         </tr>
           <!-- attachmentRow 하나만 사용. th:if로 서버 상태에 따라 보여주는 내용이 달라짐 -->
           <tr id="attachmentRow">
-            <th>첨부 파일</th>
+            <th>첨부 파일<br><sub style="gray">권장 사이즈 : 600*380px</sub></th>
             <td class="tl">
               <!-- A) 서버에 기존 파일이 있을 때 -->
               <span th:if="${board.attachment != null}"
@@ -125,7 +125,7 @@
        const endValue = endInput.value;
        if (endValue) {
          const endDate = new Date(endValue + "T00:00:00");
-         if (endDate <= startDate) {
+         if (endDate < startDate) {
            alert("종료일은 시작일 이후여야 합니다.");
            endInput.value = "";
            endInput.focus();
