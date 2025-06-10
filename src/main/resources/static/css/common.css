@@ -111,7 +111,7 @@ body.menu_open::after {opacity:1;pointer-events:auto;}
 
 #user .copy { line-height:50px; }
 #user footer img{width: 12rem; height: auto; }
-.footerBox.info{display: flex; gap:15px;}
+.footerBox.info{display: flex; gap:30px;}
 #snsIcon { justify-content:space-around; margin: 20px 0;}
 #snsIcon a{width: 50px; height: 50px; font-size: 25px;}
 .myAccount { display:block; }
