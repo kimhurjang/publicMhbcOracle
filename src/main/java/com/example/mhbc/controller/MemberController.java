@@ -77,7 +77,7 @@ public class MemberController {
     @GetMapping("/mypage")
     public String mypage(Principal principal, Model model, @ModelAttribute("successMessage") String successMessage) {
         if (principal == null) {
-            return "redirect:/login";
+            return "redirect:/api/member/login";
         }
 
         Optional<MemberEntity> optionalMember = memberRepository.findByUserid(principal.getName());
