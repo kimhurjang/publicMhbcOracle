@@ -15,7 +15,7 @@
         <td>공지사항</td>
         <td>
           <div class="btn_group">
-            <a th:href="@{/board/notice}"><button type="button" class="small">바로가기</button></a>
+            <a th:href="@{/board/notice}" target="_blank"><button type="button" class="small">바로가기</button></a>
             <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
               <input type="hidden" name="page" value="1">
               <input type="hidden" name="delCheck" />
@@ -75,7 +75,7 @@
         <td>자주 묻는 질문</td>
         <td>
           <div class="btn_group">
-            <a th:href="@{/board/oftenquestion}"><button type="button" class="small">바로가기</button></a>
+            <a th:href="@{/board/oftenquestion}" target="_blank"><button type="button" class="small">바로가기</button></a>
             <form name="selectAdminBoard" method="post" action="/admin/board/group_list_select">
               <input type="hidden" name="page" value="1">
               <input type="hidden" name="delCheck" />
