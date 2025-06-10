@@ -77,7 +77,7 @@ public class MemberController {
     @GetMapping("/mypage")
     public String mypage(Principal principal, Model model, @ModelAttribute("successMessage") String successMessage) {
         if (principal == null) {
-            return "redirect:/api/member/login";
+            return "redirect:/login";
         }
 
         Optional<MemberEntity> optionalMember = memberRepository.findByUserid(principal.getName());
@@ -158,24 +158,24 @@ public class MemberController {
         }
     }
 
-  @PostMapping("/reactivate")
-  @ResponseBody
-  public Map<String, Object> reactivate(@RequestBody Map<String, String> request) {
-    String userid = request.get("userid");
-    System.out.println("[reactivate] 요청 userid: " + userid);
+    @PostMapping("/reactivate")
+    @ResponseBody
+    public Map<String, Object> reactivate(@RequestBody Map<String, String> request) {
+        String userid = request.get("userid");
+        System.out.println("[reactivate] 요청 userid: " + userid);
 
-    boolean success = memberService.reactivate(userid);
+        boolean success = memberService.reactivate(userid);
 
-    System.out.println("[reactivate] 상태 변경 성공 여부: " + success);
+        System.out.println("[reactivate] 상태 변경 성공 여부: " + success);
 
-    Map<String, Object> response = new HashMap<>();
-    response.put("success", success);
-    response.put("userid", userid);  // 이거 추가
-    return response;
-  }
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        response.put("userid", userid);  // 이거 추가
+        return response;
+    }
 
 
-  @GetMapping("/")
+    @GetMapping("/")
     public String homePage(HttpSession session) {
         MemberEntity member = (MemberEntity) session.getAttribute("loginMember");
         SnsEntity snsUser = (SnsEntity) session.getAttribute("loginSnsUser");
@@ -320,21 +320,28 @@ public class MemberController {
     }
 
 
-
-    @RequestMapping("/join")
+    @GetMapping("/join")
     public String join() {
-        return "member/join";
+        return "member/join";  // 뷰 이름, 예: src/main/resources/templates/member/join.html
     }
 
+    // 아이디 중복 체크
     @GetMapping("/idcheck")
     @ResponseBody
     public String checkUserId(@RequestParam("userid") String userid) {
-        if (memberRepository.existsByUserid(userid)) {
-            return "Y";
-        }
-        return "N";
+        boolean exists = memberRepository.existsByUserid(userid);
+        return exists ? "Y" : "N";
     }
 
+    // 전화번호 중복 체크
+    @GetMapping("/mobilecheck")
+    @ResponseBody
+    public String checkMobile(@RequestParam("mobile") String mobile) {
+        boolean exists = memberRepository.existsByMobile(mobile);
+        return exists ? "Y" : "N";
+    }
+
+    // 회원가입 처리
     @PostMapping("/join")
     public String joinProc(@RequestParam("userid") String userid,
                            @RequestParam("pwd") String pwd,
@@ -346,9 +353,17 @@ public class MemberController {
                            @RequestParam("mobile2") String mobile2,
                            @RequestParam("mobile3") String mobile3) {
 
-        String mobile = (!mobile1.isEmpty() && !mobile2.isEmpty() && !mobile3.isEmpty())
+        String mobile = (mobile1 != null && !mobile1.isEmpty() &&
+                mobile2 != null && !mobile2.isEmpty() &&
+                mobile3 != null && !mobile3.isEmpty())
                 ? mobile1 + "-" + mobile2 + "-" + mobile3 : null;
 
+        // 중복 아이디가 있으면 회원가입 페이지로 다시 리다이렉트
+        if (memberRepository.existsByUserid(userid)) {
+            return "redirect:/api/member/join";
+        }
+
+        // MemberDTO 생성 및 저장
         MemberDTO memberDTO = MemberDTO.builder()
                 .userid(userid)
                 .pwd(pwd)
@@ -361,12 +376,9 @@ public class MemberController {
                 .status("정상")
                 .build();
 
-        if (!memberRepository.existsByUserid(userid)) {
-            memberRepository.save(memberDTO.toEntity());
-        } else {
-            return "redirect:/api/member/join";
-        }
+        memberRepository.save(memberDTO.toEntity());
 
+        // 가입 후 로그인 페이지로 리다이렉트
         return "redirect:/api/member/login";
     }
 
@@ -413,10 +425,11 @@ public class MemberController {
         if (member != null) {
             return "redirect:/api/member/reset-pwd?userid=" + id;
         } else {
-            redirectAttributes.addFlashAttribute("error", "아이디 또는 이름이 일치하지 않습니다.");
-            return "redirect:/api/member/findidpw";
+            redirectAttributes.addFlashAttribute("pwError", "아이디 또는 이름이 일치하지 않습니다. 다시 확인해 주세요.");
+            return "redirect:/api/member/findidpw#tab2";
         }
     }
+
 
     @PostMapping("/reset-pwd")
     public String resetPassword(@RequestParam("userid") String userid,
@@ -446,37 +459,39 @@ public class MemberController {
         return "member/popup"; // popup.html로 렌더링 (파일명에 맞게 수정)
     }
 
-  @GetMapping("/adminuser")
-  public String adminuser(Model model,
-                          @RequestParam(defaultValue = "0") int page,
-                          @RequestParam(required = false) String status,
-                          @RequestParam(required = false) String keyword) {
+    @GetMapping("/adminuser")
+    public String adminuser(Model model,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(required = false) String status,
+                            @RequestParam(required = false) String keyword) {
 
-    int pageSize = 8;
-    Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.ASC, "idx"));
-    Page<MemberSnsDto> memberPage;
+        int pageSize = 8;
+        // 최신 가입순으로 내림차순 정렬
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<MemberSnsDto> memberPage;
 
-    if ((status == null || status.equals("전체")) && (keyword == null || keyword.isEmpty())) {
-      memberPage = memberRepository.findAllWithSnsByStatusAndKeyword(null, null, pageable);
-    } else {
-      memberPage = memberRepository.findAllWithSnsByStatusAndKeyword(
-              (status == null || status.equals("전체")) ? null : status,
-              (keyword == null || keyword.isEmpty()) ? null : keyword,
-              pageable
-      );
+        if ((status == null || status.equals("전체")) && (keyword == null || keyword.isEmpty())) {
+            memberPage = memberRepository.findAllWithSnsByStatusAndKeyword(null, null, pageable);
+        } else {
+            memberPage = memberRepository.findAllWithSnsByStatusAndKeyword(
+                    (status == null || status.equals("전체")) ? null : status,
+                    (keyword == null || keyword.isEmpty()) ? null : keyword,
+                    pageable
+            );
+        }
+
+        model.addAttribute("memberPage", memberPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", memberPage.getTotalPages());
+        model.addAttribute("status", status);
+        model.addAttribute("keyword", keyword);
+
+        return "member/adminuser";
     }
 
-    model.addAttribute("memberPage", memberPage);
-    model.addAttribute("currentPage", page);
-    model.addAttribute("totalPages", memberPage.getTotalPages());
-    model.addAttribute("status", status);
-    model.addAttribute("keyword", keyword);
-
-    return "member/adminuser";
-  }
 
 
-  @PostMapping("/adminuser/delete-multiple")
+    @PostMapping("/adminuser/delete-multiple")
     public String deleteMultipleMembers(@RequestParam("idxList") List<Long> idxList) {
         idxList.forEach(memberRepository::deleteById);
         return "redirect:/api/member/adminuser";

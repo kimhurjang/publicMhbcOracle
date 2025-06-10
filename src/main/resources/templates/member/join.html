@@ -4,6 +4,7 @@
       layout:decorate="~{fragment/layout}">
 <body>
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block>
+
 <section layout:fragment="content" id="container" class="sub pagename pageSubname">
     <h1>회원 가입</h1>
     <p class="section_title_sub"><span class="required">*</span> 필수 입력 항목</p>
@@ -46,6 +47,7 @@
             <input type="text" name="mobile1" maxlength="3" placeholder="010" required>
             <input type="text" name="mobile2" maxlength="4" required>
             <input type="text" name="mobile3" maxlength="4" required>
+            <span id="phoneCheckResult"></span>
         </div>
 
         <!-- 이메일 -->
@@ -72,96 +74,105 @@
 
         <!-- 제출 버튼 -->
         <div class="btn_group mt20">
-            <button type="submit" class="color1">제출</button>
+            <div class="btn_wrap">
+                <button type="submit" class="color1">제출</button>
+                <button type="reset" class="color2">초기화</button>
+            </div>
         </div>
+
     </form>
 
     <script>
         // 아이디 중복 확인
         document.getElementById("checkIdBtn").addEventListener("click", function () {
-            var userid = document.getElementById("userid").value;
+            const userid = document.getElementById("userid").value.trim();
+            const resultSpan = document.getElementById("idCheckResult");
 
             if (userid === "") {
                 alert("아이디를 입력해주세요.");
                 return;
             }
 
-            var checkBtn = document.getElementById("checkIdBtn");
-            checkBtn.disabled = true;
-
+            this.disabled = true;
             fetch("/api/member/idcheck?userid=" + encodeURIComponent(userid))
-                .then(response => response.text())
+                .then(res => res.text())
                 .then(result => {
                     if (result === "Y") {
-                        document.getElementById("idCheckResult").textContent = "아이디가 중복됩니다.";
-                        document.getElementById("idCheckResult").style.color = "red";
+                        resultSpan.textContent = "아이디가 중복됩니다.";
+                        resultSpan.style.color = "red";
                     } else {
-                        document.getElementById("idCheckResult").textContent = "사용 가능한 아이디입니다.";
-                        document.getElementById("idCheckResult").style.color = "green";
+                        resultSpan.textContent = "사용 가능한 아이디입니다.";
+                        resultSpan.style.color = "green";
                     }
-                    checkBtn.disabled = false;
+                    this.disabled = false;
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    checkBtn.disabled = false;
+                    this.disabled = false;
                 });
         });
 
-        // 유효성 검사
-        document.getElementById("joinForm").addEventListener("submit", function (event) {
-            var userid = document.getElementById("userid").value;
-            var idCheckResult = document.getElementById("idCheckResult").textContent;
+        // 회원가입 유효성 및 전화번호 중복 확인
+        document.getElementById("joinForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
 
-            // 아이디 중복 검사
+            const idCheckResult = document.getElementById("idCheckResult").textContent;
             if (idCheckResult === "아이디가 중복됩니다.") {
-                event.preventDefault();
                 alert("아이디가 중복됩니다. 다른 아이디를 사용해주세요.");
                 return;
-            } else if (idCheckResult === "") {
-                event.preventDefault();
+            }
+            if (idCheckResult === "") {
                 alert("아이디 중복 확인을 해주세요.");
                 return;
             }
 
-            // 필수 항목 검사
-            var requiredInputs = document.querySelectorAll("input[required]");
-            for (var i = 0; i < requiredInputs.length; i++) {
-                if (requiredInputs[i].type === "radio") {
-                    var name = requiredInputs[i].name;
-                    var checked = document.querySelector('input[name="' + name + '"]:checked');
+            // 필수 입력 확인
+            const requiredInputs = document.querySelectorAll("input[required]");
+            for (let input of requiredInputs) {
+                if (input.type === "radio") {
+                    const name = input.name;
+                    const checked = document.querySelector('input[name="' + name + '"]:checked');
                     if (!checked) {
-                        event.preventDefault();
                         alert("통신사를 선택해주세요.");
                         return;
                     }
-                } else {
-                    if (requiredInputs[i].value.trim() === "") {
-                        event.preventDefault();
-                        alert(requiredInputs[i].previousElementSibling.textContent.replace('*', '').trim() + "을(를) 입력해주세요.");
-                        requiredInputs[i].focus();
-                        return;
-                    }
+                } else if (input.value.trim() === "") {
+                    alert(input.previousElementSibling.textContent.replace('*', '').trim() + "을(를) 입력해주세요.");
+                    input.focus();
+                    return;
                 }
             }
 
-            // 연락처 유효성 (3-4-4)
-            var mobile1 = document.querySelector('input[name="mobile1"]').value.trim();
-            var mobile2 = document.querySelector('input[name="mobile2"]').value.trim();
-            var mobile3 = document.querySelector('input[name="mobile3"]').value.trim();
+            // 전화번호 유효성 및 중복 확인
+            const m1 = document.querySelector('input[name="mobile1"]').value.trim();
+            const m2 = document.querySelector('input[name="mobile2"]').value.trim();
+            const m3 = document.querySelector('input[name="mobile3"]').value.trim();
+            const fullMobile = m1 + "-" + m2 + "-" + m3;
+            const fullMobileNumOnly = fullMobile.replace(/-/g, "");
 
-            if (!/^\d{3}$/.test(mobile1) || !/^\d{4}$/.test(mobile2) || !/^\d{4}$/.test(mobile3)) {
-                event.preventDefault();
-                alert("연락처를 정확히 입력해주세요. (예: 010-1234-5678)");
+            if (!/^\d{10,11}$/.test(fullMobileNumOnly)) {
+                alert("유효한 전화번호를 입력해주세요. (예: 010-1234-5678)");
                 return;
             }
 
-            // 이메일 @ 포함 여부 검사
-            var email = document.getElementById("email").value.trim();
-            if (email !== "" && !email.includes("@")) {
-                event.preventDefault();
-                alert("유효한 이메일 주소를 입력해주세요. (@ 포함)");
-                document.getElementById("email").focus();
-                return;
+            try {
+                const res = await fetch("/api/member/mobilecheck?mobile=" + encodeURIComponent(fullMobile));
+                const result = await res.text();
+
+                const phoneCheckResult = document.getElementById("phoneCheckResult");
+                if (result === "Y") {
+                    phoneCheckResult.textContent = "이미 등록된 전화번호입니다.";
+                    phoneCheckResult.style.color = "red";
+                    alert("이미 등록된 전화번호입니다.");
+                    return;
+                }
+
+                phoneCheckResult.textContent = "";
+                this.submit(); // 최종 제출
+
+            } catch (e) {
+                console.error("전화번호 확인 실패:", e);
+                alert("서버 오류가 발생했습니다.");
             }
         });
     </script>

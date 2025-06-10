@@ -37,6 +37,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     // 이름과 이메일로 회원 찾기
     MemberEntity findByNameAndEmail(String name, String email);
 
+    boolean existsByMobile(String mobile);
+
     // IDX로 회원 찾기
     MemberEntity findByIdx(long idx);
 
