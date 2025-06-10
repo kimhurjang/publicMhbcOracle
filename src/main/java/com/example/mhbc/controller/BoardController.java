@@ -967,11 +967,11 @@ public class BoardController {
 
         // 1) base 경로 결정 (기존 코드 그대로)
         String base = switch (groupIdx.intValue()) {
-            case 1 -> "notice_page";
-            case 2 -> "cmct_page";
-            case 3 -> "event_page";
-            case 4 -> "gallery_page";
-            case 5 -> "oftenquestion_page";
+            case 1 -> "notice_view";
+            case 2 -> "cmct_view";
+            case 3 -> "event_view";
+            case 4 -> "gallery_view";
+            case 5 -> "oftenquestion_view";
             default -> "cmct_page";
         };
 
@@ -1084,6 +1084,7 @@ public class BoardController {
                         .queryParam("page", 1)
                         .queryParam("group_idx", groupIdx)
                         .queryParam("board_type", boardType)
+                        .queryParam("idx", boardIdx)
                         .build();
     }
 }

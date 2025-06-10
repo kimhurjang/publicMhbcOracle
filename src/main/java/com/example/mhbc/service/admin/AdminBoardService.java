@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,11 +56,33 @@ public class AdminBoardService {
     }
 
     public void deleteBoardsByIds(List<Long> ids) {
-        boardRepository.deleteAllByIdInBatch(ids);
+        Set<Long> protectedIds = Set.of(326L, 327L, 328L, 329L, 330L, 331L);
+        List<Long> filtered = ids.stream()
+                .filter(id -> !protectedIds.contains(id))
+                .collect(Collectors.toList());
+
+        boardRepository.deleteAllById(filtered);
     }
 
     public void deleteById(Long idx) {
-        boardRepository.deleteById(idx);
+        Set<Long> protectedIds = Set.of(326L, 327L, 328L, 329L, 330L, 331L);
+
+        // 실제 게시물 조회
+        Optional<BoardEntity> optionalBoard = boardRepository.findById(idx);
+
+        if (optionalBoard.isPresent()) {
+            BoardEntity board = optionalBoard.get();
+            Long groupIdx = board.getGroup().getGroupIdx();
+            Long boardType = board.getGroup().getBoardType();
+
+            // 삭제 방지 조건: 갤러리 groupIdx == 4 && boardType == 1 && 고정 ID
+            if (groupIdx == 4 && boardType == 1 && protectedIds.contains(idx)) {
+                throw new IllegalStateException("고정된 갤러리 게시물은 삭제할 수 없습니다.");
+            }
+
+            // 삭제 수행
+            boardRepository.deleteById(idx);
+        }
     }
 
     @Transactional

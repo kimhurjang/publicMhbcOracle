@@ -64,7 +64,12 @@
                 </tr>
                 <th:block th:if="${paging != null and !#lists.isEmpty(paging.content)}">
                     <tr th:each="board : ${paging.content}">
-                        <td><input type="checkbox" name="delCheck" th:value="${board.idx}"></td>
+                        <td>
+                            <!-- 체크박스도 보호 ID(갤러리 고정 게시물)이면 비활성화 -->
+                            <input type="checkbox" name="delCheck"
+                                   th:value="${board.idx}"
+                                   th:disabled="${#lists.contains(protectedIds, board.idx)}" />
+                        </td>
                         <td th:text="${board.idx}"></td>
                         <td th:text="${category}"></td>
                         <td>
@@ -90,9 +95,13 @@
                         </td>
                         <td th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"></td>
                         <td>
-                            <a th:href="@{/admin/board/delete(id=${board.idx},groupIdx=${groupIdx},page=${page})}" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
+                            <!-- 삭제 버튼: 보호 ID이면 숨기거나 비활성화 -->
+                            <a th:if="${!#lists.contains(protectedIds, board.idx)}"
+                               th:href="@{/admin/board/delete(id=${board.idx},groupIdx=${groupIdx},page=${page})}"
+                               onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
                                 <button type="button" class="small red">삭제</button>
                             </a>
+                            <span th:if="${#lists.contains(protectedIds, board.idx)}" class="gray small" style="font-size: 15px;">삭제불가</span>
                         </td>
                         <td>
                             <a th:if="${groupIdx >= 1 and groupIdx <= 4}"

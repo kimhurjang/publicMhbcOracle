@@ -151,6 +151,7 @@
               item.addEventListener('mouseleave', desktopMouseLeave);
             });
           } else {
+
             // 모바일 모드: 외부 클릭, 아코디언, 토글
             navItems.forEach(item => {
               item.removeEventListener('mouseenter', desktopMouseEnter);  // 🔧 수정됨
@@ -168,7 +169,17 @@
               link.removeEventListener('click', accordionHandler);
               link.addEventListener('click', accordionHandler);
             });
-
+            const currentPath = window.location.pathname;
+            const matchedLink = Array.from(document.querySelectorAll('#gnb a')).find(a => {
+              const href = a.getAttribute('href');
+              return href && currentPath.startsWith(href);
+            });
+            if (matchedLink) {
+              const li = matchedLink.closest('.nav_item');
+              if (li) {
+                li.classList.add('active');
+              }
+            }
             // 활성된 서브 자동 펼침
             document.querySelectorAll('#gnb > li.active .sub_group')
               .forEach(sub => sub.style.maxHeight = (sub.scrollHeight + 40) + 'px');

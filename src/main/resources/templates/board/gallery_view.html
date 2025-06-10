@@ -22,12 +22,19 @@
     <div class="btn_group mt20">
       <button type="button" onclick="goBack()" class="small">뒤로가기</button>
       <div th:if="${member != null and member.grade == 10}">
-        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button class="color1 small">[관리자]삭제</button></a>
+        <a th:if="${board.idx != 326 and board.idx != 327 and board.idx != 328 and board.idx != 329 and board.idx != 330 and board.idx != 331}"
+           th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${member.idx}, comments_idx=${0})}">
+          <button class="color1 small">[관리자]삭제</button>
+        </a>
         <a th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx},commentsIdx=0)}"><button type="button" class="color2 small">[관리자]수정</button></a>
       </div>
     </div>
     <!--sec:authorize="hasRole('ADMIN')"-->
-
+    <!-- 삭제 불가능한 경우 - 관리자만 보기 -->
+    <p th:if="${(board.idx == 326 or board.idx == 327 or board.idx == 328 or board.idx == 329 or board.idx == 330 or board.idx == 331) and member != null and member.grade == 10}"
+       style="font-size: 0.8em; color: #999; margin-top: 10px;">
+      이 게시물은 삭제가 불가능합니다.
+    </p>
   </div><!--E content-->
 </section><!--E container-->
 </body>

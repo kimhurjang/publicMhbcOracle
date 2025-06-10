@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -82,6 +84,7 @@ public class AdminBoardController {
         // 공통: 쿼리스트링에 groupIdx, page, keyword 유지
         redirectAttributes.addAttribute("group_idx", groupIdx);
         redirectAttributes.addAttribute("groupIdx", groupIdx);
+        redirectAttributes.addAttribute("protectedIds", List.of(326L, 327L, 328L, 329L, 330L, 331L));
         redirectAttributes.addAttribute("page", page);
         if (keyword != null && !keyword.isBlank()) {
             redirectAttributes.addAttribute("keyword", keyword);
@@ -130,6 +133,7 @@ public class AdminBoardController {
         model.addAttribute("paging", paging);
         model.addAttribute("category", category);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("protectedIds", List.of(326L, 327L, 328L, 329L, 330L, 331L));
 
         return "/admin/board/group_list";
     }
@@ -141,10 +145,19 @@ public class AdminBoardController {
                               @RequestParam("page") int page,
                               HttpServletRequest request,
                               RedirectAttributes redirectAttributes) {
-        // 삭제 로직 처리
-        adminBoardService.deleteById(id);
+
         BoardGroupEntity board = boardGroupRepository.findByGroupIdx(groupIdx);
         Long BoardType = board.getBoardType();
+
+        // 갤러리 고정 게시물 삭제 방지
+        Set<Long> protectedIds = Set.of(326L, 327L, 328L, 329L, 330L, 331L);
+        if (groupIdx == 4 && protectedIds.contains(id)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "이 게시물은 삭제할 수 없습니다.");
+            return "redirect:" + Optional.ofNullable(request.getHeader("Referer")).orElse("/admin/board/group_list_select");
+        }
+
+        // 삭제 로직 처리
+        adminBoardService.deleteById(id);
 
         redirectAttributes.addAttribute("boardType" , BoardType);
         redirectAttributes.addAttribute("groupIdx" , groupIdx);
