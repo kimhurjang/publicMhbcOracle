@@ -1,34 +1,41 @@
-window.onload = function () {
-    const allSections = $(".bg-holder"); // ms1 ~ ms5 + footer
+document.addEventListener("DOMContentLoaded", function () {
+  const allSections = $(".bg-holder");
+  let isOnMap = false;
 
-    allSections.each(function (index) {
-        $(this).on("mousewheel DOMMouseScroll", function (e) {
-          const isOnMap = e.target.closest('#map');
-          if (isOnMap) return; // 지도가 휠 이벤트 처리하게 둠
-            e.preventDefault();
-
-            let delta = 0;
-            if (!event) event = window.event;
-            if (event.wheelDelta) {
-                delta = event.wheelDelta / 120;
-                if (window.opera) delta = -delta;
-            } else if (event.detail) {
-                delta = -event.detail / 3;
-            }
-
-            let moveTop = $(window).scrollTop();
-
-            if (delta < 0 && index < allSections.length - 1) {
-                moveTop = $(allSections[index + 1]).offset().top;
-            } else if (delta > 0 && index > 0) {
-                moveTop = $(allSections[index - 1]).offset().top;
-            } else {
-                return; // 첫 섹션 or 마지막이면 이동 없음
-            }
-
-            $("html, body").stop().animate({
-                scrollTop: moveTop + "px"
-            }, 600);
-        });
+  // 마우스가 #map에 들어가거나 나갈 때 상태 업데이트
+  const mapElement = document.querySelector("#map");
+  if (mapElement) {
+    mapElement.addEventListener("mouseenter", () => {
+      isOnMap = true;
     });
-}
+    mapElement.addEventListener("mouseleave", () => {
+      isOnMap = false;
+    });
+  }
+  allSections.each(function (index) {
+    // 'wheel' 이벤트를 직접 바인딩하고 passive:false 옵션 추가
+    this.addEventListener("wheel", function (e) {
+//      const isOnMap = e.target.closest('#map');
+//      if (isOnMap) return;
+
+      e.preventDefault();
+
+      let delta = e.deltaY < 0 ? 1 : -1;
+
+      let moveTop = window.scrollY;
+
+      if (delta < 0 && index < allSections.length - 1) {
+        moveTop = allSections[index + 1].offsetTop;
+      } else if (delta > 0 && index > 0) {
+        moveTop = allSections[index - 1].offsetTop;
+      } else {
+        return;
+      }
+
+      $("html, body").stop().animate({
+        scrollTop: moveTop + "px"
+      }, 600);
+
+    }, { passive: false });
+  });
+});
