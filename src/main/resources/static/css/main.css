@@ -296,11 +296,11 @@ button:hover{
    height: 65%;
    display: flex;
    justify-content: space-evenly;
-   position:relative
 }
 .event .card{
    width: 35%;
    display: block;
+   position:relative;
 }
 .event div img{
    width: 100%;
@@ -315,7 +315,7 @@ button:hover{
 }
 .event div div a{
    position:absolute;
-   bottom:20px; right:20px;
+   top:55%; right:20px;
 
 }
 .event button{
@@ -554,11 +554,11 @@ div#ms4 { padding-top: 130px; background-color:#f9f9f9;}
 }
 @media (max-width: 764px){
   /* 이벤트 */
-  .event{ display: block; justify-content: none; height: 55%;  }
-  .event .card{ width:100%; display: flex; margin-top:20px;}
+  .event{ display: block; justify-content: none; height: 55%; margin-top:7%; }
+  .event .card{ width:100%; display: flex; margin-top:30px;}
   .event div img{ width: 100%; height:100%; object-fit: cover;  }
-  .event div div{ height:auto; padding: 0 20px; text-align: left; line-height:100px; }
-  .event div div a{ margin: 35% 0 0 65%;  }
+  .event div div{ height:260px; padding: 0 20px; text-align: left; }
+  .event div div a{ top:auto; bottom:20px; }
 
   /* 보드 */
   #board{ display: block; padding: 100px 0;}
