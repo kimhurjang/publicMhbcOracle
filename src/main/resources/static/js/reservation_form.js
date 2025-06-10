@@ -104,14 +104,24 @@ function bindUndecidedToggle() {
   const eventDateInput = document.getElementById('event_date_input');
   const eventTimeSelect = document.getElementById('event_time_select');
   const eventUndecided = document.getElementById('event_date_undecided');
+  let  eventDateInputValue = '';
+  let  eventTimeSelectValue = '';
 
   eventUndecided.addEventListener('change', function () {
     const disabled = this.checked;
     eventDateInput.disabled = disabled;
     eventTimeSelect.disabled = disabled;
     if (disabled) {
+      eventDateInputValue = eventDateInput.value;
+      eventTimeSelectValue = eventTimeSelect.value;
       eventDateInput.value = '';
       eventTimeSelect.value = '';
+    }
+    //console.log(eventDateInputValue);
+    //console.log(eventTimeSelectValue);
+    if (!disabled) {
+      eventDateInput.value = eventDateInputValue;
+      eventTimeSelect.value = eventTimeSelectValue;
     }
   });
 }

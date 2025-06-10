@@ -20,7 +20,7 @@
     .disabled-event {cursor:not-allowed!important; opacity:0.9; background:#ededed; pointer-events:auto;}
     .fc .fc-daygrid-day-events {display:flex; flex-wrap:wrap;}
     .fc .fc-daygrid-event-harness {flex:1 1 50%; max-width:50%;}
-    all-blocked {}
+    .fc .fc-daygrid-event-harness.all-blocked {flex:1 1 100%; max-width:100%;}
   </style>
 </th:block>
 <section layout:fragment="content" id="container" class="reservation list">
@@ -107,6 +107,19 @@
 
                 if (reason) info.event.setProp("title", `${reason}`);
                 if (tooltip) info.el.setAttribute('title', tooltip);
+
+                // ALL 차단일 경우, 부모 요소에 all-blocked 클래스 추가
+                if (tooltip === 'ALL') {
+                  setTimeout(() => {
+                    const harness = info.el.closest('.fc-daygrid-event-harness');
+                    if (harness && !harness.classList.contains('all-blocked')) {
+                      harness.classList.add('all-blocked');
+                      console.log('👀 ALL 부모 클래스 적용:', harness);
+                    }
+                  }, 0);
+                }
+
+
                 if (info.event.classNames.includes('disabled-event')) {
                   info.el.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -147,7 +160,7 @@
                         title: reason,
                         date: ymd,
                         url: null,
-                        classNames: ['disabled-event', 'all-blocked'], //ALL일 때 전용 클래스 추가
+                        classNames: ['disabled-event'],
                         extendedProps: {
                           tooltip: 'ALL',
                           reason: reason
