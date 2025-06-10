@@ -5,6 +5,7 @@
 <body>
 <th:block layout:fragment="css">
     <style>
+        section:not(:first-of-type) h2 {margin-top:100px;}
         #container.about p {margin-bottom:15px;}
         #container.about img {width:100%;max-width:1000px; max-height:500px;object-fit:cover;border-radius:8px;margin:20px 0;}
         #container.about strong {font-weight:600;color:#7768ae;}
@@ -15,7 +16,7 @@
     <div id="content" class="content">
         <!-- 소개 섹션 -->
         <section data-aos="fade-right" data-aos-delay="200">
-            <h1>만화방초</h1>
+            <h2>만화방초</h2>
             <img src="/image/kuk202306110112.680x.0.jpg" alt="만화방초 정원 전경">
             <p>
                 만화방초는 1985년 정종조 대표가 경상남도 고성에서 자연 친화적인 정원 철학으로 조성하기 시작한 정원입니다.<br>

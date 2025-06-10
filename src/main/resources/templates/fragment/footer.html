@@ -29,7 +29,7 @@
             </div>
             <div th:if="${loginMember != null and loginMember.grade == 1}">
                 <p><b>내 정보</b></p>
-                <p><a href="">마이 페이지</a></p>
+                <p><a th:href="@{/api/member/mypage}">마이 페이지</a></p>
                 <p><a href="">예약 정보 조회 / 수정</a></p>
             </div>
         </div>
