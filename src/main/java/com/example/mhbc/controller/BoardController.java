@@ -210,7 +210,7 @@ public class BoardController {
             dto.setClosedAt(board.getClosedAt());  // 종료일
             dto.setCreatedAt(board.getCreatedAt()); // 작성일
 
-// 첨부파일 관련 (BoardEntity 기준)
+            // 첨부파일 관련 (BoardEntity 기준)
             if(board.getAttachment() != null) {
                 dto.setAttachment(board.getAttachment());  // attachment 엔티티/DTO를 dto에 넣어야 함
             }
