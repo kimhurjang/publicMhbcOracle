@@ -1,5 +1,6 @@
 package com.example.mhbc.dto;
 
+import com.example.mhbc.entity.AttachmentEntity;
 import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.entity.BoardGroupEntity;
 import com.example.mhbc.entity.MemberEntity;
@@ -30,8 +31,12 @@ public class BoardDTO {
     private String answerContent;
     private String category;
 
+    private boolean Started;
+    private boolean Closed;
+
     private Long groupIdx;
     private MemberEntity member;
+    private AttachmentEntity attachment;
 
     public BoardEntity toEntity(MemberEntity member, BoardGroupEntity group) {
         return BoardEntity.builder()
@@ -49,6 +54,7 @@ public class BoardDTO {
                 .answerTitle(answerTitle)
                 .answerContent(answerContent)
                 .category(category)
+                .attachment(attachment)
                 .build();
     }
     public static BoardDTO fromEntity(BoardEntity entity) {
@@ -67,6 +73,12 @@ public class BoardDTO {
         dto.setAnswerTitle(entity.getAnswerTitle());
         dto.setAnswerContent(entity.getAnswerContent());
         dto.setCategory(entity.getCategory());
+        dto.setAttachment(entity.getAttachment());
+        // 날짜 기반 상태 계산
+        Date now = new Date();
+        dto.setStarted(entity.getStartAt() != null && now.after(entity.getStartAt()));
+        dto.setClosed(entity.getClosedAt() != null && now.after(entity.getClosedAt()));
+
         return dto;
     }
 }

@@ -28,6 +28,20 @@
 
         <div><sub th:text="${#dates.format(board.startAt, 'yyyy-MM-dd')}+' ~ '+${#dates.format(board.closedAt, 'yyyy-MM-dd')}"></sub></div>
           <div><sub th:text="'작성일 : ' + ${#dates.format(board.createdAt, 'yy.MM.dd')}"></sub></div>
+        <!-- 이벤트 시작 전 -->
+        <span th:if="${!board.started}" class="tag">
+          준비중
+        </span>
+
+        <!-- 이벤트 진행 중 (시작했지만 종료 안된 상태) -->
+        <span th:if="${board.started} and not ${board.closed}" class="tag red">
+          진행중
+        </span>
+
+        <!-- 이벤트 종료 -->
+        <span th:if="${board.closed}" class="tag">
+          종료
+        </span>
           <div class="xi-step-forward"></div>
       </div>
     </a>

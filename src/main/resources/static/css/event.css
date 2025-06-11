@@ -29,17 +29,19 @@
 
 
 .event.board{
-    padding: 20px;
+    padding: 10px;
     min-height: 500px;
     width: 400px;
     position: relative;
     margin: 30px auto;
     display: block;
 }
-.event.board:not(:last-child) .event.card {
+
+.event.board:not(:last-child){
   border-bottom: 1px solid lightgray;
-  padding: 10px 0;
+  /*padding: 10px 0;*/
 }
+
 .event.board .card-img , .card-img img{
     width: 100%;
     height: 300px;
@@ -53,7 +55,7 @@
     margin-top: 300px;
 }
 .xi-step-forward{
-    margin-left: 320px;
+    margin-left: 340px;
     font-size: 50px;
 }
 
@@ -64,4 +66,7 @@
     border: 1px solid;
     border-radius: 15px;
     padding: 3px 6px;
+    text-align: center;
+    display: inline-block;
+    margin-top: 10px;
 }

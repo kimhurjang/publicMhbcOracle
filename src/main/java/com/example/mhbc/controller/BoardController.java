@@ -197,11 +197,33 @@ public class BoardController {
         } else {
             model.addAttribute("member", null);  // 로그인되지 않은 경우
         }
+        Date now = new Date();
+        // null 안전하게 처리
+        List<BoardDTO> boardDtoList = boardList.stream().map(board -> {
+            BoardDTO dto = new BoardDTO();
+            dto.setStartAt(board.getStartAt());
+            dto.setClosedAt(board.getClosedAt());
+            dto.setIdx(board.getIdx());             // 링크 idx
+            dto.setTitle(board.getTitle());         // 제목
 
+            dto.setStartAt(board.getStartAt());    // 시작일
+            dto.setClosedAt(board.getClosedAt());  // 종료일
+            dto.setCreatedAt(board.getCreatedAt()); // 작성일
+
+// 첨부파일 관련 (BoardEntity 기준)
+            if(board.getAttachment() != null) {
+                dto.setAttachment(board.getAttachment());  // attachment 엔티티/DTO를 dto에 넣어야 함
+            }
+            // 상태 계산
+            dto.setStarted(board.getStartAt() != null && now.after(board.getStartAt()));
+            dto.setClosed(board.getClosedAt() != null && now.after(board.getClosedAt()));
+
+            return dto;
+        }).collect(Collectors.toList());
         model.addAttribute("webtitle", "만화방초 | 이벤트");
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
-        model.addAttribute("boardList", boardList);
+        model.addAttribute("boardList", boardDtoList);
 
         return "board/event_page";
     }
@@ -222,20 +244,12 @@ public class BoardController {
         } else {
             model.addAttribute("member", null);  // 로그인되지 않은 경우
         }
+        Date now = new Date();
+        boolean isStarted = board.getStartAt() != null && now.after(board.getStartAt());
+        boolean isClosed = board.getClosedAt() != null && now.after(board.getClosedAt());
 
-        // Timestamp → LocalDateTime 변환
-        Date closedAt = board.getClosedAt();
-        Date startAt = board.getStartAt();
-        // Date -> Instant 변환 후, LocalDateTime으로 변환 (시스템 기본 타임존 사용)
-        LocalDateTime closedAtLocalDateTime = closedAt.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-        LocalDateTime startAtLocalDateTime = startAt.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-
-        model.addAttribute("startAtLocalDateTime", startAtLocalDateTime);
-        model.addAttribute("closedAtLocalDateTime", closedAtLocalDateTime);
+        model.addAttribute("isStarted", isStarted);
+        model.addAttribute("isClosed", isClosed);
         model.addAttribute("board", board);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);

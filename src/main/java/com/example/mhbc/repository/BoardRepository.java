@@ -19,30 +19,31 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     @Query("SELECT DISTINCT b FROM BoardEntity b JOIN b.attachment a WHERE b.group.groupIdx = :groupIdx")
-    List<BoardEntity> findBoardsByGroupIdxSort(@Param("groupIdx") long groupIdx , Sort sort);
+    List<BoardEntity> findBoardsByGroupIdxSort(@Param("groupIdx") Long groupIdx , Sort sort);
 
     @Query("SELECT DISTINCT b FROM BoardEntity b JOIN b.attachment a WHERE b.group.groupIdx = :groupIdx")
-    List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") long groupIdx);
+    List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") Long groupIdx);
 
-    public BoardEntity findByIdx(long idx);
+    public BoardEntity findByIdx(Long idx);
+
 
     public List<BoardEntity> findByTitle(String title);
 
-    public List<BoardEntity> findByGroupGroupIdx(long groupIdx);
+    public List<BoardEntity> findByGroupGroupIdx(Long groupIdx);
 
     @Transactional
     @Modifying
     @Query("DELETE FROM BoardEntity b WHERE b.idx = :idx")
-    void deleteByIdx(@Param("idx") long idx);
+    void deleteByIdx(@Param("idx") Long idx);
 
 
     @Query("SELECT b FROM BoardEntity b WHERE b.group.groupIdx = :groupIdx")
-    Page<BoardEntity> findByGroupIdx(@Param("groupIdx") long groupIdx, Pageable pageable);
+    Page<BoardEntity> findByGroupIdx(@Param("groupIdx") Long groupIdx, Pageable pageable);
 
     // 작성자 기준으로 전체 게시글 조회
     List<BoardEntity> findByMember(MemberEntity member);
 
-    Page<BoardEntity> findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(String title, long groupIdx, Long boardType , Pageable pageable);
+    Page<BoardEntity> findByTitleContainingAndGroup_GroupIdxAndGroup_BoardType(String title, Long groupIdx, Long boardType , Pageable pageable);
 
 
     @Override
