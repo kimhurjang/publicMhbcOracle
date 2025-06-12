@@ -381,6 +381,12 @@ public class MemberController {
         // 가입 후 로그인 페이지로 리다이렉트
         return "redirect:/api/member/login";
     }
+    @GetMapping("/api/member/nicknamecheck")
+    @ResponseBody
+    public String checkNickname(@RequestParam String nickname) {
+        boolean exists = memberRepository.existsByNickname(nickname);
+        return exists ? "Y" : "N";
+    }
 
     @RequestMapping("/findidpw")
     public String findidpw() {

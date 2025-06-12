@@ -33,7 +33,7 @@
       </div>
       <div>
         <label>휴대폰</label>
-        <input type="text" th:field="*{mobile}" />
+        <input type="text" th:field="*{mobile}" placeholder="예: 010-1234-5678" />
       </div>
       <div>
         <label>가입일</label>
@@ -44,7 +44,6 @@
         <td th:text="${member.updatedAt != null ? #dates.format(member.updatedAt, 'yyyy.MM.dd HH:mm:ss') : '-'}"></td>
       </div>
 
-      <!-- 버튼을 한 줄에 배치 -->
       <div class="button-row">
         <button type="submit" class="save-button">저장</button>
         <button type="button" class="withdraw-button" onclick="submitWithdrawForm()">탈퇴</button>
@@ -72,6 +71,8 @@
       const email = document.querySelector('input[name="email"]').value.trim();
       const mobile = document.querySelector('input[name="mobile"]').value.trim();
 
+      const phoneRegex = /^\d{3}-\d{4}-\d{4}$/;
+
       if (!name) {
         alert('이름을 입력해주세요.');
         return false;
@@ -84,33 +85,37 @@
         alert('휴대폰 번호를 입력해주세요.');
         return false;
       }
+      if (!phoneRegex.test(mobile)) {
+        alert('전화번호 양식에 맞춰서 입력해주세요. (예: 010-1234-5678)');
+        return false;
+      }
+
       return true;
     }
 
     function submitWithdrawForm() {
-  if (confirm("정말 탈퇴하시겠습니까?")) {
-    fetch("/api/member/withdraw", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+      if (confirm("정말 탈퇴하시겠습니까?")) {
+        fetch("/api/member/withdraw", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("탈퇴 요청 실패");
+          return response.json();
+        })
+        .then(data => {
+          alert(data.message);
+          window.location.href = "/api/member/login";
+        })
+        .catch(error => {
+          alert("탈퇴 중 오류가 발생했습니다.");
+          console.error(error);
+        });
       }
-    })
-    .then(response => {
-      if (!response.ok) throw new Error("탈퇴 요청 실패");
-      return response.json();
-    })
-    .then(data => {
-      alert(data.message);
-      window.location.href = "/api/member/login";
-    })
-    .catch(error => {
-      alert("탈퇴 중 오류가 발생했습니다.");
-      console.error(error);
-    });
-  }
-}
+    }
   </script>
-
 </th:block>
 
 </body>

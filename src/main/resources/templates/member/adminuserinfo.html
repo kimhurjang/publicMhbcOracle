@@ -8,7 +8,7 @@
 </th:block>
 
 <section layout:fragment="content" id="container">
-  <h1 class="page_title">회원 관리</h1>
+  <h1 class="page_title">회원 정보</h1>
   <div id="content" class="content">
 
     <form th:action="@{/api/member/adminuserinfo}" method="post" th:object="${member}"
@@ -39,7 +39,7 @@
           </div>
           <div class="info_item">
             <label for="mobile">휴대폰 번호</label>
-            <input type="text" id="mobile" th:field="*{mobile}">
+            <input type="text" id="mobile" th:field="*{mobile}" placeholder="예: 010-1234-5678">
             <p th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}" class="error-message" style="color: red;"></p>
           </div>
         </div>
@@ -68,7 +68,6 @@
             </select>
           </div>
         </div>
-
       </section>
 
       <div class="bottom_btns">
@@ -77,11 +76,15 @@
       </div>
     </form>
 
+    <!-- ✅ 유효성 검사 스크립트 -->
     <script>
       function validateForm() {
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
         const mobile = document.getElementById('mobile').value.trim();
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\d{3}-\d{4}-\d{4}$/;
 
         if (name === '') {
           alert('회원 이름을 입력해주세요.');
@@ -91,8 +94,16 @@
           alert('이메일을 입력해주세요.');
           return false;
         }
+        if (!emailRegex.test(email)) {
+          alert('이메일 형식에 맞춰 입력해주세요. (예: user@example.com)');
+          return false;
+        }
         if (mobile === '') {
           alert('휴대폰 번호를 입력해주세요.');
+          return false;
+        }
+        if (!phoneRegex.test(mobile)) {
+          alert('전화번호 양식에 맞춰서 입력해주세요. (예: 010-1234-5678)');
           return false;
         }
 
@@ -100,6 +111,7 @@
       }
     </script>
 
+    <!-- 서버 메시지 알림 -->
     <script th:inline="javascript">
       /*<![CDATA[*/
       let msg = /*[[${message} != null ? ${message} : '']]*/ '';
@@ -108,7 +120,6 @@
       }
       /*]]>*/
     </script>
-
 
   </div><!-- E content -->
 </section><!-- E container -->
