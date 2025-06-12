@@ -5,7 +5,7 @@
 <body>
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
-  <a th:href="@{/board/gallery}"><h1>갤러리 게시물 수정</h1></a>
+  <a th:href="@{/board/gallery}"><h1>갤러리</h1></a>
   <div id="content" class="content">
     <form name="galleryModify" method="post" action="/board/modify_proc" enctype="multipart/form-data">
       <!-- 1) 삭제 의도 전달용 hidden 필드 -->
@@ -22,23 +22,23 @@
       <input type="hidden" name="pwd" value="password123" />
       <table>
         <tr>
-          <td colspan="2">현재 페이지는 관리자 전용 페이지입니다.</td>
+          <th colspan="2">현재 페이지는 관리자 전용 페이지입니다.</th>
         </tr>
         <tr>
-          <td>제목</td>
+          <th>제목</th>
           <td>
             <input type="text" name="title" th:value="${board.title}" required placeholder="제목을 입력해주세요.">
           </td>
         </tr>
         <tr>
-          <td>본문</td>
+          <th>본문</th>
           <td>
             <textarea cols="30" rows="2" name="content" th:text="${board.content}" required placeholder="본문을 입력해주세요."></textarea>
           </td>
         </tr>
         <!-- attachmentRow 하나만 사용. th:if로 서버 상태에 따라 보여주는 내용이 달라짐 -->
         <tr id="attachmentRow">
-          <td>첨부 파일</td>
+          <th>첨부 파일</th>
           <td>
             <!-- A) 서버에 기존 파일이 있을 때 -->
             <span th:if="${board.attachment != null}"

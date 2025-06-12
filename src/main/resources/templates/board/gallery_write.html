@@ -9,7 +9,7 @@
 </th:block>
 <body>
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
-  <a th:href="@{/board/gallery}"><h1>갤러리 게시물 작성</h1></a>
+  <a th:href="@{/board/gallery}"><h1>갤러리</h1></a>
   <div id="content" class="content">
     <form name="gallery" method="post" action="/board/gallery_proc" enctype="multipart/form-data" th:object="${commonForm}">
       <input type="hidden" name="board_type" th:value="${boardType}">
