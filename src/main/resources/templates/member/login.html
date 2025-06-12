@@ -59,74 +59,81 @@
                 STOP: "휴먼 계정입니다."
             };
 
-            if (errorCode === 'WITHDRAW' || errorCode === 'STOP') {
-                let htmlContent = messages[errorCode];
+            if (errorCode) {
+                let htmlContent = messages[errorCode] || "알 수 없는 오류가 발생했습니다.";
 
-                if (errorCode === 'STOP') {
-                    htmlContent += `<br><br><button id="unlock-account" class="swal2-confirm swal2-styled">휴먼 계정 해지</button>`;
-                } else if (errorCode === 'WITHDRAW') {
-                    htmlContent += `<br><br><button id="join-btn" class="swal2-confirm swal2-styled">회원가입 하러 가기</button>`;
-                }
+                if (errorCode === 'BAD_CREDENTIALS') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: "로그인 실패",
+                        text: htmlContent,
+                        confirmButtonText: '확인'
+                    });
+                } else if (errorCode === 'WITHDRAW' || errorCode === 'STOP') {
+                    if (errorCode === 'STOP') {
+                        htmlContent += `<br><br><button id="unlock-account" class="swal2-confirm swal2-styled">휴먼 계정 해지</button>`;
+                    } else if (errorCode === 'WITHDRAW') {
+                        htmlContent += `<br><br><button id="join-btn" class="swal2-confirm swal2-styled">회원가입 하러 가기</button>`;
+                    }
 
-                Swal.fire({
-                    icon: 'error',
-                    title: "로그인 실패",
-                    html: htmlContent,
-                    showConfirmButton: false,
-                    didRender: () => {
-                        if (errorCode === 'STOP') {
-                            const unlockBtn = document.getElementById("unlock-account");
-                            if (unlockBtn) {
-                                unlockBtn.addEventListener("click", function () {
-                                    fetch('/api/member/reactivate', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ userid }),
-                                        credentials: 'same-origin'
-                                    })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: '해지되었습니다',
-                                                text: '로그인 페이지로 이동합니다.',
-                                                confirmButtonText: '확인'
-                                            }).then(() => {
-                                                window.location.href = `/api/member/login?userid=${encodeURIComponent(userid)}`;
-                                            });
-                                        } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: "로그인 실패",
+                        html: htmlContent,
+                        showConfirmButton: false,
+                        didRender: () => {
+                            if (errorCode === 'STOP') {
+                                const unlockBtn = document.getElementById("unlock-account");
+                                if (unlockBtn) {
+                                    unlockBtn.addEventListener("click", function () {
+                                        fetch('/api/member/reactivate', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ userid }),
+                                            credentials: 'same-origin'
+                                        })
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: '해지되었습니다',
+                                                    text: '로그인 페이지로 이동합니다.',
+                                                    confirmButtonText: '확인'
+                                                }).then(() => {
+                                                    window.location.href = `/api/member/login?userid=${encodeURIComponent(userid)}`;
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: '해지 요청 실패',
+                                                    text: '서버 처리 중 오류가 발생했습니다.',
+                                                });
+                                            }
+                                        })
+                                        .catch(() => {
                                             Swal.fire({
                                                 icon: 'error',
-                                                title: '해지 요청 실패',
-                                                text: '서버 처리 중 오류가 발생했습니다.',
+                                                title: '네트워크 오류',
+                                                text: '서버와 통신에 실패했습니다.',
                                             });
-                                        }
-                                    })
-                                    .catch(() => {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: '네트워크 오류',
-                                            text: '서버와 통신에 실패했습니다.',
                                         });
                                     });
-                                });
-                            }
-                        } else if (errorCode === 'WITHDRAW') {
-                            const joinBtn = document.getElementById("join-btn");
-                            if (joinBtn) {
-                                joinBtn.addEventListener("click", function () {
-                                    window.location.href = '/api/member/join';
-                                });
+                                }
+                            } else if (errorCode === 'WITHDRAW') {
+                                const joinBtn = document.getElementById("join-btn");
+                                if (joinBtn) {
+                                    joinBtn.addEventListener("click", function () {
+                                        window.location.href = '/api/member/join';
+                                    });
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
-
     </script>
-
 </th:block>
 
 </body>
