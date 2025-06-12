@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,8 +27,11 @@ public class MemberDTO {
   private Integer grade;
   private String status;
 
-  private LocalDateTime createdAt;  // 추가
-  private LocalDateTime updatedAt;  // 추가
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date createdAt;  // 추가
+
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private Date updatedAt;  // 추가
 
   public MemberEntity toEntity() {
     return MemberEntity.builder()
@@ -58,8 +62,8 @@ public class MemberDTO {
             .nickname(entity.getNickname())
             .grade(entity.getGrade())
             .status(entity.getStatus())
-            .createdAt(convertToLocalDateTime(entity.getCreatedAt()))    // Date → LocalDateTime 변환
-            .updatedAt(convertToLocalDateTime(entity.getUpdatedAt()))
+            .createdAt(entity.getCreatedAt())    // Date → LocalDateTime 변환
+            .updatedAt(entity.getUpdatedAt())
             .build();
   }
 

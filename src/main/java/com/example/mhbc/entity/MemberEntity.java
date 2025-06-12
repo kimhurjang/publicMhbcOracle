@@ -3,6 +3,7 @@ package com.example.mhbc.entity;
 import com.example.mhbc.dto.MemberDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -51,10 +52,12 @@ public class MemberEntity {
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "CREATE_AT")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date createdAt;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "UPDATE_AT")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date updatedAt;
 
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -87,8 +90,8 @@ public class MemberEntity {
             .nickname(nickname)
             .grade(grade)
             .status(status)
-            .createdAt(MemberDTO.convertToLocalDateTime(createdAt))  // 변환 처리
-            .updatedAt(MemberDTO.convertToLocalDateTime(updatedAt))
+            .createdAt(createdAt)  // 변환 처리
+            .updatedAt(updatedAt)
             .build();
   }
 }
