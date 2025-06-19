@@ -118,4 +118,8 @@
 .mapImg{text-align: center;}
 .mapImg img{ width: 80%; height: auto;}
 .openTime{display: block;}
-.openTime.span{text-align: left; margin: 0 auto; width: 35%;}
+.openTime.span{text-align: center; margin: 0 auto; width: 35%;}
+
+@media screen and (max-width: 765px) {
+    .openTime.span{ width: 90%;}
+}
