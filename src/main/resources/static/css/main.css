@@ -192,12 +192,6 @@ button:hover{
   cursor: pointer;
 }
 
-
-
-
-
-
-
 /*
 ------------------------------------
 메인 웨딩 캐러셀
@@ -266,7 +260,6 @@ button:hover{
     font-size: 40px;
     font-weight: bold;
 }
-
 
 #banner div div{
    margin: auto;
@@ -338,16 +331,13 @@ button:hover{
     color: lightgray;
 }
 
-
-
-
 /*
 -------------------------------
 메인화면 갤러리 캐러셀
 -------------------------------
 */
 
-div#ms4 { padding-top: 130px; background-color:#f9f9f9;}
+#ms4 { padding-top: 130px; background-color:#f9f9f9;}
 #ms4 h2 {font-size:4rem; text-align:center;margin-bottom:20px;}
 .gallerySlider .bx-wrapper {background-color:transparent;}
 .gallerySlider .bx-viewport { height:100% !important; padding: 0 15%;}
@@ -565,4 +555,17 @@ div#ms4 { padding-top: 130px; background-color:#f9f9f9;}
   .boardBox , .mapBox{ width: 100%; }
   #ms5{ height: auto;}
 
+}
+@media screen and (max-width: 400px) {
+  body { font-size:15px; }
+  .subtitle {top:52%;}
+  #ms5.bg-holder { height: auto;overflow: visible;}
+  #board, #ms2, #ms4 {padding-top:20px;}
+  #ms4 h2 {font-size:3rem;margin-bottom:0;}
+
+  .subSlideWrapper {gap:1rem;height:80%;}
+  .mainImage {height:initial; }
+
+  .event div div {height:180px;}
+  .event div p {display:none;}
 }
