@@ -121,5 +121,6 @@
 .openTime.span{text-align: center; margin: 0 auto; width: 35%;}
 
 @media screen and (max-width: 765px) {
-    .openTime.span{ width: 90%;}
+    .openTime.span{ width: 90%; font-size: 15px;}
+    
 }
