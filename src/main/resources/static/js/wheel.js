@@ -51,4 +51,20 @@ document.addEventListener("DOMContentLoaded", function () {
       window.scrollTo({ top: moveTop, behavior: 'smooth' }); // 부드러운 스크롤
     }
   }
+
+  // 로드 시점의 화면 넓이 및 body 넓이 출력
+  console.log("📱 window.innerWidth:", window.innerWidth + "px");
+  console.log("📦 document.body.clientWidth:", document.body.clientWidth + "px");
+
+  // 요소 선택
+  const toggleBtn = document.querySelector('.toggle.icon');
+
+  // 현재 스타일에서 top 값 (style 또는 CSS 계산값)
+  const computedTop = window.getComputedStyle(toggleBtn).top;
+  console.log("🔍 CSS top 속성:", computedTop);
+
+  // 현재 화면 상 위치 (좌표 기준, 스크롤 포함)
+  const rect = toggleBtn.getBoundingClientRect();
+  console.log("📌 브라우저 상 위치 - top:", rect.top + "px");
+  console.log("📌 브라우저 상 위치 - right:", rect.right + "px");
 });

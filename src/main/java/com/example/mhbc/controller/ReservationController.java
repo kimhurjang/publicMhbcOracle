@@ -48,8 +48,8 @@ public class ReservationController {
   // 예약 등록 폼 화면
   @GetMapping("/form")
   public String showForm(
-          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
-          @RequestParam(required = false) String time,
+          @RequestParam(name = "date",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+          @RequestParam(name = "time",required = false) String time,
           Model model) {
     ReservationDTO reservation = new ReservationDTO(); // or 조회한 DTO
 
