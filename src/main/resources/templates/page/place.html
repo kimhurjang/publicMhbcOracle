@@ -8,8 +8,7 @@
         .place_info {display:flex; gap:40px; align-items:center; margin-bottom:60px;}
         .place_text {flex:1;}
         .place_text p { margin-bottom:20px;}
-        .
-        place_highlight li { margin-bottom:8px;}
+        .place_highlight li { margin-bottom:8px;}
         .place_image {flex:1; text-align:center;}
         .place_image img {width:100%; max-width:450px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
 
@@ -17,7 +16,13 @@
         .hall_item {display:flex; gap:20px; align-items:center; margin-bottom:30px;}
         .hall_item img {width:250px; height:auto; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
         .hall_item .desc h3 {margin-bottom:8px;}
-        .hall_item .desc p {;}
+
+        @media (max-width: 764px){
+            .place_info, .hall_item {display:block;}
+            .place_info div {margin-bottom:10px;}
+            .desc {margin-top:10px;}
+            img {width:100% !important; }
+        }
 
     </style>
 </th:block>
